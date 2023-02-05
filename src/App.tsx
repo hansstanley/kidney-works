@@ -2,9 +2,12 @@ import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import HomePage from './pages/HomePage';
+import LoginPage from './pages/LoginPage';
 
 const router = createBrowserRouter([
-	{ path: '/', element: <div>Hello world</div> },
+	{ path: '/', element: <HomePage /> },
+	{ path: '/login', element: <LoginPage /> },
 ]);
 
 function App() {
