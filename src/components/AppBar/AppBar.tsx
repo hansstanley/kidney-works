@@ -11,7 +11,7 @@ export default function AppBar() {
 					<Nav className="me-auto">
 						<Nav.Link href="#">About</Nav.Link>
 						<Nav.Link href={NAV_LINKS.JOBS}>Jobs</Nav.Link>
-						<Nav.Link href="#">Blog</Nav.Link>
+						<Nav.Link href={NAV_LINKS.BLOG}>Blog</Nav.Link>
 						<NavDropdown title="my-username">
 							<NavDropdown.Item href="#">Profile</NavDropdown.Item>
 							<NavDropdown.Divider />
