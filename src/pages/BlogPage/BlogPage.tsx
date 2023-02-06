@@ -1,10 +1,20 @@
-import { Card, Container, Stack } from 'react-bootstrap';
+import { Badge, Card, Container, Stack } from 'react-bootstrap';
 import PageHero from '../../components/PageHero';
 
 const blogs = [
-	{ id: 1, title: 'Blog 1', description: 'This is blog 1.' },
+	{
+		id: 1,
+		title: 'Blog 1',
+		description: 'This is blog 1.',
+		tags: ['hello', 'world'],
+	},
 	{ id: 2, title: 'Blog 2', description: 'This is blog 2.' },
-	{ id: 3, title: 'Blog 3', description: 'This is blog 3.' },
+	{
+		id: 3,
+		title: 'Blog 3',
+		description: 'This is blog 3.',
+		tags: ['hi', 'bye'],
+	},
 ];
 
 export default function BlogPage() {
@@ -17,6 +27,15 @@ export default function BlogPage() {
 						<Card.Body>
 							<Card.Title>{b.title}</Card.Title>
 							<Card.Text>{b.description}</Card.Text>
+							{b.tags ? (
+								<Stack direction="horizontal" gap={1}>
+									{b.tags?.map((t, i) => (
+										<Badge key={i} pill bg="secondary">
+											{t}
+										</Badge>
+									))}
+								</Stack>
+							) : null}
 						</Card.Body>
 					</Card>
 				))}
