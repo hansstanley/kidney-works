@@ -1,7 +1,10 @@
 import { Button, Col, Container, Row, Stack } from 'react-bootstrap';
 import PageHero from '../../components/PageHero';
+import { useAuth,  } from '../../hook/useAuth';
 
 export default function LoginPage() {
+const {signInWithGoogle} = useAuth();
+
 	return (
 		<Container style={{ height: '80vh' }}>
 			<Row className="h-100">
@@ -17,7 +20,7 @@ export default function LoginPage() {
 				</Col>
 				<Col>
 					<Stack gap={2} className="justify-content-center h-100">
-						<Button>Sign in with Google</Button>
+						<Button onClick={signInWithGoogle}>Sign in with Google</Button>
 						<Button variant="secondary">Sign in with Email</Button>
 					</Stack>
 				</Col>
