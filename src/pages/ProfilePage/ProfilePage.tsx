@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Badge,
   Button,
@@ -11,8 +11,11 @@ import {
 } from 'react-bootstrap';
 import PageHero from '../../components/PageHero';
 import ProfileSection from './ProfileSection';
+import { useAuth } from '../../hook/useAuth';
+import useUserInfo from '../../hook/useUserInfo';
 
 export default function ProfilePage() {
+  const { user } = useAuth();
   const [skills, setSkills] = useState(['Writing', 'Speaking', 'Teamwork']);
   const [limitations, setLimitations] = useState([
     'Low blood pressure',

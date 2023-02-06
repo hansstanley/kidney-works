@@ -6,7 +6,7 @@ import React, {
   useContext,
   createContext,
 } from 'react'
-import { firebaseAuth } from '../utils/firebase'
+import { db, firebaseAuth } from '../utils/firebase'
 import {
   Auth,
   UserCredential,
@@ -17,6 +17,7 @@ import {
   signInWithPopup,
   GoogleAuthProvider
 } from 'firebase/auth'
+import { doc, getDoc, setDoc } from 'firebase/firestore';
 
 const googleAuthProvider = new GoogleAuthProvider();
 
@@ -75,7 +76,20 @@ export const useProvideAuth = () => {
   }
   useEffect(() => {
     //function that firebase notifies you if a user is set
-    const unsubsrcibe = firebaseAuth.onAuthStateChanged((user) => {
+    const unsubsrcibe = firebaseAuth.onAuthStateChanged(async (user) => {
+      if (user) {
+        // Add information to firestore whenever is a new user
+        const docRef = doc(db, "users", user.uid);
+        const docSnap = await getDoc(docRef);
+        // when there is no reference to the database
+        if (!docSnap.exists()) {
+          await setDoc(docRef, {
+            email: user.email,
+            name: user.displayName,
+            avatar: user?.photoURL
+          })
+        }
+      }
       setUser(user)
     })
     return unsubsrcibe
@@ -86,7 +100,6 @@ export const useProvideAuth = () => {
     user,
     signIn, 
     resetPassword,
-    firebaseAuth,
     signInWithGoogle
   }
 }

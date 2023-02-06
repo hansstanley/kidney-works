@@ -3,7 +3,7 @@ import PageHero from '../../components/PageHero';
 import { useAuth,  } from '../../hook/useAuth';
 
 export default function LoginPage() {
-const {signInWithGoogle} = useAuth();
+const {signInWithGoogle, user} = useAuth();
 
 	return (
 		<Container style={{ height: '80vh' }}>
@@ -12,7 +12,7 @@ const {signInWithGoogle} = useAuth();
 					<PageHero
 						title="Welcome!"
 						tagline="Sign in with one of the methods"
-						noDivider
+						noDividergit 
 					/>
 				</Col>
 				<Col xs={1}>
