@@ -20,9 +20,35 @@ export default function ProfilePage() {
     'Wheelchair',
   ]);
 
-  const handleAddSkill = () => {};
+  const [skill, setSkill] = useState("")
+  const handleAddSkill = () => {
+    if (!skill || /^\s*$/.test(skill)) {
+      return
+    }
 
-  const handleDeleteSkill = () => {};
+    const newSkills = [skill, ...skills]
+    setSkills(newSkills)
+  };
+
+  const handleDeleteSkill = (index: number) => {
+    const newSkills = skills.filter((_, i) => i != index)
+    setSkills(newSkills)
+  };
+
+  const [limitation, setLimitation] = useState("")
+  const handleAddLimitation = () => {
+    if (!limitation || /^\s*$/.test(limitation)) {
+      return
+    }
+
+    const newLimitations = [limitation, ...limitations]
+    setLimitations(newLimitations)
+  };
+
+  const handleDeleteLimitation = (index: number) => {
+    const newLimitations = limitations.filter((_, i) => i != index)
+    setLimitations(newLimitations)
+  };
 
   return (
     <Container className="pb-5">
@@ -73,15 +99,17 @@ export default function ProfilePage() {
             <Form.Group className="mb-3" controlId="skills">
               <Form.Label>Skills</Form.Label>
               <InputGroup>
-                <Form.Control type="text" placeholder="E.g. public speaking" />
-                <Button variant="outline-secondary">Add</Button>
+                <Form.Control type="text" 
+                placeholder="E.g. public speaking" 
+                onChange={(event) => {setSkill(event.target.value)}} />
+                <Button variant="outline-secondary" onClick={() => handleAddSkill()}>Add</Button>
               </InputGroup>
               <Stack direction="horizontal" gap={1} className="mt-2">
                 {skills.map((s, i) => (
                   <Badge key={i} bg="secondary">
                     <Stack direction="horizontal" gap={2}>
                       {s}
-                      <CloseButton variant="white" />
+                      <CloseButton variant="white" onClick={() => handleDeleteSkill(i)}/>
                     </Stack>
                   </Badge>
                 ))}
@@ -94,15 +122,16 @@ export default function ProfilePage() {
                 <Form.Control
                   type="text"
                   placeholder="E.g. low blood pressure"
+                  onChange={(event) => {setLimitation(event.target.value)}}
                 />
-                <Button variant="outline-secondary">Add</Button>
+                <Button variant="outline-secondary" onClick={() => handleAddLimitation()}>Add</Button>
               </InputGroup>
               <Stack direction="horizontal" gap={1} className="mt-2">
                 {limitations.map((l, i) => (
                   <Badge key={i} bg="secondary">
                     <Stack direction="horizontal" gap={2}>
                       {l}
-                      <CloseButton variant="white" />
+                      <CloseButton variant="white" onClick={() => handleDeleteLimitation(i)} />
                     </Stack>
                   </Badge>
                 ))}
