@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Badge,
   Button,
@@ -13,15 +13,40 @@ import PageHero from '../../components/PageHero';
 import ProfileSection from './ProfileSection';
 import { useAuth } from '../../hook/useAuth';
 import useUserInfo from '../../hook/useUserInfo';
+import { doc, setDoc } from 'firebase/firestore';
+import { db } from '../../utils/firebase';
+import UseSkills from '../../hook/useSkills';
 
 export default function ProfilePage() {
   const { user } = useAuth();
-  const [skills, setSkills] = useState(['Writing', 'Speaking', 'Teamwork']);
+  const { skills, setSkillsState } = UseSkills();
+  const { avatar , name} = useUserInfo();
+  // const [skills, setSkills] = useState(['Writing', 'Speaking', 'Teamwork']);
   const [limitations, setLimitations] = useState([
     'Low blood pressure',
     'Medication',
     'Wheelchair',
   ]);
+
+  const [inputskill, setInputskill] = useState("");
+  
+
+  function addSkillHandler(e:React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+      addSkill(inputskill);
+  }
+
+  function setSkills(newSkills: String[]) {
+    setSkillsState(newSkills)
+    // @ts-ignore
+      setDoc(doc(db, "skills", user?.uid), {skills: newSkills });
+  }
+
+  function addSkill(skill: String) {
+    const newSkills = [
+      ...skills, skill
+    ];
+    setSkills(newSkills);
+  }
 
   const handleAddSkill = () => {};
 
@@ -76,8 +101,8 @@ export default function ProfilePage() {
             <Form.Group className="mb-3" controlId="skills">
               <Form.Label>Skills</Form.Label>
               <InputGroup>
-                <Form.Control type="text" placeholder="E.g. public speaking" />
-                <Button variant="outline-secondary">Add</Button>
+                <Form.Control type="text" placeholder="E.g. public speaking" onChange={e => setInputskill(e.target.value)} />
+                <Button variant="outline-secondary" onClick={addSkillHandler}>Add</Button>
               </InputGroup>
               <Stack direction="horizontal" gap={1} className="mt-2">
                 {skills.map((s, i) => (

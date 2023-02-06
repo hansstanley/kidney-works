@@ -2,16 +2,11 @@ import { Container, Dropdown, Nav, Navbar, NavDropdown } from 'react-bootstrap';
 import { NAV_LINKS } from '../../utils/constants';
 import { useAuth } from '../../hook/useAuth';
 import { useEffect, useState } from 'react';
+import useUserInfo from '../../hook/useUserInfo';
 
 export default function AppBar() {
-  const {user} = useAuth();
-  const [name, setName] = useState("my-username");
-
-  useEffect(() => {
-    if (user?.displayName) {
-      setName(user.displayName);
-    }
-  }, [user]);
+  const { user } = useAuth();
+  const { name } = useUserInfo();
 
   return (
     <Navbar expand="lg">
