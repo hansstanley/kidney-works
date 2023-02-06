@@ -1,7 +1,10 @@
 import { Button, Card, Col, Container, Row, Stack } from 'react-bootstrap';
 import PageHero from '../../components/PageHero';
+import { useAuth } from '../../hook/useAuth';
 
 export default function LoginPage() {
+  const { signInWithGoogle } = useAuth();
+
   return (
     <Container
       className="d-flex flex-column justify-content-center align-content-center"
@@ -13,7 +16,7 @@ export default function LoginPage() {
               <Card.Title>Welcome</Card.Title>
               <Card.Text>Find a new career today!</Card.Text>
               <hr />
-              <Button>Sign in with Google</Button>
+              <Button onClick={signInWithGoogle}>Sign in with Google</Button>
             </Card.Body>
           </Card>
         </Col>
