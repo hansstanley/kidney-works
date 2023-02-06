@@ -10,9 +10,11 @@ import { NAV_LINKS } from './utils/constants';
 import BlogPage from './pages/BlogPage';
 import ProfilePage from './pages/ProfilePage';
 import JobDetailPage from './pages/JobDetailPage';
+import ErrorPage from './pages/ErrorPage';
+import { Container } from 'react-bootstrap';
 
 const router = createBrowserRouter([
-	{ path: NAV_LINKS.HOME, element: <HomePage /> },
+	{ path: NAV_LINKS.HOME, element: <HomePage />, errorElement: <ErrorPage /> },
 	{ path: NAV_LINKS.LOGIN, element: <LoginPage /> },
 	{
 		path: NAV_LINKS.JOBS,
