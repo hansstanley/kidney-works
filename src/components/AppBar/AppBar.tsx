@@ -13,7 +13,9 @@ export default function AppBar() {
 						<Nav.Link href={NAV_LINKS.JOBS}>Jobs</Nav.Link>
 						<Nav.Link href={NAV_LINKS.BLOG}>Blog</Nav.Link>
 						<NavDropdown title="my-username">
-							<NavDropdown.Item href="#">Profile</NavDropdown.Item>
+							<NavDropdown.Item href={NAV_LINKS.PROFILE}>
+								Profile
+							</NavDropdown.Item>
 							<NavDropdown.Divider />
 							<NavDropdown.Item href={NAV_LINKS.LOGIN}>
 								Sign in

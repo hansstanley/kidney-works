@@ -8,12 +8,14 @@ import AppBar from './components/AppBar';
 import JobsPage from './pages/JobsPage';
 import { NAV_LINKS } from './utils/constants';
 import BlogPage from './pages/BlogPage';
+import ProfilePage from './pages/ProfilePage';
 
 const router = createBrowserRouter([
 	{ path: NAV_LINKS.HOME, element: <HomePage /> },
 	{ path: NAV_LINKS.LOGIN, element: <LoginPage /> },
 	{ path: NAV_LINKS.JOBS, element: <JobsPage /> },
 	{ path: NAV_LINKS.BLOG, element: <BlogPage /> },
+	{ path: NAV_LINKS.PROFILE, element: <ProfilePage /> },
 ]);
 
 function App() {
