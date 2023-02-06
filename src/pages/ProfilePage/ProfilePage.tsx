@@ -27,7 +27,7 @@ export default function ProfilePage() {
 						</Stack>
 					</Col>
 					<Col xs={1}>
-						<div className="d-flex vr" style={{ height: '100%' }} />
+						<div className="d-flex vr h-100" />
 					</Col>
 					<Col>
 						<Form>
