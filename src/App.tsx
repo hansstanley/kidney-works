@@ -11,27 +11,31 @@ import BlogPage from './pages/BlogPage';
 import ProfilePage from './pages/ProfilePage';
 import JobDetailPage from './pages/JobDetailPage';
 import ErrorPage from './pages/ErrorPage';
-import { Container } from 'react-bootstrap';
+import {
+  loadAll as allJobsLoader,
+  loadOne as oneJobLoader,
+} from './features/job/loaders';
 
 const router = createBrowserRouter([
-	{ path: NAV_LINKS.HOME, element: <HomePage />, errorElement: <ErrorPage /> },
-	{ path: NAV_LINKS.LOGIN, element: <LoginPage /> },
-	{
-		path: NAV_LINKS.JOBS,
-		element: <JobsPage />,
-		children: [{ path: ':jobId', element: <JobDetailPage /> }],
-	},
-	{ path: NAV_LINKS.BLOG, element: <BlogPage /> },
-	{ path: NAV_LINKS.PROFILE, element: <ProfilePage /> },
+  { path: NAV_LINKS.HOME, element: <HomePage />, errorElement: <ErrorPage /> },
+  { path: NAV_LINKS.LOGIN, element: <LoginPage /> },
+  { path: NAV_LINKS.JOBS, element: <JobsPage />, loader: allJobsLoader },
+  {
+    path: `${NAV_LINKS.JOBS}/:jobId`,
+    element: <JobDetailPage />,
+    loader: oneJobLoader,
+  },
+  { path: NAV_LINKS.BLOG, element: <BlogPage /> },
+  { path: NAV_LINKS.PROFILE, element: <ProfilePage /> },
 ]);
 
 function App() {
-	return (
-		<div>
-			<AppBar />
-			<RouterProvider router={router} />
-		</div>
-	);
+  return (
+    <div>
+      <AppBar />
+      <RouterProvider router={router} />
+    </div>
+  );
 }
 
 export default App;
