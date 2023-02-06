@@ -1,4 +1,5 @@
 import { Container, Dropdown, Nav, Navbar, NavDropdown } from 'react-bootstrap';
+import { NAV_LINKS } from '../../utils/constants';
 
 export default function AppBar() {
 	return (
@@ -9,12 +10,14 @@ export default function AppBar() {
 				<Navbar.Collapse id="appbar">
 					<Nav className="me-auto">
 						<Nav.Link href="#">About</Nav.Link>
-						<Nav.Link href="#">Jobs</Nav.Link>
+						<Nav.Link href={NAV_LINKS.JOBS}>Jobs</Nav.Link>
 						<Nav.Link href="#">Blog</Nav.Link>
 						<NavDropdown title="my-username">
 							<NavDropdown.Item href="#">Profile</NavDropdown.Item>
 							<NavDropdown.Divider />
-							<NavDropdown.Item href="/login">Sign in</NavDropdown.Item>
+							<NavDropdown.Item href={NAV_LINKS.LOGIN}>
+								Sign in
+							</NavDropdown.Item>
 						</NavDropdown>
 					</Nav>
 				</Navbar.Collapse>
