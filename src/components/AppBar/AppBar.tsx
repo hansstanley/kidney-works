@@ -6,9 +6,9 @@ export default function AppBar() {
 		<Navbar expand="lg">
 			<Container>
 				<Navbar.Brand href="/">Hire-a-Patient</Navbar.Brand>
-				<Navbar.Toggle aria-controls="appbar" />
-				<Navbar.Collapse id="appbar">
-					<Nav className="me-auto">
+				<Navbar.Toggle />
+				<Navbar.Collapse>
+					<Nav className="justify-content-end w-100">
 						<Nav.Link href="#">About</Nav.Link>
 						<Nav.Link href={NAV_LINKS.JOBS}>Jobs</Nav.Link>
 						<Nav.Link href={NAV_LINKS.BLOG}>Blog</Nav.Link>
