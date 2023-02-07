@@ -1,4 +1,4 @@
-import { Container, Dropdown, Nav, Navbar, NavDropdown } from 'react-bootstrap';
+import { Container, Nav, Navbar, NavDropdown } from 'react-bootstrap';
 import { NAV_LINKS } from '../../utils/constants';
 
 export default function AppBar() {
@@ -15,6 +15,9 @@ export default function AppBar() {
             <NavDropdown title="my-username">
               <NavDropdown.Item href={NAV_LINKS.PROFILE}>
                 Profile
+              </NavDropdown.Item>
+              <NavDropdown.Item href={NAV_LINKS.JOBS_APPLIED}>
+                Job applications
               </NavDropdown.Item>
               <NavDropdown.Divider />
               <NavDropdown.Item href={NAV_LINKS.LOGIN}>
