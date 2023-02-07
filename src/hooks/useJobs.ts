@@ -15,8 +15,8 @@ export default function UseJobs() {
                 snapshot.docs.forEach((doc) => {
                     const appjob: AppJob = {
                         id:jobId,
-                        title:doc.data().role,
-                        company:doc.data().name,
+                        title:doc.data().title,
+                        company:doc.data().company,
                         description:doc.data().description,
                         requirements:doc.data().requirements,
                     }
