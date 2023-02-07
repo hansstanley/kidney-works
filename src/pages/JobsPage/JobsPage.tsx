@@ -1,4 +1,5 @@
 import { useCallback, useMemo, useState } from 'react';
+import UseJobs from '../../hooks/useJobs';
 import {
   Button,
   ButtonGroup,
@@ -14,7 +15,7 @@ import { NAV_LINKS } from '../../utils/constants';
 import JobFormModal from './JobFormModal';
 
 export default function JobsPage() {
-  const jobs = useLoaderData() as AppJob[];
+  const { jobs, setJobsState } = UseJobs();
   const [showForm, setShowForm] = useState(false);
   const [search, setSearch] = useState('');
 
@@ -37,7 +38,6 @@ export default function JobsPage() {
         job.description,
         job.company,
         job.requirements,
-        job.specialRequirements,
       ]
         .map((x) => x?.toLowerCase())
         .some((x) => x?.includes(lowerSearch));
