@@ -5,7 +5,7 @@ import React, {
   useContext,
   createContext,
 } from 'react';
-import { firebaseAuth } from '../utils/firebase';
+import { db, firebaseAuth } from '../utils/firebase';
 import {
   Auth,
   UserCredential,
@@ -17,6 +17,7 @@ import {
   signOut,
   GoogleAuthProvider,
 } from 'firebase/auth';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
 
 const googleAuthProvider = new GoogleAuthProvider();
 
@@ -73,11 +74,27 @@ export const useProvideAuth = () => {
     return sendPasswordResetEmail(firebaseAuth, email);
   }
   function signOutOfSession() {
+    // refresh the page
+    window.location.reload();
     return signOut(firebaseAuth);
   }
   useEffect(() => {
     //function that firebase notifies you if a user is set
-    const unsubsrcibe = firebaseAuth.onAuthStateChanged((user) => {
+    const unsubsrcibe = firebaseAuth.onAuthStateChanged(async (user) => {
+      if (user) {
+        // Add information to firestore whenever is a new user
+        const docRef = doc(db, "users", user?.uid);
+        const docSnap = await getDoc(docRef);
+        if (!docSnap.exists()) {
+          console.log("Add information to database");
+          await setDoc(docRef, {
+            email: user.email,
+            name: user.displayName,
+            avatar: user?.photoURL || "https://1fid.com/wp-content/uploads/2022/07/aesthetic-profile-picture-2-1024x1024.jpg",
+            eduLevel: null
+          });
+        }
+      }
       setUser(user);
     });
     return unsubsrcibe;
@@ -96,4 +113,4 @@ export const useProvideAuth = () => {
 
 export const useUserContext = (): UserContextState => {
   return useContext(UserStateContext);
-};
+}

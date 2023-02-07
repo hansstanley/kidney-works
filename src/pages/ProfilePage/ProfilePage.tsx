@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   Badge,
   Button,
@@ -7,74 +7,167 @@ import {
   Form,
   Image,
   InputGroup,
+  ProgressBar,
   Stack,
 } from 'react-bootstrap';
 import PageHero from '../../components/PageHero';
 import { useAuth } from '../../hooks/useAuth';
 import ProfileSection from './ProfileSection';
+import { arrayRemove, doc, onSnapshot, setDoc, updateDoc } from 'firebase/firestore';
+import { db, storage } from '../../utils/firebase';
+import UseSkills from '../../hooks/useSkills';
+import UseLimitations from '../../hooks/useLimitations';
+import useUserInfo from '../../hooks/useUserInfo';
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 
 export default function ProfilePage() {
   const { user } = useAuth();
-  const [fullName, setFullName] = useState(user?.displayName || '');
-  const [email, setEmail] = useState(user?.email || '');
-  const [skills, setSkills] = useState(['Writing', 'Speaking', 'Teamwork']);
-  const [limitations, setLimitations] = useState([
-    'Low blood pressure',
-    'Medication',
-    'Wheelchair',
-  ]);
+  const { skills, setSkillsState } = UseSkills();
+  const { limitations, setLimitationState } = UseLimitations();
+  const { name, email, setName, setEmail, avatar, eduLevel, setEduLevel } = useUserInfo();
+  const [inputName, setInputName] = useState(name);
+  const [inputEmail, setInputEmail] = useState(email);
+  const [inputSkill, setInputSkill] = useState("");
+  const [inputLimitation, setInputLimitation] = useState("");
+  const [progress, setProgress] = useState(0);
 
-  useEffect(() => {
-    if (user) {
-      setFullName(user.displayName || '');
-      setEmail(user.email || '');
-    }
-  }, [user]);
+  function updateUserInfo(name: String, email: String) {
+    const userSnap = doc(db, "users", user?.uid || '')
+    updateDoc(userSnap, {
+      name: name,
+      email: email,
+    })
+    onSnapshot(userSnap, (doc) => {
+      if (doc.exists()) {
+        setName(doc.data().name);
+        setEmail(doc.data().email)
+      }
+    })
+  }
 
-  const [skill, setSkill] = useState('');
-  const handleAddSkill = () => {
-    if (!skill.trim()) {
-      return;
-    }
+  function addSkillHandler(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+      addSkill(inputSkill);
+  }
 
-    const newSkills = [skill.trim(), ...skills];
+  function setSkills(newSkills: String[]) {
+    setSkillsState(newSkills);
+      setDoc(doc(db, "skills", user?.uid || ''), {skills: newSkills });
+  }
+
+  function addSkill(skill: String) {
+    const newSkills = [
+      ...skills, skill
+    ];
     setSkills(newSkills);
-    setSkill('');
+  }
+
+  function deleteSkill(skill: String) {
+    const skillsSnap = doc(db, "skills", user?.uid || '')
+    updateDoc(skillsSnap, {
+       skills:  arrayRemove(skill),
+    });
+    onSnapshot(skillsSnap, (doc) => {
+      if (doc.exists()) {
+        setSkillsState(doc.data().skills);
+      } else {
+        setSkillsState([]);
+      }
+    })
+  }
+
+  function addLimitationHandler(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    addLimitation(inputLimitation);
+  }
+
+  function setLimitations(newLimitations: String[]) {
+    setLimitationState(newLimitations);
+    setDoc(doc(db, "limitations", user?.uid || ''), {limitations: newLimitations});
+  }
+
+  function addLimitation(limitation: String) {
+    const newLimitations = [
+      ...limitations, limitation
+    ];
+    setLimitations(newLimitations);
+  }
+
+  function deleteLimitation(limitation: String) {
+    const limitationSnap = doc(db, "limitations", user?.uid || '')
+    updateDoc(limitationSnap, {
+        limitations: arrayRemove(limitation),
+    });
+    onSnapshot(limitationSnap, (doc) => {
+      if (doc.exists()) {
+        setLimitationState(doc.data().limitations);
+      } else {
+        setLimitationState([]);
+      }
+    })
+  }
+
+  function updateEduLevel(eduLevel: String) {
+    const userSnap = doc(db, "users", user?.uid || '')
+    updateDoc(userSnap, {
+      eduLevel: eduLevel,
+    })
+    onSnapshot(userSnap, (doc) => {
+      if (doc.exists()) {
+        setEduLevel(doc.data()?.eduLevel);
+      }
+    })
+  }
+
+  const uploadFiles = (file: File) => {
+    if (!file) return;
+    const storageRef = ref(storage);
+    const imageRef = ref(storageRef, `/image/${user?.uid}`);
+    const spaceRef = ref(imageRef, file.name);
+    const uploadTask = uploadBytesResumable(spaceRef, file);
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        const prog = Math.round(
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+        );
+        setProgress(prog);
+      },
+      (err) => console.log(err),
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((url) => {
+          updateDoc(doc(db, "users", user?.uid || ''), {
+            avatar: url,
+          });
+        });
+      }
+    );
   };
 
-  const handleDeleteSkill = (index: number) => {
-    const newSkills = skills.filter((_, i) => i !== index);
-    setSkills(newSkills);
+  const openFile = () => {
+    document.getElementById("fileID")?.click();
+    setProgress(0);
   };
 
-  const [limitation, setLimitation] = useState('');
-  const handleAddLimitation = () => {
-    if (!limitation.trim()) {
-      return;
+  const avatarHandler = (e: React.ChangeEvent<HTMLInputElement>)  => {
+    e.preventDefault();
+    if (e.target.files) {
+        uploadFiles(e.target.files[0]);
     }
-
-    const newLimitations = [limitation.trim(), ...limitations];
-    setLimitations(newLimitations);
-    setLimitation('');
-  };
-
-  const handleDeleteLimitation = (index: number) => {
-    const newLimitations = limitations.filter((_, i) => i !== index);
-    setLimitations(newLimitations);
-  };
+  }
 
   return (
     <Container className="pb-5">
       <PageHero title="Profile" />
       <Stack gap={4}>
         <ProfileSection>
+            <input id="fileID" type="file" accept="image/*" hidden onChange={avatarHandler}/>
           <Image
             roundedCircle
             className="hover-shadow m-2"
-            src="https://1fid.com/wp-content/uploads/2022/07/aesthetic-profile-picture-2-1024x1024.jpg"
+            src={avatar}
             style={{ width: 100, height: 100 }}
           />
-          <Button variant="secondary">Change</Button>
+          <Button variant="secondary" onClick={() => openFile()}>Change</Button>
+          <ProgressBar now={progress} />
         </ProfileSection>
         <ProfileSection title="Account">
           <Form>
@@ -83,8 +176,8 @@ export default function ProfilePage() {
               <Form.Control
                 type="text"
                 placeholder="Your name"
-                value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
+                defaultValue={name}
+                onChange={(e) => setInputName(e.target.value)}
               />
             </Form.Group>
             <Form.Group className="mb-3" controlId="email">
@@ -92,12 +185,12 @@ export default function ProfilePage() {
               <Form.Control
                 type="email"
                 placeholder="E.g. johndoe@abc.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                defaultValue={email}
+                onChange={(e) => setInputEmail(e.target.value)}
               />
             </Form.Group>
             <hr />
-            <Button type="submit" href="#">
+            <Button type="submit" href="#" onClick={() => updateUserInfo(inputName, inputEmail)}>
               Update
             </Button>
           </Form>
@@ -106,13 +199,22 @@ export default function ProfilePage() {
           <Form>
             <Form.Group className="mb-3" controlId="education">
               <Form.Label>Education level</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="E.g. High School Diploma"
-              />
+              <Form.Select onChange={e => setEduLevel(e.target.value)} value={eduLevel}>
+                <option value="0">No Education</option>
+                <option value="1">Primary Education</option>
+                <option value="2">Normal-level (N-level)</option>
+                <option value="3">GCE 'O' Level</option>
+                <option value="4">GEC 'A' Level</option>
+                <option value="5">National ITE Certificate (Nitec)</option>
+                <option value="6">Higher National ITE Certificate (Higher Nitec)</option>
+                <option value="7">Diploma</option>
+                <option value="8">Bachelor's Degree</option>
+                <option value="9">Master's Degree</option>
+                <option value="10">PhD</option>
+              </Form.Select>
             </Form.Group>
             <hr />
-            <Button type="submit" href="#">
+            <Button type="submit" href="#" onClick={() => updateEduLevel(eduLevel)}>
               Update
             </Button>
           </Form>
@@ -122,30 +224,15 @@ export default function ProfilePage() {
             <Form.Group className="mb-3" controlId="skills">
               <Form.Label>Skills</Form.Label>
               <InputGroup>
-                <Form.Control
-                  type="text"
-                  placeholder="E.g. public speaking"
-                  value={skill}
-                  onChange={(event) => {
-                    setSkill(event.target.value);
-                  }}
-                />
-                <Button
-                  variant="outline-secondary"
-                  disabled={!skill.trim()}
-                  onClick={handleAddSkill}>
-                  Add
-                </Button>
+                <Form.Control type="text" placeholder="E.g. public speaking" onChange={e => setInputSkill(e.target.value)}/>
+                <Button variant="outline-secondary" onClick={addSkillHandler} >Add</Button>
               </InputGroup>
               <Stack direction="horizontal" gap={1} className="mt-2">
                 {skills.map((s, i) => (
                   <Badge key={i} bg="secondary">
                     <Stack direction="horizontal" gap={2}>
                       {s}
-                      <CloseButton
-                        variant="white"
-                        onClick={() => handleDeleteSkill(i)}
-                      />
+                      <CloseButton variant="white" onClick={() => deleteSkill(s)} />
                     </Stack>
                   </Badge>
                 ))}
@@ -157,27 +244,16 @@ export default function ProfilePage() {
                 <Form.Control
                   type="text"
                   placeholder="E.g. low blood pressure"
-                  value={limitation}
-                  onChange={(event) => {
-                    setLimitation(event.target.value);
-                  }}
+                  onChange={e => setInputLimitation(e.target.value)}
                 />
-                <Button
-                  variant="outline-secondary"
-                  disabled={!limitation.trim()}
-                  onClick={handleAddLimitation}>
-                  Add
-                </Button>
+                <Button variant="outline-secondary" onClick={addLimitationHandler}>Add</Button>
               </InputGroup>
               <Stack direction="horizontal" gap={1} className="mt-2">
                 {limitations.map((l, i) => (
                   <Badge key={i} bg="secondary">
                     <Stack direction="horizontal" gap={2}>
                       {l}
-                      <CloseButton
-                        variant="white"
-                        onClick={() => handleDeleteLimitation(i)}
-                      />
+                      <CloseButton variant="white"  onClick={() => deleteLimitation(l)}/>
                     </Stack>
                   </Badge>
                 ))}
