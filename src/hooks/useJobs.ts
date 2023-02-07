@@ -27,7 +27,7 @@ export default function UseJobs() {
             })
         }
         getJobs();
-    },[jobs])
+    },[])
     
     return {jobs, setJobsState}
 }
