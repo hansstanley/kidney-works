@@ -13,30 +13,25 @@ import PageHero from '../../components/PageHero';
 import ProfileSection from './ProfileSection';
 import { useAuth } from '../../hook/useAuth';
 import useUserInfo from '../../hook/useUserInfo';
-import { doc, setDoc } from 'firebase/firestore';
+import { arrayRemove, doc, onSnapshot, setDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../../utils/firebase';
 import UseSkills from '../../hook/useSkills';
+import UseLimitations from '../../hook/useLimitations';
 
 export default function ProfilePage() {
   const { user } = useAuth();
   const { skills, setSkillsState } = UseSkills();
-  const { avatar , name} = useUserInfo();
-  // const [skills, setSkills] = useState(['Writing', 'Speaking', 'Teamwork']);
-  const [limitations, setLimitations] = useState([
-    'Low blood pressure',
-    'Medication',
-    'Wheelchair',
-  ]);
+  const { limitations, setLimitationState } = UseLimitations();
 
-  const [inputskill, setInputskill] = useState("");
-  
+  const [inputSkill, setInputSkill] = useState("");
+  const [inputLimitation, setInputLimitation] = useState("");
 
-  function addSkillHandler(e:React.MouseEvent<HTMLButtonElement, MouseEvent>) {
-      addSkill(inputskill);
+  function addSkillHandler(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+      addSkill(inputSkill);
   }
 
   function setSkills(newSkills: String[]) {
-    setSkillsState(newSkills)
+    setSkillsState(newSkills);
     // @ts-ignore
       setDoc(doc(db, "skills", user?.uid), {skills: newSkills });
   }
@@ -48,9 +43,53 @@ export default function ProfilePage() {
     setSkills(newSkills);
   }
 
-  const handleAddSkill = () => {};
+  function deleteSkill(skill: String) {
+    // @ts-ignore
+    const skillsSnap = doc(db, "skills", user?.uid)
+    updateDoc(skillsSnap, {
+       skills:  arrayRemove(skill),
+    });
+    onSnapshot(skillsSnap, (doc) => {
+      if (doc.exists()) {
+        setSkillsState(doc.data().skills);
+      } else {
+        setSkillsState([]);
+      }
+    })
+  }
 
-  const handleDeleteSkill = () => {};
+
+  function addLimitationHandler(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    addLimitation(inputLimitation);
+  }
+
+  function setLimitations(newLimitations: String[]) {
+    setLimitationState(newLimitations);
+    // @ts-ignore
+    setDoc(doc(db, "limitations", user?.uid), {limitations: newLimitations});
+  }
+
+  function addLimitation(limitation: String) {
+    const newLimitations = [
+      ...limitations, limitation
+    ];
+    setLimitations(newLimitations);
+  }
+
+  function deleteLimitation(limitation: String) {
+    // @ts-ignore
+    const limitationSnap = doc(db, "limitations", user?.uid)
+    updateDoc(limitationSnap, {
+        limitations: arrayRemove(limitation),
+    });
+    onSnapshot(limitationSnap, (doc) => {
+      if (doc.exists()) {
+        setLimitationState(doc.data().limitations);
+      } else {
+        setLimitationState([]);
+      }
+    })
+  }
 
   return (
     <Container className="pb-5">
@@ -101,7 +140,7 @@ export default function ProfilePage() {
             <Form.Group className="mb-3" controlId="skills">
               <Form.Label>Skills</Form.Label>
               <InputGroup>
-                <Form.Control type="text" placeholder="E.g. public speaking" onChange={e => setInputskill(e.target.value)} />
+                <Form.Control type="text" placeholder="E.g. public speaking" onChange={e => setInputSkill(e.target.value)} />
                 <Button variant="outline-secondary" onClick={addSkillHandler}>Add</Button>
               </InputGroup>
               <Stack direction="horizontal" gap={1} className="mt-2">
@@ -109,7 +148,7 @@ export default function ProfilePage() {
                   <Badge key={i} bg="secondary">
                     <Stack direction="horizontal" gap={2}>
                       {s}
-                      <CloseButton variant="white" />
+                      <CloseButton variant="white" onClick={() => deleteSkill(s)}/>
                     </Stack>
                   </Badge>
                 ))}
@@ -122,15 +161,16 @@ export default function ProfilePage() {
                 <Form.Control
                   type="text"
                   placeholder="E.g. low blood pressure"
+                  onChange={e => setInputLimitation(e.target.value)}
                 />
-                <Button variant="outline-secondary">Add</Button>
+                <Button variant="outline-secondary" onClick={addLimitationHandler}>Add</Button>
               </InputGroup>
               <Stack direction="horizontal" gap={1} className="mt-2">
                 {limitations.map((l, i) => (
                   <Badge key={i} bg="secondary">
                     <Stack direction="horizontal" gap={2}>
                       {l}
-                      <CloseButton variant="white" />
+                      <CloseButton variant="white"  onClick={() => deleteLimitation(l)}/>
                     </Stack>
                   </Badge>
                 ))}

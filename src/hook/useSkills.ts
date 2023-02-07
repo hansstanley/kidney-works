@@ -15,6 +15,8 @@ export default function UseSkills() {
 
             if (skillSnap.exists()) {
                 setSkillsState(skillSnap.data().skills);
+            }  else {
+                setSkillsState([]);
             }
         }
         getSkills();
