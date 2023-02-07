@@ -1,6 +1,5 @@
 import { useMemo, useState } from 'react';
 import { Button, Form, Modal } from 'react-bootstrap';
-import UseJobs from '../../hooks/useJobs';
 import AppJob from '../../types/job.app';
 import { addDoc, collection } from 'firebase/firestore';
 import { db } from "../../utils/firebase";
@@ -20,11 +19,8 @@ export default function JobFormModal({ job, show, onHide, jobs, setJobsState }: 
   const [newRequirements, setRequirements] = useState(job?.requirements || '');
 
   const isEdit = useMemo(() => !!job, [job]);
-  const [inputjob, setInputJob] = useState<AppJob>()
 
   function addJob(job: AppJob) {
-    console.log(job)
-    console.log(setJobsState)
     if (jobs && setJobsState) {
       const newJobs = [
         ...jobs, job
@@ -38,19 +34,21 @@ export default function JobFormModal({ job, show, onHide, jobs, setJobsState }: 
       })
 
       setJobsState(newJobs);
-      console.log(jobs)
     }
+  }
+
+  function getRandomInt(max: number) {
+    return Math.floor(Math.random() * max);
   }
 
   function makeJob() {
     const newJob: AppJob = {
-      id:0,
+      id:getRandomInt(Number.MAX_SAFE_INTEGER),
       title: newTitle,
       company: newCompany,
       description: newDescription,
       requirements: newRequirements,
     }
-    setInputJob(newJob);
     addJob(newJob);
   }
 
