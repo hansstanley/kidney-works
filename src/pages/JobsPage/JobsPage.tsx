@@ -2,7 +2,7 @@ import { useCallback, useMemo, useState } from 'react';
 import { Button, Container, Form, Stack } from 'react-bootstrap';
 import { useLoaderData } from 'react-router-dom';
 import PageHero from '../../components/PageHero';
-import { loadAll, loadAppliedStatuses } from '../../features/job/loaders';
+import { loadJobs, loadAppliedStatuses } from '../../features/job/loaders';
 import AppJobApplication from '../../types/job-application.app';
 import AppJob from '../../types/job.app';
 import JobFormModal from './JobFormModal';
@@ -14,7 +14,7 @@ export interface JobsPageData {
 }
 
 export async function loader(): Promise<JobsPageData> {
-  const [jobs, apps] = await Promise.all([loadAll(), loadAppliedStatuses()]);
+  const [jobs, apps] = await Promise.all([loadJobs(), loadAppliedStatuses()]);
   return { jobs, apps };
 }
 
