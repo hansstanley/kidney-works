@@ -1,8 +1,9 @@
 export const NAV_LINKS = {
-	HOME: '/',
-	LOGIN: '/login',
-	ABOUT: '/about',
-	JOBS: '/jobs',
-	BLOG: '/blog',
-	PROFILE: '/profile',
+  HOME: '/',
+  LOGIN: '/login',
+  ABOUT: '/about',
+  JOBS: '/jobs',
+  JOBS_APPLIED: '/applied',
+  BLOG: '/blog',
+  PROFILE: '/profile',
 };

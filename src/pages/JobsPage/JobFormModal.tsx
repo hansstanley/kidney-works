@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { Button, Form, Modal } from 'react-bootstrap';
 import AppJob from '../../types/job.app';
 
@@ -9,6 +9,13 @@ export interface JobFormModalProps {
 }
 
 export default function JobFormModal({ job, show, onHide }: JobFormModalProps) {
+  const [title, setTitle] = useState(job?.title || '');
+  const [description, setDescription] = useState(job?.description || '');
+  const [requirements, setRequirements] = useState(job?.requirements || '');
+  const [specialRequirements, setSpecialRequirements] = useState(
+    job?.specialRequirements || '',
+  );
+
   const isEdit = useMemo(() => !!job, [job]);
 
   return (
@@ -28,9 +35,11 @@ export default function JobFormModal({ job, show, onHide }: JobFormModalProps) {
           <Form.Group className="mb-3">
             <Form.Label>Job title</Form.Label>
             <Form.Control
+              autoFocus
               type="text"
               placeholder="E.g. Software engineer"
-              autoFocus
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
             />
           </Form.Group>
           <Form.Group className="mb-3">
@@ -39,6 +48,8 @@ export default function JobFormModal({ job, show, onHide }: JobFormModalProps) {
               placeholder="Describe the nature of this job"
               as="textarea"
               rows={4}
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
             />
           </Form.Group>
           <Form.Group className="mb-3">
@@ -47,6 +58,8 @@ export default function JobFormModal({ job, show, onHide }: JobFormModalProps) {
               placeholder="Describe the general requirements for anyone to accomplish this job"
               as="textarea"
               rows={2}
+              value={requirements}
+              onChange={(e) => setRequirements(e.target.value)}
             />
           </Form.Group>
           <Form.Group className="mb-3">
@@ -55,13 +68,15 @@ export default function JobFormModal({ job, show, onHide }: JobFormModalProps) {
               placeholder="Describe any other special requirements, e.g. physically strenuous"
               as="textarea"
               rows={2}
+              value={specialRequirements}
+              onChange={(e) => setSpecialRequirements(e.target.value)}
             />
           </Form.Group>
         </Form>
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={onHide}>
-          Close
+          Cancel
         </Button>
         <Button>{isEdit ? 'Edit' : 'Create'}</Button>
       </Modal.Footer>
