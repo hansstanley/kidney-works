@@ -1,7 +1,10 @@
 import { Container } from 'react-bootstrap';
 import { useLoaderData } from 'react-router-dom';
 import PageHero from '../../components/PageHero';
-import { loadApplied, loadAppliedStatuses } from '../../features/job/loaders';
+import {
+  loadAppliedJobs,
+  loadAppliedStatuses,
+} from '../../features/job/loaders';
 import AppJobApplication from '../../types/job-application.app';
 import AppJob from '../../types/job.app';
 import { JobsList } from '../JobsPage';
@@ -13,7 +16,7 @@ export interface JobAppsPageData {
 
 export async function loader(): Promise<JobAppsPageData> {
   const [jobs, apps] = await Promise.all([
-    loadApplied(),
+    loadAppliedJobs(),
     loadAppliedStatuses(),
   ]);
   return { jobs, apps };

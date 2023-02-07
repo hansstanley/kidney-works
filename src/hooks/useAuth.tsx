@@ -1,12 +1,11 @@
-
 import React, {
   ReactNode,
   useEffect,
   useState,
   useContext,
   createContext,
-} from 'react'
-import { firebaseAuth } from '../utils/firebase'
+} from 'react';
+import { firebaseAuth } from '../utils/firebase';
 import {
   Auth,
   UserCredential,
@@ -15,36 +14,36 @@ import {
   signInWithEmailAndPassword,
   sendPasswordResetEmail,
   signInWithPopup,
-  GoogleAuthProvider
-} from 'firebase/auth'
+  signOut,
+  GoogleAuthProvider,
+} from 'firebase/auth';
 
 const googleAuthProvider = new GoogleAuthProvider();
 
 export interface AuthProviderProps {
-  children?: ReactNode
+  children?: ReactNode;
 }
 
 export interface UserContextState {
-  isAuthenticated: boolean
-  isLoading: boolean
-  id?: string
+  isAuthenticated: boolean;
+  isLoading: boolean;
+  id?: string;
 }
 
 export const UserStateContext = createContext<UserContextState>(
   {} as UserContextState,
 );
 export interface AuthContextModel {
-  auth: Auth
-  user: User | null
-  signIn: (email: string, password: string) => Promise<UserCredential>
-  signInWithGoogle: () => Promise<UserCredential>
-  signUp: (email: string, password: string) => Promise<UserCredential>
-  sendPasswordResetEmail?: (email: string) => Promise<void>
+  auth: Auth;
+  user: User | null;
+  signIn: (email: string, password: string) => Promise<UserCredential>;
+  signInWithGoogle: () => Promise<UserCredential>;
+  signUp: (email: string, password: string) => Promise<UserCredential>;
+  signOutOfSession: () => Promise<void>;
+  sendPasswordResetEmail?: (email: string) => Promise<void>;
 }
 
-const AuthContext = createContext<AuthContextModel> (
-  {} as AuthContextModel,
-);
+const AuthContext = createContext<AuthContextModel>({} as AuthContextModel);
 
 export function useAuth(): AuthContextModel {
   return useContext(AuthContext);
@@ -53,44 +52,48 @@ export function useAuth(): AuthContextModel {
 export const ProvideAuth = ({ children }: AuthProviderProps): JSX.Element => {
   const auth = useProvideAuth();
   // @ts-ignore
-  return <AuthContext.Provider value={auth}>{children}</AuthContext.Provider>
+  return <AuthContext.Provider value={auth}>{children}</AuthContext.Provider>;
 };
 
 export const useProvideAuth = () => {
-  const [user, setUser] = useState<User | null>(null)
+  const [user, setUser] = useState<User | null>(null);
 
   function signUp(email: string, password: string): Promise<UserCredential> {
-    return createUserWithEmailAndPassword(firebaseAuth, email, password)
+    return createUserWithEmailAndPassword(firebaseAuth, email, password);
   }
 
   function signIn(email: string, password: string): Promise<UserCredential> {
-    return signInWithEmailAndPassword(firebaseAuth, email, password)
+    return signInWithEmailAndPassword(firebaseAuth, email, password);
   }
 
-  function signInWithGoogle(): Promise<UserCredential>{
-      return signInWithPopup(firebaseAuth, googleAuthProvider)
+  function signInWithGoogle(): Promise<UserCredential> {
+    return signInWithPopup(firebaseAuth, googleAuthProvider);
   }
   function resetPassword(email: string): Promise<void> {
-    return sendPasswordResetEmail(firebaseAuth, email)
+    return sendPasswordResetEmail(firebaseAuth, email);
+  }
+  function signOutOfSession() {
+    return signOut(firebaseAuth);
   }
   useEffect(() => {
     //function that firebase notifies you if a user is set
     const unsubsrcibe = firebaseAuth.onAuthStateChanged((user) => {
-      setUser(user)
-    })
-    return unsubsrcibe
-  }, [])
+      setUser(user);
+    });
+    return unsubsrcibe;
+  }, []);
 
-  return  {
+  return {
     signUp,
     user,
-    signIn, 
+    signIn,
     resetPassword,
     firebaseAuth,
-    signInWithGoogle
-  }
-}
+    signInWithGoogle,
+    signOutOfSession,
+  };
+};
 
 export const useUserContext = (): UserContextState => {
   return useContext(UserStateContext);
-}
+};

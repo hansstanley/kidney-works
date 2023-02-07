@@ -36,6 +36,15 @@ export default function JobsList({
     ['accepted', 'success'],
   ]);
 
+  const applyButton = (job: AppJob) => {
+    const hasApplied = appliedStatuses?.map((s) => s.jobId).includes(job.id);
+    if (hideActions || hasApplied) {
+      return null;
+    } else {
+      return <Button>Apply</Button>;
+    }
+  };
+
   return (
     <Stack gap={2}>
       {hasJobs ? (
@@ -54,7 +63,7 @@ export default function JobsList({
                 <Button variant="light" href={`${NAV_LINKS.JOBS}/${j.id}`}>
                   View
                 </Button>
-                {hideActions ? null : <Button>Apply</Button>}
+                {applyButton(j)}
               </ButtonGroup>
             </Card.Body>
             {hasStatuses ? (

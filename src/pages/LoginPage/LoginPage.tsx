@@ -1,9 +1,20 @@
-import { Button, Card, Col, Container, Row, Stack } from 'react-bootstrap';
-import PageHero from '../../components/PageHero';
+import { useEffect, useMemo } from 'react';
+import { Button, Card, Col, Container, Row } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
+import { NAV_LINKS } from '../../utils/constants';
 
 export default function LoginPage() {
-  const { signInWithGoogle } = useAuth();
+  const navigate = useNavigate();
+  const { signInWithGoogle, signOutOfSession, user } = useAuth();
+
+  const hasAuth = useMemo(() => !!user, [user]);
+
+  useEffect(() => {
+    if (hasAuth) {
+      navigate(NAV_LINKS.HOME);
+    }
+  }, [hasAuth, navigate]);
 
   return (
     <Container
@@ -13,10 +24,22 @@ export default function LoginPage() {
         <Col xs={6} className="mx-auto">
           <Card className="text-center">
             <Card.Body>
-              <Card.Title>Welcome</Card.Title>
-              <Card.Text>Find a new career today!</Card.Text>
+              <Card.Title>
+                <h1 className="display-5">Welcome</h1>
+              </Card.Title>
+              <Card.Text>
+                {hasAuth
+                  ? `You have already signed in as ${user?.displayName}.`
+                  : 'Find a new career today!'}
+              </Card.Text>
               <hr />
-              <Button onClick={signInWithGoogle}>Sign in with Google</Button>
+              {hasAuth ? (
+                <Button variant="secondary" onClick={signOutOfSession}>
+                  Sign out
+                </Button>
+              ) : (
+                <Button onClick={signInWithGoogle}>Sign in with Google</Button>
+              )}
             </Card.Body>
           </Card>
         </Col>
