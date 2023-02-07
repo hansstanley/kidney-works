@@ -24,13 +24,12 @@ export default function ProfilePage() {
   const { user } = useAuth();
   const { skills, setSkillsState } = UseSkills();
   const { limitations, setLimitationState } = UseLimitations();
-  const { name, email, setName, setEmail, avatar } = useUserInfo();
+  const { name, email, setName, setEmail, avatar, eduLevel, setEduLevel } = useUserInfo();
   const [inputName, setInputName] = useState(name);
   const [inputEmail, setInputEmail] = useState(email);
   const [inputSkill, setInputSkill] = useState("");
   const [inputLimitation, setInputLimitation] = useState("");
   const [progress, setProgress] = useState(0);
-
 
   function updateUserInfo(name: String, email: String) {
     const userSnap = doc(db, "users", user?.uid || '')
@@ -106,6 +105,18 @@ export default function ProfilePage() {
     })
   }
 
+  function updateEduLevel(eduLevel: String) {
+    const userSnap = doc(db, "users", user?.uid || '')
+    updateDoc(userSnap, {
+      eduLevel: eduLevel,
+    })
+    onSnapshot(userSnap, (doc) => {
+      if (doc.exists()) {
+        setEduLevel(doc.data()?.eduLevel);
+      }
+    })
+  }
+
   const uploadFiles = (file: File) => {
     if (!file) return;
     const storageRef = ref(storage);
@@ -155,9 +166,8 @@ export default function ProfilePage() {
             src={avatar}
             style={{ width: 100, height: 100 }}
           />
-          
           <Button variant="secondary" onClick={() => openFile()}>Change</Button>
-          <ProgressBar now={progress}></ProgressBar>
+          <ProgressBar now={progress} />
         </ProfileSection>
         <ProfileSection title="Account">
           <Form>
@@ -189,13 +199,22 @@ export default function ProfilePage() {
           <Form>
             <Form.Group className="mb-3" controlId="education">
               <Form.Label>Education level</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="E.g. High School Diploma"
-              />
+              <Form.Select onChange={e => setEduLevel(e.target.value)} value={eduLevel}>
+                <option value="0">No Education</option>
+                <option value="1">Primary Education</option>
+                <option value="2">Normal-level (N-level)</option>
+                <option value="3">GCE 'O' Level</option>
+                <option value="4">GEC 'A' Level</option>
+                <option value="5">National ITE Certificate (Nitec)</option>
+                <option value="6">Higher National ITE Certificate (Higher Nitec)</option>
+                <option value="7">Diploma</option>
+                <option value="8">Bachelor's Degree</option>
+                <option value="9">Master's Degree</option>
+                <option value="10">PhD</option>
+              </Form.Select>
             </Form.Group>
             <hr />
-            <Button type="submit" href="#">
+            <Button type="submit" href="#" onClick={() => updateEduLevel(eduLevel)}>
               Update
             </Button>
           </Form>

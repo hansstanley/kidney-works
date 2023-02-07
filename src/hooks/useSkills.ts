@@ -11,7 +11,6 @@ export default function UseSkills() {
         async function getSkills() {
             const skillsRef = doc(db, "skills", user?.uid || '');
             const skillSnap = await getDoc(skillsRef);
-
             if (skillSnap.exists()) {
                 setSkillsState(skillSnap.data().skills);
             }  else {
