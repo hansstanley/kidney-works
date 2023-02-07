@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Badge,
   Button,
@@ -12,18 +12,18 @@ import {
 import PageHero from '../../components/PageHero';
 import { useAuth } from '../../hooks/useAuth';
 import ProfileSection from './ProfileSection';
-import { useAuth } from '../../hook/useAuth';
-import useUserInfo from '../../hook/useUserInfo';
 import { arrayRemove, doc, onSnapshot, setDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../../utils/firebase';
-import UseSkills from '../../hook/useSkills';
-import UseLimitations from '../../hook/useLimitations';
+import UseSkills from '../../hooks/useSkills';
+import UseLimitations from '../../hooks/useLimitations';
+
 
 export default function ProfilePage() {
   const { user } = useAuth();
   const { skills, setSkillsState } = UseSkills();
   const { limitations, setLimitationState } = UseLimitations();
-
+  const [fullName, setFullName] = useState(user?.displayName || '');
+  const [email, setEmail] = useState(user?.email || '');
   const [inputSkill, setInputSkill] = useState("");
   const [inputLimitation, setInputLimitation] = useState("");
 

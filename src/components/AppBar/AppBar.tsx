@@ -2,9 +2,6 @@ import { useMemo } from 'react';
 import { Button, Container, Nav, Navbar, NavDropdown } from 'react-bootstrap';
 import { useAuth } from '../../hooks/useAuth';
 import { NAV_LINKS } from '../../utils/constants';
-import { useAuth } from '../../hook/useAuth';
-import { useEffect, useState } from 'react';
-import useUserInfo from '../../hook/useUserInfo';
 
 export default function AppBar() {
   const { user, signOutOfSession } = useAuth();
