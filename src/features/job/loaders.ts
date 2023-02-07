@@ -1,4 +1,4 @@
-import { LoaderFunctionArgs } from 'react-router-dom';
+import AppJobApplication from '../../types/job-application.app';
 import AppJob from '../../types/job.app';
 
 const jobs: AppJob[] = [
@@ -22,14 +22,30 @@ const jobs: AppJob[] = [
   },
 ];
 
-export async function loadOne({ params }: LoaderFunctionArgs) {
-  const jobId = parseInt(params.jobId || '');
-  if (isNaN(jobId)) {
-    return null;
+const jobStatuses: AppJobApplication[] = [
+  { jobId: 2, status: 'reviewed' },
+  { jobId: 3, status: 'accepted' },
+];
+
+export async function loadJob(jobId: number) {
+  if (jobId < 0) {
+    return undefined;
   }
-  return jobs.find((j) => j.id === jobId) || null;
+  return jobs.find((j) => j.id === jobId);
 }
 
-export async function loadAll() {
+export async function loadJobs() {
   return jobs;
+}
+
+export async function loadAppliedJobs() {
+  return jobs.filter((j) => jobStatuses.map((s) => s.jobId).includes(j.id));
+}
+
+export async function loadAppliedStatus(jobId: number) {
+  return jobId < 0 ? undefined : jobStatuses.find((j) => jobId === j.jobId);
+}
+
+export async function loadAppliedStatuses() {
+  return jobStatuses;
 }

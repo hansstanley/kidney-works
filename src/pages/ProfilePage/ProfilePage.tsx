@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useState } from 'react';
 import {
   Badge,
   Button,
@@ -10,6 +10,7 @@ import {
   Stack,
 } from 'react-bootstrap';
 import PageHero from '../../components/PageHero';
+import { useAuth } from '../../hooks/useAuth';
 import ProfileSection from './ProfileSection';
 import { useAuth } from '../../hook/useAuth';
 import useUserInfo from '../../hook/useUserInfo';
@@ -72,6 +73,39 @@ export default function ProfilePage() {
     ];
     setLimitations(newLimitations);
   }
+  useEffect(() => {
+    if (user) {
+      setFullName(user.displayName || '');
+      setEmail(user.email || '');
+    }
+  }, [user]);
+
+  const [skill, setSkill] = useState('');
+  const handleAddSkill = () => {
+    if (!skill.trim()) {
+      return;
+    }
+
+    const newSkills = [skill.trim(), ...skills];
+    setSkills(newSkills);
+    setSkill('');
+  };
+
+  const handleDeleteSkill = (index: number) => {
+    const newSkills = skills.filter((_, i) => i !== index);
+    setSkills(newSkills);
+  };
+
+  const [limitation, setLimitation] = useState('');
+  const handleAddLimitation = () => {
+    if (!limitation.trim()) {
+      return;
+    }
+
+    const newLimitations = [limitation.trim(), ...limitations];
+    setLimitations(newLimitations);
+    setLimitation('');
+  };
 
   function deleteLimitation(limitation: String) {
     const limitationSnap = doc(db, "limitations", user?.uid || '')
@@ -100,15 +134,25 @@ export default function ProfilePage() {
           />
           <Button variant="secondary">Change</Button>
         </ProfileSection>
-        <ProfileSection>
+        <ProfileSection title="Account">
           <Form>
-            <Form.Group className="mb-3" controlId="username">
-              <Form.Label>Username</Form.Label>
-              <Form.Control type="username" placeholder="Username" />
-            </Form.Group>
             <Form.Group className="mb-3" controlId="fullname">
               <Form.Label>Full name</Form.Label>
-              <Form.Control type="text" placeholder="Your name" />
+              <Form.Control
+                type="text"
+                placeholder="Your name"
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3" controlId="email">
+              <Form.Label>Email</Form.Label>
+              <Form.Control
+                type="email"
+                placeholder="E.g. johndoe@abc.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
             </Form.Group>
             <hr />
             <Button type="submit" href="#">
@@ -116,12 +160,8 @@ export default function ProfilePage() {
             </Button>
           </Form>
         </ProfileSection>
-        <ProfileSection>
+        <ProfileSection title="Education">
           <Form>
-            <Form.Group className="mb-3" controlId="email">
-              <Form.Label>Email</Form.Label>
-              <Form.Control type="email" placeholder="E.g. johndoe@abc.com" />
-            </Form.Group>
             <Form.Group className="mb-3" controlId="education">
               <Form.Label>Education level</Form.Label>
               <Form.Control
@@ -129,37 +169,39 @@ export default function ProfilePage() {
                 placeholder="E.g. High School Diploma"
               />
             </Form.Group>
+            <hr />
+            <Button type="submit" href="#">
+              Update
+            </Button>
           </Form>
         </ProfileSection>
-        <ProfileSection>
+        <ProfileSection title="Skills and limitations">
           <Form>
             <Form.Group className="mb-3" controlId="skills">
               <Form.Label>Skills</Form.Label>
               <InputGroup>
-                <Form.Control type="text" placeholder="E.g. public speaking" onChange={e => setInputSkill(e.target.value)} />
-                <Button variant="outline-secondary" onClick={addSkillHandler}>Add</Button>
+                <Form.Control type="text" placeholder="E.g. public speaking" />
+                <Button variant="outline-secondary">Add</Button>
               </InputGroup>
               <Stack direction="horizontal" gap={1} className="mt-2">
                 {skills.map((s, i) => (
                   <Badge key={i} bg="secondary">
                     <Stack direction="horizontal" gap={2}>
                       {s}
-                      <CloseButton variant="white" onClick={() => deleteSkill(s)}/>
+                      <CloseButton variant="white" />
                     </Stack>
                   </Badge>
                 ))}
               </Stack>
             </Form.Group>
-            <Form.Group></Form.Group>
             <Form.Group className="mb-3" controlId="physicalLimitations">
               <Form.Label>Physical limitations</Form.Label>
               <InputGroup>
                 <Form.Control
                   type="text"
                   placeholder="E.g. low blood pressure"
-                  onChange={e => setInputLimitation(e.target.value)}
                 />
-                <Button variant="outline-secondary" onClick={addLimitationHandler}>Add</Button>
+                <Button variant="outline-secondary">Add</Button>
               </InputGroup>
               <Stack direction="horizontal" gap={1} className="mt-2">
                 {limitations.map((l, i) => (
