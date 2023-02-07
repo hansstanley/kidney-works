@@ -9,8 +9,7 @@ export default function UseLimitations() {
 
     useEffect(() => {
         async function getLimitations() {
-            //@ts-ignore
-            const limitationRef = doc(db, "limitations", user?.uid);
+            const limitationRef = doc(db, "limitations", user?.uid || '');
             const limitationSnap = await getDoc(limitationRef);
 
             if (limitationSnap.exists()) {

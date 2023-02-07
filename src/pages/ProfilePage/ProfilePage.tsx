@@ -32,8 +32,7 @@ export default function ProfilePage() {
 
   function setSkills(newSkills: String[]) {
     setSkillsState(newSkills);
-    // @ts-ignore
-      setDoc(doc(db, "skills", user?.uid), {skills: newSkills });
+      setDoc(doc(db, "skills", user?.uid || ''), {skills: newSkills });
   }
 
   function addSkill(skill: String) {
@@ -44,8 +43,7 @@ export default function ProfilePage() {
   }
 
   function deleteSkill(skill: String) {
-    // @ts-ignore
-    const skillsSnap = doc(db, "skills", user?.uid)
+    const skillsSnap = doc(db, "skills", user?.uid || '')
     updateDoc(skillsSnap, {
        skills:  arrayRemove(skill),
     });
@@ -65,8 +63,7 @@ export default function ProfilePage() {
 
   function setLimitations(newLimitations: String[]) {
     setLimitationState(newLimitations);
-    // @ts-ignore
-    setDoc(doc(db, "limitations", user?.uid), {limitations: newLimitations});
+    setDoc(doc(db, "limitations", user?.uid || ''), {limitations: newLimitations});
   }
 
   function addLimitation(limitation: String) {
@@ -77,8 +74,7 @@ export default function ProfilePage() {
   }
 
   function deleteLimitation(limitation: String) {
-    // @ts-ignore
-    const limitationSnap = doc(db, "limitations", user?.uid)
+    const limitationSnap = doc(db, "limitations", user?.uid || '')
     updateDoc(limitationSnap, {
         limitations: arrayRemove(limitation),
     });

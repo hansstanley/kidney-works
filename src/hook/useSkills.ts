@@ -9,8 +9,7 @@ export default function UseSkills() {
 
     useEffect(() => {
         async function getSkills() {
-            //@ts-ignore
-            const skillsRef = doc(db, "skills", user?.uid);
+            const skillsRef = doc(db, "skills", user?.uid || '');
             const skillSnap = await getDoc(skillsRef);
 
             if (skillSnap.exists()) {
