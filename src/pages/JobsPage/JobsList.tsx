@@ -49,7 +49,7 @@ export default function JobsList({
               <Card.Title>{j.title}</Card.Title>
               <Card.Text>{j.company}</Card.Text>
               <Card.Text>Description:<br></br>{j.description}</Card.Text>
-              <Card.Text>Requirement:<br></br>{j.requirements}</Card.Text>
+              <Card.Text>Requirement(s):<br></br>{j.requirements}</Card.Text>
               <ButtonGroup>
                 <Button variant="light" href={`${NAV_LINKS.JOBS}/${j.id}`}>
                   View
