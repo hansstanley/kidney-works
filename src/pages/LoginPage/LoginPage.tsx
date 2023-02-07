@@ -1,6 +1,6 @@
 import { Button, Card, Col, Container, Row, Stack } from 'react-bootstrap';
 import PageHero from '../../components/PageHero';
-import { useAuth } from '../../hook/useAuth';
+import { useAuth } from '../../hooks/useAuth';
 
 export default function LoginPage() {
   const { signInWithGoogle } = useAuth();
