@@ -1,5 +1,3 @@
-import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import HomePage from './pages/HomePage';
@@ -11,28 +9,15 @@ import BlogPage from './pages/BlogPage';
 import ProfilePage from './pages/ProfilePage';
 import JobDetailPage from './pages/JobDetailPage';
 import ErrorPage from './pages/ErrorPage';
-import {
-  loadAll as allJobsLoader,
-  loadOne as oneJobLoader,
-} from './features/job/loaders';
 import AboutPage from './pages/AboutPage';
 import JobAppsPage from './pages/JobAppsPage';
-import { loader as jobAppsPageLoader } from './pages/JobAppsPage/JobAppsPage';
 
 const router = createBrowserRouter([
   { path: NAV_LINKS.HOME, element: <HomePage />, errorElement: <ErrorPage /> },
   { path: NAV_LINKS.LOGIN, element: <LoginPage /> },
-  { path: NAV_LINKS.JOBS, element: <JobsPage />, loader: allJobsLoader },
-  {
-    path: `${NAV_LINKS.JOBS}/:jobId`,
-    element: <JobDetailPage />,
-    loader: oneJobLoader,
-  },
-  {
-    path: NAV_LINKS.JOBS_APPLIED,
-    element: <JobAppsPage />,
-    loader: jobAppsPageLoader,
-  },
+  { path: NAV_LINKS.JOBS, element: <JobsPage /> },
+  { path: `${NAV_LINKS.JOBS}/:jobId`, element: <JobDetailPage /> },
+  { path: NAV_LINKS.JOBS_APPLIED, element: <JobAppsPage /> },
   { path: NAV_LINKS.BLOG, element: <BlogPage /> },
   { path: NAV_LINKS.PROFILE, element: <ProfilePage /> },
   { path: NAV_LINKS.ABOUT, element: <AboutPage /> },

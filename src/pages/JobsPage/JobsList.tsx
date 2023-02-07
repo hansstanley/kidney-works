@@ -9,13 +9,13 @@ import { NAV_LINKS } from '../../utils/constants';
 export interface JobsListProps {
   jobs?: AppJob[];
   hideActions?: boolean;
-  appliedStatuses?: AppJobApplication[];
+  jobApplications?: AppJobApplication[];
 }
 
 export default function JobsList({
   jobs,
   hideActions,
-  appliedStatuses,
+  jobApplications: appliedStatuses,
 }: JobsListProps) {
   const hasJobs = useMemo(() => !!jobs?.length, [jobs]);
   const hasStatuses = useMemo(() => !!appliedStatuses, [appliedStatuses]);
@@ -36,6 +36,15 @@ export default function JobsList({
     ['accepted', 'success'],
   ]);
 
+  const applyButton = (job: AppJob) => {
+    const hasApplied = appliedStatuses?.map((s) => s.jobId).includes(job.id);
+    if (hideActions || hasApplied) {
+      return null;
+    } else {
+      return <Button>Apply</Button>;
+    }
+  };
+
   return (
     <Stack gap={2}>
       {hasJobs ? (
@@ -47,14 +56,20 @@ export default function JobsList({
             )}>
             <Card.Body>
               <Card.Title>{j.title}</Card.Title>
-              <Card.Text>{j.company}</Card.Text>
-              <Card.Text>Description:<br></br>{j.description}</Card.Text>
-              <Card.Text>Requirement(s):<br></br>{j.requirements}</Card.Text>
+              <Card.Subtitle>{j.company}</Card.Subtitle>
+              <Card.Text>
+                Description:<br></br>
+                {j.description}
+              </Card.Text>
+              <Card.Text>
+                Requirement:<br></br>
+                {j.requirements}
+              </Card.Text>
               <ButtonGroup>
                 <Button variant="light" href={`${NAV_LINKS.JOBS}/${j.id}`}>
                   View
                 </Button>
-                {hideActions ? null : <Button>Apply</Button>}
+                {applyButton(j)}
               </ButtonGroup>
             </Card.Body>
             {hasStatuses ? (

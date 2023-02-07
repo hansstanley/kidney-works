@@ -3,6 +3,7 @@ import { Button, Form, Modal } from 'react-bootstrap';
 import AppJob from '../../types/job.app';
 import { addDoc, collection } from 'firebase/firestore';
 import { db } from "../../utils/firebase";
+import { v1 as uuidv1 } from 'uuid';
 
 export interface JobFormModalProps {
   job?: AppJob;
@@ -43,7 +44,7 @@ export default function JobFormModal({ job, show, onHide, jobs, setJobsState }: 
 
   function makeJob() {
     const newJob: AppJob = {
-      id:getRandomInt(Number.MAX_SAFE_INTEGER),
+      id:uuidv1(),
       title: newTitle,
       company: newCompany,
       description: newDescription,

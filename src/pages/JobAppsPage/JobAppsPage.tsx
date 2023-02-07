@@ -1,31 +1,26 @@
-import { Container } from 'react-bootstrap';
-import { useLoaderData } from 'react-router-dom';
+import { Button, Container, Stack } from 'react-bootstrap';
 import PageHero from '../../components/PageHero';
-import { loadApplied, loadAppliedStatuses } from '../../features/job/loaders';
-import AppJobApplication from '../../types/job-application.app';
-import AppJob from '../../types/job.app';
+import { useAuth } from '../../hooks/useAuth';
+import useJobs from '../../hooks/useJobs';
+import { NAV_LINKS } from '../../utils/constants';
 import { JobsList } from '../JobsPage';
 
-export interface JobAppsPageData {
-  jobs: AppJob[];
-  apps: AppJobApplication[];
-}
-
-export async function loader(): Promise<JobAppsPageData> {
-  const [jobs, apps] = await Promise.all([
-    loadApplied(),
-    loadAppliedStatuses(),
-  ]);
-  return { jobs, apps };
-}
-
 export default function JobAppsPage() {
-  const { jobs, apps } = useLoaderData() as JobAppsPageData;
+  const { user } = useAuth();
+  const { findAppliedJobs, findJobApplications } = useJobs();
+
+  const jobs = findAppliedJobs(user?.uid);
+  const applications = findJobApplications(user?.uid);
 
   return (
     <Container>
       <PageHero title="My Applications" tagline="Track your job applications" />
-      <JobsList jobs={jobs} appliedStatuses={apps} hideActions />
+      <Stack gap={3}>
+        <Button className="align-self-start" href={NAV_LINKS.JOBS}>
+          Apply for more
+        </Button>
+        <JobsList jobs={jobs} jobApplications={applications} hideActions />
+      </Stack>
     </Container>
   );
 }

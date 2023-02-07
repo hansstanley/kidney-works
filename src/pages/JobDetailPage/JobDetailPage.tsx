@@ -1,16 +1,21 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { Button, ButtonGroup, Card, Container, Stack } from 'react-bootstrap';
-import { useLoaderData } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import PageHero from '../../components/PageHero';
-import AppJob from '../../types/job.app';
+import { useAuth } from '../../hooks/useAuth';
+import useJobs from '../../hooks/useJobs';
 import { NAV_LINKS } from '../../utils/constants';
 import { JobFormModal } from '../JobsPage';
 
 export default function JobDetailPage() {
+  const { user } = useAuth();
+  const { jobId } = useParams();
+  const { findJob, isJobApplied } = useJobs();
+  const job = findJob(jobId);
   const [showForm, setShowForm] = useState(false);
-  const job = useLoaderData() as AppJob;
 
-  const hasJob = useMemo(() => !!job, [job]);
+  const hasJob = !!job;
+  const hasApplied = isJobApplied(user?.uid)(jobId || '');
 
   const handleShowEditForm = () => {
     setShowForm(true);
@@ -37,29 +42,38 @@ export default function JobDetailPage() {
         {hasJob ? (
           <Card>
             <Card.Body>
+              <Card.Title>Description</Card.Title>
               <Card.Text>{job.description}</Card.Text>
+              <hr />
+              <Card.Title>Job requirements</Card.Title>
+              <Card.Text>{job.requirements || 'Nothing here.'}</Card.Text>
               <hr />
               <ButtonGroup>
                 <Button variant="light" onClick={handleShowEditForm}>
                   Edit
                 </Button>
-                <Button>Apply</Button>
+                {hasApplied ? null : <Button>Apply</Button>}
               </ButtonGroup>
             </Card.Body>
           </Card>
         ) : (
-          <Card>
-            <Card.Body>
-              <Card.Text>
-                This job does not exist or has been deleted, please try a
-                different job.
-              </Card.Text>
-              <Button href={NAV_LINKS.JOBS}>Return to job list</Button>
-            </Card.Body>
-          </Card>
+          <MissingJobPlaceholder />
         )}
       </Stack>
       <JobFormModal job={job} show={showForm} onHide={handleHideEditForm} />
     </Container>
+  );
+}
+
+function MissingJobPlaceholder() {
+  return (
+    <Card>
+      <Card.Body>
+        <Card.Text>
+          This job does not exist or has been deleted, please try a different
+          job.
+        </Card.Text>
+      </Card.Body>
+    </Card>
   );
 }
