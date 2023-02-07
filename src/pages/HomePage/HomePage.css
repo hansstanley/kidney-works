@@ -5,3 +5,19 @@
     align-items: center;
     flex-direction: column;
 }
+
+/* The animation code */
+@keyframes example {
+    from {background-color: red;}
+    to {background-color: yellow;}
+}
+
+.button_container {
+    display: flex;
+}
+
+.button {
+    width: 113px;
+    justify-content: center;
+}
+

@@ -4,6 +4,7 @@ import {
   ButtonGroup,
   Card,
   Container,
+  Fade,
   Form,
   Stack,
 } from 'react-bootstrap';
@@ -53,45 +54,49 @@ export default function JobsPage() {
         title="Start your journey today"
         tagline="Look for accessible jobs that fit your needs and interests, then hit apply!"
       />
-      <Stack gap={3}>
-        <Button className="align-self-end" onClick={handleShowCreateForm}>
-          Create a new job
-        </Button>
-        <Form>
-          <Stack direction="horizontal" gap={2}>
-            <Form.Control
-              type="search"
-              placeholder="Search"
-              className="w-25"
-              onChange={(e) => {
-                setSearch(e.target.value);
-              }}
-            />
-          </Stack>
-        </Form>
-        {visibleJobs.length ? (
-          visibleJobs.map((j) => (
-            <Card key={j.id}>
+		  <Fade appear={true} in={true}>
+
+        <Stack gap={3}>
+          <Button className="align-self-end" onClick={handleShowCreateForm}>
+            Create a new job
+          </Button>
+          <Form>
+            <Stack direction="horizontal" gap={2}>
+              <Form.Control
+                type="search"
+                placeholder="Search"
+                className="w-25"
+                onChange={(e) => {
+                  setSearch(e.target.value);
+                }}
+              />
+            </Stack>
+          </Form>
+          {visibleJobs.length ? (
+            visibleJobs.map((j) => (
+              <Card key={j.id}>
+                <Card.Body>
+                  <Card.Title>{j.title}</Card.Title>
+                  <Card.Text>{j.description}</Card.Text>
+                  <ButtonGroup>
+                    <Button variant="light" href={`${NAV_LINKS.JOBS}/${j.id}`}>
+                      View
+                    </Button>
+                    <Button>Apply</Button>
+                  </ButtonGroup>
+                </Card.Body>
+              </Card>
+            ))
+          ) : (
+            <Card>
               <Card.Body>
-                <Card.Title>{j.title}</Card.Title>
-                <Card.Text>{j.description}</Card.Text>
-                <ButtonGroup>
-                  <Button variant="light" href={`${NAV_LINKS.JOBS}/${j.id}`}>
-                    View
-                  </Button>
-                  <Button>Apply</Button>
-                </ButtonGroup>
+                <Card.Text>No jobs found.</Card.Text>
               </Card.Body>
             </Card>
-          ))
-        ) : (
-          <Card>
-            <Card.Body>
-              <Card.Text>No jobs found.</Card.Text>
-            </Card.Body>
-          </Card>
-        )}
-      </Stack>
+          )}
+        </Stack>
+      </Fade>
+      
       <JobFormModal show={showForm} onHide={handleHideCreateForm} />
     </Container>
   );

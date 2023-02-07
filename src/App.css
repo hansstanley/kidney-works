@@ -36,3 +36,9 @@
     transform: rotate(360deg);
   }
 }
+
+
+.fade {
+  -webkit-transition-duration: 1s; /* Safari */
+  transition-duration: 1s;
+}
