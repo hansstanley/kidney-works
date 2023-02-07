@@ -8,7 +8,6 @@ import {
   Form,
   Stack,
 } from 'react-bootstrap';
-import { useLoaderData } from 'react-router-dom';
 import PageHero from '../../components/PageHero';
 import AppJob from '../../types/job.app';
 import { NAV_LINKS } from '../../utils/constants';

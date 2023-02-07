@@ -16,7 +16,7 @@ export default function UseJobs() {
                     const appjob: AppJob = {
                         id:jobId,
                         title:doc.data().role,
-                        company:doc.data().company,
+                        company:doc.data().name,
                         description:doc.data().description,
                         requirements:doc.data().requirements,
                     }
