@@ -2,18 +2,20 @@ import { useState } from 'react';
 import { Button, ButtonGroup, Card, Container, Stack } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 import PageHero from '../../components/PageHero';
+import { useAuth } from '../../hooks/useAuth';
 import useJobs from '../../hooks/useJobs';
 import { NAV_LINKS } from '../../utils/constants';
 import { JobFormModal } from '../JobsPage';
 
 export default function JobDetailPage() {
+  const { user } = useAuth();
   const { jobId } = useParams();
-  const { findJob } = useJobs();
+  const { findJob, isJobApplied } = useJobs();
   const job = findJob(jobId);
   const [showForm, setShowForm] = useState(false);
 
   const hasJob = !!job;
-  const hasApplied = false; // TODO: determine whether job has been applied to
+  const hasApplied = isJobApplied(user?.uid)(jobId || '');
 
   const handleShowEditForm = () => {
     setShowForm(true);
