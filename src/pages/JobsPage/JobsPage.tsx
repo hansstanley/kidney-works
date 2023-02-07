@@ -1,17 +1,10 @@
 import { useCallback, useMemo, useState } from 'react';
-import {
-  Button,
-  ButtonGroup,
-  Card,
-  Container,
-  Form,
-  Stack,
-} from 'react-bootstrap';
+import { Button, Container, Form, Stack } from 'react-bootstrap';
 import { useLoaderData } from 'react-router-dom';
 import PageHero from '../../components/PageHero';
 import AppJob from '../../types/job.app';
-import { NAV_LINKS } from '../../utils/constants';
 import JobFormModal from './JobFormModal';
+import JobsList from './JobsList';
 
 export default function JobsPage() {
   const jobs = useLoaderData() as AppJob[];
@@ -58,39 +51,16 @@ export default function JobsPage() {
           Create a new job
         </Button>
         <Form>
-          <Stack direction="horizontal" gap={2}>
-            <Form.Control
-              type="search"
-              placeholder="Search"
-              className="w-25"
-              onChange={(e) => {
-                setSearch(e.target.value);
-              }}
-            />
-          </Stack>
+          <Form.Control
+            type="search"
+            placeholder="Search"
+            className="w-50"
+            onChange={(e) => {
+              setSearch(e.target.value);
+            }}
+          />
         </Form>
-        {visibleJobs.length ? (
-          visibleJobs.map((j) => (
-            <Card key={j.id}>
-              <Card.Body>
-                <Card.Title>{j.title}</Card.Title>
-                <Card.Text>{j.description}</Card.Text>
-                <ButtonGroup>
-                  <Button variant="light" href={`${NAV_LINKS.JOBS}/${j.id}`}>
-                    View
-                  </Button>
-                  <Button>Apply</Button>
-                </ButtonGroup>
-              </Card.Body>
-            </Card>
-          ))
-        ) : (
-          <Card>
-            <Card.Body>
-              <Card.Text>No jobs found.</Card.Text>
-            </Card.Body>
-          </Card>
-        )}
+        <JobsList jobs={visibleJobs} />
       </Stack>
       <JobFormModal show={showForm} onHide={handleHideCreateForm} />
     </Container>
