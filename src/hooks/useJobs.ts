@@ -15,11 +15,10 @@ export default function useJobs() {
         let jobsList: AppJob[] = [];
         snapshot.docs.forEach((doc) => {
           const {
-            role: title,
-            name: company,
+            title,
+            company,
             description,
             requirements,
-            specialRequirements,
           } = doc.data();
           const appjob: AppJob = {
             id: doc.id,
@@ -27,7 +26,6 @@ export default function useJobs() {
             company,
             description,
             requirements,
-            specialRequirements,
           };
           jobsList.push(appjob);
         });

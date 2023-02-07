@@ -48,11 +48,6 @@ export default function JobDetailPage() {
               <Card.Title>Job requirements</Card.Title>
               <Card.Text>{job.requirements || 'Nothing here.'}</Card.Text>
               <hr />
-              <Card.Title>Special requirements</Card.Title>
-              <Card.Text>
-                {job.specialRequirements || 'Nothing here.'}
-              </Card.Text>
-              <hr />
               <ButtonGroup>
                 <Button variant="light" onClick={handleShowEditForm}>
                   Edit

@@ -1,19 +1,57 @@
 import { useMemo, useState } from 'react';
 import { Button, Form, Modal } from 'react-bootstrap';
 import AppJob from '../../types/job.app';
+import { addDoc, collection } from 'firebase/firestore';
+import { db } from "../../utils/firebase";
+import { v1 as uuidv1 } from 'uuid';
 
 export interface JobFormModalProps {
   job?: AppJob;
   show?: boolean;
   onHide?: () => void;
+  jobs?: AppJob[];
+  setJobsState?: React.Dispatch<React.SetStateAction<AppJob[]>>;
 }
 
-export default function JobFormModal({ job, show, onHide }: JobFormModalProps) {
-  const [title, setTitle] = useState(job?.title || '');
-  const [description, setDescription] = useState(job?.description || '');
-  const [requirements, setRequirements] = useState(job?.requirements || '');
+export default function JobFormModal({ job, show, onHide, jobs, setJobsState }: JobFormModalProps) {
+  const [newCompany, setCompany] = useState(job?.company || '');
+  const [newTitle, setTitle] = useState(job?.title || '');
+  const [newDescription, setDescription] = useState(job?.description || '');
+  const [newRequirements, setRequirements] = useState(job?.requirements || '');
 
   const isEdit = useMemo(() => !!job, [job]);
+
+  function addJob(job: AppJob) {
+    if (jobs && setJobsState) {
+      const newJobs = [
+        ...jobs, job
+      ];
+      const colRef = collection(db, "jobs")
+      addDoc(colRef, {
+        title: newTitle,
+        company: newCompany,
+        description: newDescription,
+        requirements: newRequirements,
+      })
+
+      setJobsState(newJobs);
+    }
+  }
+
+  function getRandomInt(max: number) {
+    return Math.floor(Math.random() * max);
+  }
+
+  function makeJob() {
+    const newJob: AppJob = {
+      id:uuidv1(),
+      title: newTitle,
+      company: newCompany,
+      description: newDescription,
+      requirements: newRequirements,
+    }
+    addJob(newJob);
+  }
 
   return (
     <Modal
@@ -35,6 +73,8 @@ export default function JobFormModal({ job, show, onHide }: JobFormModalProps) {
               type="text"
               placeholder="E.g. Google"
               autoFocus
+              value={newCompany}
+              onChange={(e) => setCompany(e.target.value)}
             />
           </Form.Group>
           <Form.Group className="mb-3">
@@ -43,7 +83,7 @@ export default function JobFormModal({ job, show, onHide }: JobFormModalProps) {
               autoFocus
               type="text"
               placeholder="E.g. Software engineer"
-              value={title}
+              value={newTitle}
               onChange={(e) => setTitle(e.target.value)}
             />
           </Form.Group>
@@ -53,7 +93,7 @@ export default function JobFormModal({ job, show, onHide }: JobFormModalProps) {
               placeholder="Describe the nature of this job"
               as="textarea"
               rows={4}
-              value={description}
+              value={newDescription}
               onChange={(e) => setDescription(e.target.value)}
             />
           </Form.Group>
@@ -63,7 +103,7 @@ export default function JobFormModal({ job, show, onHide }: JobFormModalProps) {
               placeholder="Describe the general requirements for anyone to accomplish this job"
               as="textarea"
               rows={2}
-              value={requirements}
+              value={newRequirements}
               onChange={(e) => setRequirements(e.target.value)}
             />
           </Form.Group>
@@ -73,7 +113,7 @@ export default function JobFormModal({ job, show, onHide }: JobFormModalProps) {
         <Button variant="secondary" onClick={onHide}>
           Cancel
         </Button>
-        <Button>{isEdit ? 'Edit' : 'Create'}</Button>
+        <Button onClick={makeJob}>{isEdit ? 'Edit' : 'Create'}</Button>
       </Modal.Footer>
     </Modal>
   );

@@ -9,7 +9,7 @@ import { useAuth } from '../../hooks/useAuth';
 
 export default function JobsPage() {
   const { user } = useAuth();
-  const { jobs, findJobApplications } = useJobs();
+  const { jobs, setJobsState, findJobApplications } = useJobs();
   const [showForm, setShowForm] = useState(false);
   const [search, setSearch] = useState('');
 
@@ -22,7 +22,7 @@ export default function JobsPage() {
   const handleHideCreateForm = () => {
     setShowForm(false);
   };
-
+  console.log(jobs)
   const filterJob = useCallback(
     (job: AppJob) => {
       if (!search) {
@@ -34,7 +34,6 @@ export default function JobsPage() {
         job.description,
         job.company,
         job.requirements,
-        job.specialRequirements,
       ]
         .map((x) => x?.toLowerCase())
         .some((x) => x?.includes(lowerSearch));
@@ -66,7 +65,7 @@ export default function JobsPage() {
         </Form>
         <JobsList jobs={visibleJobs} jobApplications={applications} />
       </Stack>
-      <JobFormModal show={showForm} onHide={handleHideCreateForm} />
+      <JobFormModal show={showForm} onHide={handleHideCreateForm} jobs={jobs} setJobsState={setJobsState}/>
     </Container>
   );
 }

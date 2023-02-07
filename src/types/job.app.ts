@@ -4,5 +4,4 @@ export default interface AppJob {
   company: string;
   description: string;
   requirements?: string;
-  specialRequirements?: string;
 }
