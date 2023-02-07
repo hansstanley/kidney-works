@@ -16,6 +16,8 @@ import {
   loadOne as oneJobLoader,
 } from './features/job/loaders';
 import AboutPage from './pages/AboutPage';
+import JobAppsPage from './pages/JobAppsPage';
+import { loader as jobAppsPageLoader } from './pages/JobAppsPage/JobAppsPage';
 
 const router = createBrowserRouter([
   { path: NAV_LINKS.HOME, element: <HomePage />, errorElement: <ErrorPage /> },
@@ -26,9 +28,14 @@ const router = createBrowserRouter([
     element: <JobDetailPage />,
     loader: oneJobLoader,
   },
+  {
+    path: NAV_LINKS.JOBS_APPLIED,
+    element: <JobAppsPage />,
+    loader: jobAppsPageLoader,
+  },
   { path: NAV_LINKS.BLOG, element: <BlogPage /> },
   { path: NAV_LINKS.PROFILE, element: <ProfilePage /> },
-  { path: NAV_LINKS.ABOUT, element: <AboutPage />},
+  { path: NAV_LINKS.ABOUT, element: <AboutPage /> },
 ]);
 
 function App() {

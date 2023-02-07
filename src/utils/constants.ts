@@ -3,7 +3,7 @@ export const NAV_LINKS = {
   LOGIN: '/login',
   ABOUT: '/about',
   JOBS: '/jobs',
-  JOBS_APPLIED: '/applied',
+  JOBS_APPLIED: '/my-apps',
   BLOG: '/blog',
   PROFILE: '/profile',
 };

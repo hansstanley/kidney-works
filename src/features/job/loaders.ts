@@ -1,4 +1,5 @@
 import { LoaderFunctionArgs } from 'react-router-dom';
+import AppJobApplication from '../../types/job-application.app';
 import AppJob from '../../types/job.app';
 
 const jobs: AppJob[] = [
@@ -22,6 +23,11 @@ const jobs: AppJob[] = [
   },
 ];
 
+const jobStatuses: AppJobApplication[] = [
+  { jobId: 2, status: 'reviewed' },
+  { jobId: 3, status: 'accepted' },
+];
+
 export async function loadOne({ params }: LoaderFunctionArgs) {
   const jobId = parseInt(params.jobId || '');
   if (isNaN(jobId)) {
@@ -32,4 +38,12 @@ export async function loadOne({ params }: LoaderFunctionArgs) {
 
 export async function loadAll() {
   return jobs;
+}
+
+export async function loadApplied() {
+  return jobs.filter((j) => jobStatuses.map((s) => s.jobId).includes(j.id));
+}
+
+export async function loadAppliedStatuses() {
+  return jobStatuses;
 }
