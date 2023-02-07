@@ -1,5 +1,6 @@
 export default interface AppJobApplication {
-  jobId: number;
+  jobId: string;
+  userId: string;
   status: AppJobStatus;
 }
 

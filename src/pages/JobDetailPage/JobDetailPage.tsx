@@ -1,35 +1,21 @@
 import { useState } from 'react';
 import { Button, ButtonGroup, Card, Container, Stack } from 'react-bootstrap';
-import { LoaderFunctionArgs, useLoaderData } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import PageHero from '../../components/PageHero';
-import { loadAppliedStatus, loadJob } from '../../features/job/loaders';
-import AppJobApplication from '../../types/job-application.app';
-import AppJob from '../../types/job.app';
+import { useAuth } from '../../hooks/useAuth';
+import useJobs from '../../hooks/useJobs';
 import { NAV_LINKS } from '../../utils/constants';
 import { JobFormModal } from '../JobsPage';
 
-interface JobDetailPageData {
-  job?: AppJob;
-  app?: AppJobApplication;
-}
-
-export async function loader({
-  params,
-}: LoaderFunctionArgs): Promise<JobDetailPageData> {
-  const jobId = parseInt(params.jobId || '') || -1;
-  const [job, app] = await Promise.all([
-    loadJob(jobId),
-    loadAppliedStatus(jobId),
-  ]);
-  return { job, app };
-}
-
 export default function JobDetailPage() {
+  const { user } = useAuth();
+  const { jobId } = useParams();
+  const { findJob, isJobApplied } = useJobs();
+  const job = findJob(jobId);
   const [showForm, setShowForm] = useState(false);
-  const { job, app } = useLoaderData() as JobDetailPageData;
 
   const hasJob = !!job;
-  const hasApplied = !!app;
+  const hasApplied = isJobApplied(user?.uid)(jobId || '');
 
   const handleShowEditForm = () => {
     setShowForm(true);
