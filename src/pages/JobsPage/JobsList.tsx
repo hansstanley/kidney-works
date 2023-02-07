@@ -47,7 +47,7 @@ export default function JobsList({
             )}>
             <Card.Body>
               <Card.Title>{j.title}</Card.Title>
-              <Card.Subtitle>{j.company}</Card.Subtitle>
+              <Card.Text>{j.company}</Card.Text>
               <Card.Text>Description:<br></br>{j.description}</Card.Text>
               <Card.Text>Requirement:<br></br>{j.requirements}</Card.Text>
               <ButtonGroup>

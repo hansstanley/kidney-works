@@ -61,7 +61,7 @@ export default function JobsPage() {
         </Form>
         <JobsList jobs={visibleJobs} />
       </Stack>
-      <JobFormModal show={showForm} onHide={handleHideCreateForm} />
+      <JobFormModal show={showForm} onHide={handleHideCreateForm} jobs={jobs} setJobsState={setJobsState}/>
     </Container>
   );
 }
