@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   Badge,
   Button,
@@ -7,25 +7,44 @@ import {
   Form,
   Image,
   InputGroup,
+  ProgressBar,
   Stack,
 } from 'react-bootstrap';
 import PageHero from '../../components/PageHero';
 import { useAuth } from '../../hooks/useAuth';
 import ProfileSection from './ProfileSection';
 import { arrayRemove, doc, onSnapshot, setDoc, updateDoc } from 'firebase/firestore';
-import { db } from '../../utils/firebase';
+import { db, storage } from '../../utils/firebase';
 import UseSkills from '../../hooks/useSkills';
 import UseLimitations from '../../hooks/useLimitations';
-
+import useUserInfo from '../../hooks/useUserInfo';
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 
 export default function ProfilePage() {
   const { user } = useAuth();
   const { skills, setSkillsState } = UseSkills();
   const { limitations, setLimitationState } = UseLimitations();
-  const [fullName, setFullName] = useState(user?.displayName || '');
-  const [email, setEmail] = useState(user?.email || '');
+  const { name, email, setName, setEmail, avatar } = useUserInfo();
+  const [inputName, setInputName] = useState(name);
+  const [inputEmail, setInputEmail] = useState(email);
   const [inputSkill, setInputSkill] = useState("");
   const [inputLimitation, setInputLimitation] = useState("");
+  const [progress, setProgress] = useState(0);
+
+
+  function updateUserInfo(name: String, email: String) {
+    const userSnap = doc(db, "users", user?.uid || '')
+    updateDoc(userSnap, {
+      name: name,
+      email: email,
+    })
+    onSnapshot(userSnap, (doc) => {
+      if (doc.exists()) {
+        setName(doc.data().name);
+        setEmail(doc.data().email)
+      }
+    })
+  }
 
   function addSkillHandler(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
       addSkill(inputSkill);
@@ -57,7 +76,6 @@ export default function ProfilePage() {
     })
   }
 
-
   function addLimitationHandler(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     addLimitation(inputLimitation);
   }
@@ -73,39 +91,6 @@ export default function ProfilePage() {
     ];
     setLimitations(newLimitations);
   }
-  useEffect(() => {
-    if (user) {
-      setFullName(user.displayName || '');
-      setEmail(user.email || '');
-    }
-  }, [user]);
-
-  const [skill, setSkill] = useState('');
-  const handleAddSkill = () => {
-    if (!skill.trim()) {
-      return;
-    }
-
-    const newSkills = [skill.trim(), ...skills];
-    setSkills(newSkills);
-    setSkill('');
-  };
-
-  const handleDeleteSkill = (index: number) => {
-    const newSkills = skills.filter((_, i) => i !== index);
-    setSkills(newSkills);
-  };
-
-  const [limitation, setLimitation] = useState('');
-  const handleAddLimitation = () => {
-    if (!limitation.trim()) {
-      return;
-    }
-
-    const newLimitations = [limitation.trim(), ...limitations];
-    setLimitations(newLimitations);
-    setLimitation('');
-  };
 
   function deleteLimitation(limitation: String) {
     const limitationSnap = doc(db, "limitations", user?.uid || '')
@@ -121,18 +106,58 @@ export default function ProfilePage() {
     })
   }
 
+  const uploadFiles = (file: File) => {
+    if (!file) return;
+    const storageRef = ref(storage);
+    const imageRef = ref(storageRef, `/image/${user?.uid}`);
+    const spaceRef = ref(imageRef, file.name);
+    const uploadTask = uploadBytesResumable(spaceRef, file);
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        const prog = Math.round(
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+        );
+        setProgress(prog);
+      },
+      (err) => console.log(err),
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((url) => {
+          updateDoc(doc(db, "users", user?.uid || ''), {
+            avatar: url,
+          });
+        });
+      }
+    );
+  };
+
+  const openFile = () => {
+    document.getElementById("fileID")?.click();
+    setProgress(0);
+  };
+
+  const avatarHandler = (e: React.ChangeEvent<HTMLInputElement>)  => {
+    e.preventDefault();
+    if (e.target.files) {
+        uploadFiles(e.target.files[0]);
+    }
+  }
+
   return (
     <Container className="pb-5">
       <PageHero title="Profile" />
       <Stack gap={4}>
         <ProfileSection>
+            <input id="fileID" type="file" accept="image/*" hidden onChange={avatarHandler}/>
           <Image
             roundedCircle
             className="hover-shadow m-2"
-            src="https://1fid.com/wp-content/uploads/2022/07/aesthetic-profile-picture-2-1024x1024.jpg"
+            src={avatar}
             style={{ width: 100, height: 100 }}
           />
-          <Button variant="secondary">Change</Button>
+          
+          <Button variant="secondary" onClick={() => openFile()}>Change</Button>
+          <ProgressBar now={progress}></ProgressBar>
         </ProfileSection>
         <ProfileSection title="Account">
           <Form>
@@ -141,8 +166,8 @@ export default function ProfilePage() {
               <Form.Control
                 type="text"
                 placeholder="Your name"
-                value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
+                defaultValue={name}
+                onChange={(e) => setInputName(e.target.value)}
               />
             </Form.Group>
             <Form.Group className="mb-3" controlId="email">
@@ -150,12 +175,12 @@ export default function ProfilePage() {
               <Form.Control
                 type="email"
                 placeholder="E.g. johndoe@abc.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                defaultValue={email}
+                onChange={(e) => setInputEmail(e.target.value)}
               />
             </Form.Group>
             <hr />
-            <Button type="submit" href="#">
+            <Button type="submit" href="#" onClick={() => updateUserInfo(inputName, inputEmail)}>
               Update
             </Button>
           </Form>
@@ -180,15 +205,15 @@ export default function ProfilePage() {
             <Form.Group className="mb-3" controlId="skills">
               <Form.Label>Skills</Form.Label>
               <InputGroup>
-                <Form.Control type="text" placeholder="E.g. public speaking" />
-                <Button variant="outline-secondary">Add</Button>
+                <Form.Control type="text" placeholder="E.g. public speaking" onChange={e => setInputSkill(e.target.value)}/>
+                <Button variant="outline-secondary" onClick={addSkillHandler} >Add</Button>
               </InputGroup>
               <Stack direction="horizontal" gap={1} className="mt-2">
                 {skills.map((s, i) => (
                   <Badge key={i} bg="secondary">
                     <Stack direction="horizontal" gap={2}>
                       {s}
-                      <CloseButton variant="white" />
+                      <CloseButton variant="white" onClick={() => deleteSkill(s)} />
                     </Stack>
                   </Badge>
                 ))}
@@ -200,8 +225,9 @@ export default function ProfilePage() {
                 <Form.Control
                   type="text"
                   placeholder="E.g. low blood pressure"
+                  onChange={e => setInputLimitation(e.target.value)}
                 />
-                <Button variant="outline-secondary">Add</Button>
+                <Button variant="outline-secondary" onClick={addLimitationHandler}>Add</Button>
               </InputGroup>
               <Stack direction="horizontal" gap={1} className="mt-2">
                 {limitations.map((l, i) => (
