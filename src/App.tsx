@@ -15,6 +15,7 @@ import {
   loadAll as allJobsLoader,
   loadOne as oneJobLoader,
 } from './features/job/loaders';
+import AboutPage from './pages/AboutPage';
 
 const router = createBrowserRouter([
   { path: NAV_LINKS.HOME, element: <HomePage />, errorElement: <ErrorPage /> },
@@ -27,6 +28,7 @@ const router = createBrowserRouter([
   },
   { path: NAV_LINKS.BLOG, element: <BlogPage /> },
   { path: NAV_LINKS.PROFILE, element: <ProfilePage /> },
+  { path: NAV_LINKS.ABOUT, element: <AboutPage />},
 ]);
 
 function App() {
