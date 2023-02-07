@@ -1,5 +1,5 @@
 export default interface AppJob {
-  id: number;
+  id: string;
   title: string;
   company: string;
   description: string;
