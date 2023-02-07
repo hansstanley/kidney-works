@@ -11,18 +11,16 @@ import BlogPage from './pages/BlogPage';
 import ProfilePage from './pages/ProfilePage';
 import JobDetailPage from './pages/JobDetailPage';
 import ErrorPage from './pages/ErrorPage';
-import {
-  loadAll as allJobsLoader,
-  loadOne as oneJobLoader,
-} from './features/job/loaders';
+import { loadOne as oneJobLoader } from './features/job/loaders';
 import AboutPage from './pages/AboutPage';
 import JobAppsPage from './pages/JobAppsPage';
 import { loader as jobAppsPageLoader } from './pages/JobAppsPage/JobAppsPage';
+import { loader as jobsPageLoader } from './pages/JobsPage/JobsPage';
 
 const router = createBrowserRouter([
   { path: NAV_LINKS.HOME, element: <HomePage />, errorElement: <ErrorPage /> },
   { path: NAV_LINKS.LOGIN, element: <LoginPage /> },
-  { path: NAV_LINKS.JOBS, element: <JobsPage />, loader: allJobsLoader },
+  { path: NAV_LINKS.JOBS, element: <JobsPage />, loader: jobsPageLoader },
   {
     path: `${NAV_LINKS.JOBS}/:jobId`,
     element: <JobDetailPage />,

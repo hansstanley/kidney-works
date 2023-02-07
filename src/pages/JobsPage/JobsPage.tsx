@@ -2,12 +2,24 @@ import { useCallback, useMemo, useState } from 'react';
 import { Button, Container, Form, Stack } from 'react-bootstrap';
 import { useLoaderData } from 'react-router-dom';
 import PageHero from '../../components/PageHero';
+import { loadAll, loadAppliedStatuses } from '../../features/job/loaders';
+import AppJobApplication from '../../types/job-application.app';
 import AppJob from '../../types/job.app';
 import JobFormModal from './JobFormModal';
 import JobsList from './JobsList';
 
+export interface JobsPageData {
+  jobs?: AppJob[];
+  apps?: AppJobApplication[];
+}
+
+export async function loader(): Promise<JobsPageData> {
+  const [jobs, apps] = await Promise.all([loadAll(), loadAppliedStatuses()]);
+  return { jobs, apps };
+}
+
 export default function JobsPage() {
-  const jobs = useLoaderData() as AppJob[];
+  const { jobs, apps } = useLoaderData() as JobsPageData;
   const [showForm, setShowForm] = useState(false);
   const [search, setSearch] = useState('');
 
@@ -38,7 +50,7 @@ export default function JobsPage() {
     [search],
   );
 
-  const visibleJobs = useMemo(() => jobs.filter(filterJob), [jobs, filterJob]);
+  const visibleJobs = useMemo(() => jobs?.filter(filterJob), [jobs, filterJob]);
 
   return (
     <Container className="pb-5">
@@ -60,7 +72,7 @@ export default function JobsPage() {
             }}
           />
         </Form>
-        <JobsList jobs={visibleJobs} />
+        <JobsList jobs={visibleJobs} appliedStatuses={apps} />
       </Stack>
       <JobFormModal show={showForm} onHide={handleHideCreateForm} />
     </Container>
