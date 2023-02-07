@@ -1,10 +1,20 @@
 import { PropsWithChildren } from 'react';
 import { Card } from 'react-bootstrap';
 
-export default function ProfileSection({ children }: PropsWithChildren) {
+export interface ProfileSectionProps extends PropsWithChildren {
+  title?: string;
+}
+
+export default function ProfileSection({
+  title,
+  children,
+}: ProfileSectionProps) {
   return (
     <Card>
-      <Card.Body>{children}</Card.Body>
+      <Card.Body>
+        {title ? <Card.Title>{title}</Card.Title> : null}
+        {children}
+      </Card.Body>
     </Card>
   );
 }
