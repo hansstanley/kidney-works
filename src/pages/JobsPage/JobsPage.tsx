@@ -5,11 +5,15 @@ import PageHero from '../../components/PageHero';
 import AppJob from '../../types/job.app';
 import JobFormModal from './JobFormModal';
 import JobsList from './JobsList';
+import { useAuth } from '../../hooks/useAuth';
 
 export default function JobsPage() {
-  const { jobs } = useJobs();
+  const { user } = useAuth();
+  const { jobs, findJobApplications } = useJobs();
   const [showForm, setShowForm] = useState(false);
   const [search, setSearch] = useState('');
+
+  const applications = findJobApplications(user?.uid);
 
   const handleShowCreateForm = () => {
     setShowForm(true);
@@ -60,8 +64,7 @@ export default function JobsPage() {
             }}
           />
         </Form>
-        {/* TODO: pass in list of applied statuses */}
-        <JobsList jobs={visibleJobs} appliedStatuses={undefined} />
+        <JobsList jobs={visibleJobs} jobApplications={applications} />
       </Stack>
       <JobFormModal show={showForm} onHide={handleHideCreateForm} />
     </Container>

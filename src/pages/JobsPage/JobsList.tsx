@@ -9,13 +9,13 @@ import { NAV_LINKS } from '../../utils/constants';
 export interface JobsListProps {
   jobs?: AppJob[];
   hideActions?: boolean;
-  appliedStatuses?: AppJobApplication[];
+  jobApplications?: AppJobApplication[];
 }
 
 export default function JobsList({
   jobs,
   hideActions,
-  appliedStatuses,
+  jobApplications: appliedStatuses,
 }: JobsListProps) {
   const hasJobs = useMemo(() => !!jobs?.length, [jobs]);
   const hasStatuses = useMemo(() => !!appliedStatuses, [appliedStatuses]);
@@ -57,8 +57,14 @@ export default function JobsList({
             <Card.Body>
               <Card.Title>{j.title}</Card.Title>
               <Card.Subtitle>{j.company}</Card.Subtitle>
-              <Card.Text>Description:<br></br>{j.description}</Card.Text>
-              <Card.Text>Requirement:<br></br>{j.requirements}</Card.Text>
+              <Card.Text>
+                Description:<br></br>
+                {j.description}
+              </Card.Text>
+              <Card.Text>
+                Requirement:<br></br>
+                {j.requirements}
+              </Card.Text>
               <ButtonGroup>
                 <Button variant="light" href={`${NAV_LINKS.JOBS}/${j.id}`}>
                   View
