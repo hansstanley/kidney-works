@@ -26,6 +26,14 @@ export default function JobFormModal({ job, show, onHide }: JobFormModalProps) {
       <Modal.Body>
         <Form>
           <Form.Group className="mb-3">
+            <Form.Label>Company title</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="E.g. Google"
+              autoFocus
+            />
+          </Form.Group>
+          <Form.Group className="mb-3">
             <Form.Label>Job title</Form.Label>
             <Form.Control
               type="text"
