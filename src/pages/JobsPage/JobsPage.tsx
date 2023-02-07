@@ -73,7 +73,9 @@ export default function JobsPage() {
             <Card key={j.id}>
               <Card.Body>
                 <Card.Title>{j.title}</Card.Title>
-                <Card.Text>{j.description}</Card.Text>
+                <Card.Subtitle>{j.company}</Card.Subtitle>
+                <Card.Text>Description:<br></br>{j.description}</Card.Text>
+                <Card.Text>Requirement:<br></br>{j.requirements}</Card.Text>
                 <ButtonGroup>
                   <Button variant="light" href={`${NAV_LINKS.JOBS}/${j.id}`}>
                     View
