@@ -1,10 +1,12 @@
 import { useMemo } from 'react';
-import { Button, ButtonGroup, Card, Stack } from 'react-bootstrap';
+import { Button, ButtonGroup, Card, OverlayTrigger, Stack, Tooltip } from 'react-bootstrap';
 import AppJobApplication, {
   AppJobStatus,
 } from '../../types/job-application.app';
 import AppJob from '../../types/job.app';
 import { NAV_LINKS } from '../../utils/constants';
+import { useAuth } from '../../hooks/useAuth';
+import "./JobsList.css";
 
 export interface JobsListProps {
   jobs?: AppJob[];
