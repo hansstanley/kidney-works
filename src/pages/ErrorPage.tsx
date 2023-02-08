@@ -1,6 +1,4 @@
-import { useEffect } from 'react';
 import { Button, Card, Container } from 'react-bootstrap';
-import { useRouteError } from 'react-router-dom';
 import { NAV_LINKS } from '../utils/constants';
 
 export default function ErrorPage() {

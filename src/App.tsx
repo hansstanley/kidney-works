@@ -1,4 +1,5 @@
 import './App.css';
+import './scss/custom.scss';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
@@ -12,6 +13,7 @@ import ErrorPage from './pages/ErrorPage';
 import AboutPage from './pages/AboutPage';
 import JobAppsPage from './pages/JobAppsPage';
 import ProfileCreationPage from './pages/ProfileCreationPage';
+import { Container } from 'react-bootstrap';
 
 const router = createBrowserRouter([
   { path: NAV_LINKS.HOME, element: <HomePage />, errorElement: <ErrorPage /> },
@@ -27,7 +29,7 @@ const router = createBrowserRouter([
 
 function App() {
   return (
-    <div>
+    <div className="App-page">
       <AppBar />
       <RouterProvider router={router} />
     </div>

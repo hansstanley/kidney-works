@@ -19,7 +19,6 @@ import UseSkills from '../../hooks/useSkills';
 import UseLimitations from '../../hooks/useLimitations';
 import useUserInfo from '../../hooks/useUserInfo';
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
-import "../Page.css";
 import { useNavigate } from 'react-router-dom';
 import { NAV_LINKS } from '../../utils/constants';
 
@@ -70,13 +69,13 @@ export default function ProfileCreationPage() {
       addSkill(inputSkill);
   }
 
-  function setSkills(newSkills: String[]) {
+  function setSkills(newSkills: string[]) {
     setSkillsState(newSkills);
       setDoc(doc(db, "skills", user?.uid || ''), {skills: newSkills });
   }
 
-  function addSkill(skill: String) {
-    const newSkills = [
+  function addSkill(skill: string) {
+    const newSkills: string[] = [
       ...skills, skill
     ];
     setSkills(newSkills);
@@ -100,13 +99,13 @@ export default function ProfileCreationPage() {
     addLimitation(inputLimitation);
   }
 
-  function setLimitations(newLimitations: String[]) {
+  function setLimitations(newLimitations: string[]) {
     setLimitationState(newLimitations);
     setDoc(doc(db, "limitations", user?.uid || ''), {limitations: newLimitations});
   }
 
-  function addLimitation(limitation: String) {
-    const newLimitations = [
+  function addLimitation(limitation: string) {
+    const newLimitations: string[] = [
       ...limitations, limitation
     ];
     setLimitations(newLimitations);

@@ -1,76 +1,95 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Badge,
   Button,
   CloseButton,
-  Container,
+  Col,
   Form,
   Image,
   InputGroup,
   ProgressBar,
+  Row,
+  Spinner,
   Stack,
 } from 'react-bootstrap';
-import PageHero from '../../components/PageHero';
 import { useAuth } from '../../hooks/useAuth';
 import ProfileSection from './ProfileSection';
-import { arrayRemove, doc, onSnapshot, setDoc, updateDoc } from 'firebase/firestore';
+import {
+  arrayRemove,
+  doc,
+  onSnapshot,
+  setDoc,
+  updateDoc,
+} from 'firebase/firestore';
 import { db, storage } from '../../utils/firebase';
 import UseSkills from '../../hooks/useSkills';
 import UseLimitations from '../../hooks/useLimitations';
 import useUserInfo from '../../hooks/useUserInfo';
-import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
-import "../Page.css";
+import { deleteObject, getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import AppResume from '../../types/resume.app';
+import UseResume from '../../hooks/useResume';
+import { Page, PageBody, PageHeader } from '../../components/Page';
+import UseEmployer from '../../hooks/useEmployer';
 
 
 export default function ProfilePage() {
   const { user } = useAuth();
   const { skills, setSkillsState } = UseSkills();
   const { limitations, setLimitationState } = UseLimitations();
+  //Still does not work.
+  //const { isEmployer } = UseEmployer();
+  const { resume, setResumeState } = UseResume();
   const { name, email, setName, setEmail, avatar, eduLevel, setEduLevel, companyName, setCompanyName, companyDescription, setCompanyDescription, isEmployer } = useUserInfo();
   const [inputName, setInputName] = useState(name);
   const [inputEmail, setInputEmail] = useState(email);
   const [inputSkill, setInputSkill] = useState("");
   const [inputLimitation, setInputLimitation] = useState("");
-  const [progress, setProgress] = useState(0);
+  const [avatarProgress, setAvatarProgress] = useState(0);
+  const [resumeProgress, setResumeProgress] = useState(0);
+  const [resumeFile, setResumeFile] = useState<File | null>(null);
+  const [duplicate, setDuplicate] = useState<boolean>(false);
+  const [desc, setDesc] = useState("");
 
   const [inputCompanyName, setInputCompanyName] = useState("");
   const [inputCompanyDescription, setInputCompanyDescription] = useState("");
 
 
-  function updateUserInfo(name: String, email: String) {
+  const storageRef = ref(storage, `/${user?.uid}`);
+
+  console.log(isEmployer);
+
+  function updateUserInfo(name: string, email: string) {
     const userSnap = doc(db, "users", user?.uid || '')
     updateDoc(userSnap, {
       name: name,
       email: email,
-    })
+    });
     onSnapshot(userSnap, (doc) => {
       if (doc.exists()) {
         setName(doc.data().name);
-        setEmail(doc.data().email)
+        setEmail(doc.data().email);
       }
-    })
+    });
   }
 
   function addSkillHandler(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
-      addSkill(inputSkill);
+    addSkill(inputSkill);
   }
 
-  function setSkills(newSkills: String[]) {
+  function setSkills(newSkills: string[]) {
     setSkillsState(newSkills);
-      setDoc(doc(db, "skills", user?.uid || ''), {skills: newSkills });
+    setDoc(doc(db, 'skills', user?.uid || ''), { skills: newSkills });
   }
 
-  function addSkill(skill: String) {
-    const newSkills = [
-      ...skills, skill
-    ];
+  function addSkill(skill: string) {
+    const newSkills: string[] = [...skills, skill];
     setSkills(newSkills);
   }
 
-  function deleteSkill(skill: String) {
-    const skillsSnap = doc(db, "skills", user?.uid || '')
+  function deleteSkill(skill: string) {
+    const skillsSnap = doc(db, 'skills', user?.uid || '');
     updateDoc(skillsSnap, {
-       skills:  arrayRemove(skill),
+      skills: arrayRemove(skill),
     });
     onSnapshot(skillsSnap, (doc) => {
       if (doc.exists()) {
@@ -78,29 +97,31 @@ export default function ProfilePage() {
       } else {
         setSkillsState([]);
       }
-    })
+    });
   }
 
-  function addLimitationHandler(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+  function addLimitationHandler(
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+  ) {
     addLimitation(inputLimitation);
   }
 
-  function setLimitations(newLimitations: String[]) {
+  function setLimitations(newLimitations: string[]) {
     setLimitationState(newLimitations);
-    setDoc(doc(db, "limitations", user?.uid || ''), {limitations: newLimitations});
+    setDoc(doc(db, 'limitations', user?.uid || ''), {
+      limitations: newLimitations,
+    });
   }
 
-  function addLimitation(limitation: String) {
-    const newLimitations = [
-      ...limitations, limitation
-    ];
+  function addLimitation(limitation: string) {
+    const newLimitations = [...limitations, limitation];
     setLimitations(newLimitations);
   }
 
-  function deleteLimitation(limitation: String) {
-    const limitationSnap = doc(db, "limitations", user?.uid || '')
+  function deleteLimitation(limitation: string) {
+    const limitationSnap = doc(db, 'limitations', user?.uid || '');
     updateDoc(limitationSnap, {
-        limitations: arrayRemove(limitation),
+      limitations: arrayRemove(limitation),
     });
     onSnapshot(limitationSnap, (doc) => {
       if (doc.exists()) {
@@ -108,19 +129,19 @@ export default function ProfilePage() {
       } else {
         setLimitationState([]);
       }
-    })
+    });
   }
 
-  function updateEduLevel(eduLevel: String) {
+  function updateEduLevel(eduLevel: string) {
     const userSnap = doc(db, "users", user?.uid || '')
     updateDoc(userSnap, {
       eduLevel: eduLevel,
-    })
+    });
     onSnapshot(userSnap, (doc) => {
       if (doc.exists()) {
         setEduLevel(doc.data()?.eduLevel);
       }
-    })
+    });
   }
 
   function updateCompanyName(companyName: String) {
@@ -147,11 +168,82 @@ export default function ProfilePage() {
     })
   }
 
-  const uploadFiles = (file: File) => {
+  const uploadResume = (file: File | null) => {
     if (!file) return;
-    const storageRef = ref(storage);
-    const imageRef = ref(storageRef, `/image/${user?.uid}`);
-    const spaceRef = ref(imageRef, file.name);
+    const fileRef = ref(storageRef, `/resume`);
+    const spaceRef = ref(fileRef, desc);
+    const uploadTask = uploadBytesResumable(spaceRef, file);
+    uploadTask.on(
+      'state_changed',
+      (snapshot) => {
+        const prog = Math.round(
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100,
+        );
+        setResumeProgress(prog);
+      },
+      (err) => console.log(err),
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((url) => {
+          addResume(desc, url);
+        });
+      }
+    );
+  }
+
+  function addResume(desc: string, link: string) {
+    const newResume = [
+      ...resume, {
+        desc: desc,
+        link: link
+      }
+    ]
+    setResume(newResume);
+  }
+
+  function setResume(newResume: AppResume[]) {
+    setResumeState(newResume);
+    setDoc(doc(db, "resumes", user?.uid || ''), {
+      resumes: newResume
+    });
+  }
+
+  function deleteResume(resume: AppResume) {
+    const resumeSnap = doc(db, "resumes", user?.uid || '')
+    const fileRef = ref(storageRef, `/resume`);
+    const spaceRef = ref(fileRef, resume.desc);
+    deleteObject(spaceRef).then(() => {
+      updateDoc(resumeSnap, {
+        resumes: arrayRemove(resume),
+      });
+      onSnapshot(resumeSnap, (doc) => {
+        if (doc.exists()) {
+          setResumeState(doc.data().resumes);
+        } else {
+          setResumeState([]);
+        }
+      })
+    }).catch((error) => {
+      console.log("can't delete");
+    });
+    
+  }
+
+  const addResumeHandler = (e: React.ChangeEvent<HTMLInputElement>)  => {
+    e.preventDefault();
+    if (e.target.files) {
+        setResumeFile(e.target.files[0]);
+    }
+  }
+
+  const resumeHandler = (e: React.FormEvent<HTMLFormElement>)  => {
+    e.preventDefault();
+    uploadResume(resumeFile);
+  }
+
+  const uploadPic = (file: File) => {
+    if (!file) return;
+    const imageRef = ref(storageRef, `/image`);
+    const spaceRef = ref(imageRef, "profilepic");
     const uploadTask = uploadBytesResumable(spaceRef, file);
     uploadTask.on(
       "state_changed",
@@ -159,73 +251,88 @@ export default function ProfilePage() {
         const prog = Math.round(
           (snapshot.bytesTransferred / snapshot.totalBytes) * 100
         );
-        setProgress(prog);
+        setAvatarProgress(prog);
       },
       (err) => console.log(err),
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((url) => {
-          updateDoc(doc(db, "users", user?.uid || ''), {
+          updateDoc(doc(db, 'users', user?.uid || ''), {
             avatar: url,
           });
         });
-      }
+      },
     );
   };
   
 
   const openFile = () => {
     document.getElementById("fileID")?.click();
-    setProgress(0);
+    setAvatarProgress(0);
   };
 
-  const avatarHandler = (e: React.ChangeEvent<HTMLInputElement>)  => {
-    e.preventDefault();
+  const avatarHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-        uploadFiles(e.target.files[0]);
+        uploadPic(e.target.files[0]);
     }
-  }
+  };
+
+  useEffect(() => {
+    setDuplicate(resume.filter(x => x.desc === desc).length !== 0);
+  },[desc, resume])
 
   return (
-    <Container className="pb-5 background">
-      <PageHero title="Profile" />
-      <Stack gap={4}>
-        <ProfileSection>
-            <input id="fileID" type="file" accept="image/*" hidden onChange={avatarHandler}/>
-          <Image
-            roundedCircle
-            className="hover-shadow m-2"
-            src={avatar}
-            style={{ width: 100, height: 100 }}
-          />
-          <Button variant="secondary" onClick={() => openFile()}>Change</Button>
-          <ProgressBar now={progress} />
-        </ProfileSection>
-        <ProfileSection title="Account">
-          <Form>
-            <Form.Group className="mb-3" controlId="fullname">
-              <Form.Label>Full name</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Your name"
-                defaultValue={name}
-                onChange={(e) => setInputName(e.target.value)}
-              />
-            </Form.Group>
-            <Form.Group className="mb-3" controlId="email">
-              <Form.Label>Email</Form.Label>
-              <Form.Control
-                type="email"
-                placeholder="E.g. johndoe@abc.com"
-                defaultValue={email}
-                onChange={(e) => setInputEmail(e.target.value)}
-              />
-            </Form.Group>
-            <hr />
-            <Button type="submit" href="#" onClick={() => updateUserInfo(inputName, inputEmail)}>
-              Update
+    <Page>
+      <PageHeader noDivider title="Profile" />
+      <PageBody>
+        <Stack gap={4}>
+          <ProfileSection>
+            <input
+              id="fileID"
+              type="file"
+              accept="image/*"
+              hidden
+              onChange={avatarHandler}
+            />
+            <Image
+              roundedCircle
+              className="hover-shadow m-2"
+              src={avatar}
+              style={{ width: 100, height: 100 }}
+            />
+            <Button variant="secondary" onClick={() => openFile()}>
+              Change
             </Button>
-          </Form>
-        </ProfileSection>
+            <ProgressBar now={avatarProgress} />
+          </ProfileSection>
+          <ProfileSection title="Account">
+            <Form>
+              <Form.Group className="mb-3" controlId="fullname">
+                <Form.Label>Full name</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Your name"
+                  defaultValue={name}
+                  onChange={(e) => setInputName(e.target.value)}
+                />
+              </Form.Group>
+              <Form.Group className="mb-3" controlId="email">
+                <Form.Label>Email</Form.Label>
+                <Form.Control
+                  type="email"
+                  placeholder="E.g. johndoe@abc.com"
+                  defaultValue={email}
+                  onChange={(e) => setInputEmail(e.target.value)}
+                />
+              </Form.Group>
+              <hr />
+              <Button
+                type="submit"
+                href="#"
+                onClick={() => updateUserInfo(inputName, inputEmail)}>
+                Update
+              </Button>
+            </Form>
+          </ProfileSection>
         {isEmployer ? (
         <ProfileSection title="Company Name">
             <Form>
@@ -242,8 +349,8 @@ export default function ProfilePage() {
             <Button type="submit" href="#" onClick={() => updateCompanyName(inputCompanyName)}>
               Update
             </Button>
-        </ProfileSection>)
-        : (
+        </ProfileSection>
+        ) : (
         <ProfileSection title="Education">
           <Form>
             <Form.Group className="mb-3" controlId="education">
@@ -306,31 +413,74 @@ export default function ProfilePage() {
                 ))}
               </Stack>
             </Form.Group>
-            <Form.Group className="mb-3" controlId="physicalLimitations">
-              <Form.Label>Physical limitations</Form.Label>
-              <InputGroup>
-                <Form.Control
-                  type="text"
-                  placeholder="E.g. low blood pressure"
-                  onChange={e => setInputLimitation(e.target.value)}
-                />
-                <Button variant="outline-secondary" onClick={addLimitationHandler}>Add</Button>
-              </InputGroup>
+            </Form>
+            <Form>
+              <Form.Group className="mb-3" controlId="physicalLimitations">
+                <Form.Label>Physical limitations</Form.Label>
+                <InputGroup>
+                  <Form.Control
+                    type="text"
+                    placeholder="E.g. low blood pressure"
+                    onChange={(e) => setInputLimitation(e.target.value)}
+                  />
+                  <Button
+                    variant="outline-secondary"
+                    onClick={addLimitationHandler}>
+                    Add
+                  </Button>
+                </InputGroup>
+                <Stack direction="horizontal" gap={1} className="mt-2">
+                  {limitations.map((l, i) => (
+                    <Badge key={i} bg="secondary">
+                      <Stack direction="horizontal" gap={2}>
+                        {l}
+                        <CloseButton
+                          variant="white"
+                          onClick={() => deleteLimitation(l)}
+                        />
+                      </Stack>
+                    </Badge>
+                  ))}
+                </Stack>
+              </Form.Group>
+            </Form>
+          </ProfileSection>)}
+        <ProfileSection title='Resume'>
+          <Form onSubmit={resumeHandler} noValidate validated={!duplicate || resume.length === 0}>
+            <Form.Group className="mb-3" >
+            <Form.Group as={Row} className="mb-3" controlId="resume">
+              <Form.Label column sm="1">
+                  Filename
+              </Form.Label>
+                <Form.Group as={Col}>
+                <Form.Control  placeholder="E.g. Resume_v1" required  onChange={e => setDesc(e.target.value)} isInvalid={duplicate} />
+                  <Form.Control.Feedback type="invalid">
+                    {desc.length === 0 ? "Please choose a filename" : "Filename exists. Please choose other name"}
+                  </Form.Control.Feedback>
+            </Form.Group>
+            </Form.Group>
+              <Form.Control type="file" required accept=".pdf" onChange={addResumeHandler} />
+              <ProgressBar now={resumeProgress}></ProgressBar>
               <Stack direction="horizontal" gap={1} className="mt-2">
-                {limitations.map((l, i) => (
+                {resume.map((l, i) => (
                   <Badge key={i} bg="secondary">
                     <Stack direction="horizontal" gap={2}>
-                      {l}
-                      <CloseButton variant="white"  onClick={() => deleteLimitation(l)}/>
+                      <Button variant="secondary" size="sm" href={l.link}>{l.desc}</Button>
+                      <CloseButton variant="white" onClick={() => deleteResume(l)} />
                     </Stack>
                   </Badge>
                 ))}
               </Stack>
+              <hr />
+              <Button type='submit' disabled={duplicate && resume.length !== 0}>
+                Upload
+                </Button>
             </Form.Group>
           </Form>
         </ProfileSection>
-        )}
-      </Stack>
-    </Container>
+
+        </Stack>
+      </PageBody>
+    </Page>
   );
 }
