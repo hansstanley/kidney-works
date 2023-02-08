@@ -28,12 +28,18 @@ export default function ProfileCreationPage() {
   const { user, signOutOfSession } = useAuth();
   const { skills, setSkillsState } = UseSkills();
   const { limitations, setLimitationState } = UseLimitations();
-  const { name, email, setName, setEmail, avatar, eduLevel, setEduLevel, created, setCreated } = useUserInfo();
+  const { name, email, setName, setEmail, avatar, eduLevel, setEduLevel, created, setCreated, 
+    companyName, setCompanyName, companyDescription, setCompanyDescription } = useUserInfo();
   const [inputName, setInputName] = useState(name);
   const [inputEmail, setInputEmail] = useState(email);
   const [inputSkill, setInputSkill] = useState("");
   const [inputLimitation, setInputLimitation] = useState("");
   const [progress, setProgress] = useState(0);
+
+  const [isEmployer, setIsEmployer] = useState(false);
+  const [inputCompanyName, setInputCompanyName] = useState("");
+  const [inputCompanyDescription, setInputCompanyDescription] = useState("");
+
   const navigate = useNavigate();
 
   // eslint-disable-next-line no-restricted-globals
@@ -133,6 +139,43 @@ export default function ProfileCreationPage() {
     })
   }
 
+  function updateCompanyName(companyName: String) {
+    const userSnap = doc(db, "users", user?.uid || '')
+    updateDoc(userSnap, {
+      companyName: companyName,
+    })
+    onSnapshot(userSnap, (doc) => {
+      if (doc.exists()) {
+        setCompanyName(doc.data()?.companyName);
+      }
+    })
+  }
+
+  function updateCompanyDescription(companyDescription: String) {
+    const userSnap = doc(db, "users", user?.uid || '')
+    updateDoc(userSnap, {
+      companyDescription: companyDescription,
+    })
+    onSnapshot(userSnap, (doc) => {
+      if (doc.exists()) {
+        setCompanyName(doc.data()?.companyDescription);
+      }
+    })
+  }
+
+  function updateCreated () {
+    setCreated(true);
+    const userSnap = doc(db, "users", user?.uid || '')
+    updateDoc(userSnap, {
+      created: true,
+    })
+    onSnapshot(userSnap, (doc) => {
+      if (doc.exists()) {
+        setCreated(doc.data()?.created);
+      }
+    })
+  }
+
   
 
   const uploadFiles = (file: File) => {
@@ -173,25 +216,20 @@ export default function ProfileCreationPage() {
   }
 
   async function updateAll(name: String, email: String, eduLevel: String) {
-    updateUserInfo(inputName, inputEmail);
-    updateEduLevel(eduLevel);
-    setCreated(true);
-
-    const userSnap = doc(db, "users", user?.uid || '')
-    await updateDoc(userSnap, {
-      created: true,
-    })
-    onSnapshot(userSnap, (doc) => {
-      if (doc.exists()) {
-        setCreated(doc.data()?.created);
-      }
-    })
-
+    
+    if (isEmployer) {
+        updateCompanyName(inputCompanyName);
+        updateCompanyDescription(inputCompanyDescription);
+    } else {
+        updateUserInfo(inputName, inputEmail);
+        updateEduLevel(eduLevel);
+    }
+    updateCreated();
     navigate(NAV_LINKS.HOME);
   }
 
   return (
-    (<Container className="pb-5 background">
+    <Container className="pb-5 background">
       <PageHero title="Profile" />
       <Stack gap={4}>
         <ProfileSection>
@@ -229,6 +267,33 @@ export default function ProfileCreationPage() {
             <hr />
           </Form>
         </ProfileSection>
+
+        <ProfileSection title="Role">
+            <Form>
+                <Form.Group className="mb-3" controlId="education">
+                <Form.Label>Employer or Looking for Hire</Form.Label>
+                <Form.Select onChange={e => {e.target.value === "0" ? setIsEmployer(true): setIsEmployer(false)}} value={eduLevel} defaultValue={1}>
+                    <option value="1">Looking for Hire</option>
+                    <option value="0">Employer</option>
+                </Form.Select>
+                </Form.Group>
+            </Form>
+        </ProfileSection>
+
+        {isEmployer ? (
+        <ProfileSection title="Company Name">
+            <Form>
+                <Form.Group className="mb-3" controlId="companyname">
+                    <Form.Label>Company name</Form.Label>
+                    <Form.Control
+                    type="text"
+                    placeholder="Your company's name"
+                    onChange={(e) => setInputCompanyName(e.target.value)}
+                    />
+                </Form.Group>
+            </Form>
+        </ProfileSection>)
+        : (
         <ProfileSection title="Education">
           <Form>
             <Form.Group className="mb-3" controlId="education">
@@ -250,6 +315,21 @@ export default function ProfileCreationPage() {
             <hr />
           </Form>
         </ProfileSection>
+        )}
+        {isEmployer ? (
+        <ProfileSection title="Company Description">
+            <Form>
+                <Form.Group className="mb-3" controlId="companydescription">
+                    <Form.Label>Company name</Form.Label>
+                    <Form.Control
+                    type="text"
+                    placeholder="A description of your company's dealings"
+                    onChange={(e) => setInputCompanyDescription(e.target.value)}
+                    />
+                </Form.Group>
+            </Form>
+        </ProfileSection> 
+        ) : (
         <ProfileSection title="Skills and limitations">
           <Form>
             <Form.Group className="mb-3" controlId="skills">
@@ -292,10 +372,11 @@ export default function ProfileCreationPage() {
             </Form.Group>
           </Form>
         </ProfileSection>
+        )}
         <Button onClick={() => updateAll(inputName, inputEmail, eduLevel)}>
             Create
         </Button>
       </Stack>
-    </Container>)
+    </Container>
   );
 }

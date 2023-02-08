@@ -92,6 +92,8 @@ export const useProvideAuth = () => {
             name: user.displayName,
             avatar: user?.photoURL || "https://1fid.com/wp-content/uploads/2022/07/aesthetic-profile-picture-2-1024x1024.jpg",
             eduLevel: null,
+            companyName: null,
+            companyDescription: null,
             created: false
           });
         }
