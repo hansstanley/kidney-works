@@ -5,7 +5,7 @@ import { useAuth } from "./useAuth";
 
 export default function UseSkills() {
     const { user } = useAuth();
-    const [skills, setSkillsState] = useState<String[]>([]);
+    const [skills, setSkillsState] = useState<string[]>([]);
 
     useEffect(() => {
         async function getSkills() {

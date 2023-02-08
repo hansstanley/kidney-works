@@ -22,21 +22,28 @@ import UseLimitations from '../../hooks/useLimitations';
 import useUserInfo from '../../hooks/useUserInfo';
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import "../Page.css";
+import AppResume from '../../types/resume.app';
+import UseResume from '../../hooks/useResume';
 
 
 export default function ProfilePage() {
   const { user } = useAuth();
   const { skills, setSkillsState } = UseSkills();
   const { limitations, setLimitationState } = UseLimitations();
+  const {resume, setResumeState} = UseResume();
   const { name, email, setName, setEmail, avatar, eduLevel, setEduLevel } = useUserInfo();
   const [inputName, setInputName] = useState(name);
   const [inputEmail, setInputEmail] = useState(email);
   const [inputSkill, setInputSkill] = useState("");
   const [inputLimitation, setInputLimitation] = useState("");
-  const [progress, setProgress] = useState(0);
-  const [resume, setResume] = useState(["resume_v1", "resume_v2"])
+  const [avatarProgress, setAvatarProgress] = useState(0);
+  const [resumeProgress, setResumeProgress] = useState(0);
+  const [resumeFile, setResumeFile] = useState<File | null>(null)
+  const [desc, setDesc] = useState("");
 
-  function updateUserInfo(name: String, email: String) {
+  const storageRef = ref(storage, `/${user?.uid}`);
+
+  function updateUserInfo(name: string, email: string) {
     const userSnap = doc(db, "users", user?.uid || '')
     updateDoc(userSnap, {
       name: name,
@@ -54,19 +61,19 @@ export default function ProfilePage() {
       addSkill(inputSkill);
   }
 
-  function setSkills(newSkills: String[]) {
+  function setSkills(newSkills: string[]) {
     setSkillsState(newSkills);
-      setDoc(doc(db, "skills", user?.uid || ''), {skills: newSkills });
+    setDoc(doc(db, "skills", user?.uid || '' ), {skills: newSkills });
   }
 
-  function addSkill(skill: String) {
+  function addSkill(skill: string) {
     const newSkills = [
       ...skills, skill
     ];
     setSkills(newSkills);
   }
 
-  function deleteSkill(skill: String) {
+  function deleteSkill(skill: string) {
     const skillsSnap = doc(db, "skills", user?.uid || '')
     updateDoc(skillsSnap, {
        skills:  arrayRemove(skill),
@@ -84,19 +91,19 @@ export default function ProfilePage() {
     addLimitation(inputLimitation);
   }
 
-  function setLimitations(newLimitations: String[]) {
+  function setLimitations(newLimitations: string[]) {
     setLimitationState(newLimitations);
     setDoc(doc(db, "limitations", user?.uid || ''), {limitations: newLimitations});
   }
 
-  function addLimitation(limitation: String) {
+  function addLimitation(limitation: string) {
     const newLimitations = [
       ...limitations, limitation
     ];
     setLimitations(newLimitations);
   }
 
-  function deleteLimitation(limitation: String) {
+  function deleteLimitation(limitation: string) {
     const limitationSnap = doc(db, "limitations", user?.uid || '')
     updateDoc(limitationSnap, {
         limitations: arrayRemove(limitation),
@@ -110,7 +117,7 @@ export default function ProfilePage() {
     })
   }
 
-  function updateEduLevel(eduLevel: String) {
+  function updateEduLevel(eduLevel: string) {
     const userSnap = doc(db, "users", user?.uid || '')
     updateDoc(userSnap, {
       eduLevel: eduLevel,
@@ -122,11 +129,10 @@ export default function ProfilePage() {
     })
   }
 
-  const uploadPic = (file: File) => {
+  const uploadResume = (file: File | null) => {
     if (!file) return;
-    const storageRef = ref(storage);
-    const imageRef = ref(storageRef, `/image/${user?.uid}`);
-    const spaceRef = ref(imageRef, file.name);
+    const fileRef = ref(storageRef, `/resume`);
+    const spaceRef = ref(fileRef, desc);
     const uploadTask = uploadBytesResumable(spaceRef, file);
     uploadTask.on(
       "state_changed",
@@ -134,7 +140,72 @@ export default function ProfilePage() {
         const prog = Math.round(
           (snapshot.bytesTransferred / snapshot.totalBytes) * 100
         );
-        setProgress(prog);
+        setResumeProgress(prog);
+      },
+      (err) => console.log(err),
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((url) => {
+          addResume(desc, url);
+        });
+      }
+    );
+  }
+
+  function addResume(desc: string, link: string) {
+    const newResume = [
+      ...resume, {
+        desc: desc,
+        link: link
+      }
+    ]
+    setResume(newResume);
+  }
+
+  function setResume(newResume: AppResume[]) {
+    setResumeState(newResume);
+    setDoc(doc(db, "resumes", user?.uid || ''), {
+      resumes: newResume
+    });
+  }
+
+  function deleteResume(resume: AppResume) {
+    const resumeSnap = doc(db, "resumes", user?.uid || '')
+    updateDoc(resumeSnap, {
+        resumes: arrayRemove(resume),
+    });
+    onSnapshot(resumeSnap, (doc) => {
+      if (doc.exists()) {
+        setResumeState(doc.data().resumes);
+      } else {
+        setResumeState([]);
+      }
+    })
+  }
+
+  const addResumeHandler = (e: React.ChangeEvent<HTMLInputElement>)  => {
+    e.preventDefault();
+    if (e.target.files) {
+        setResumeFile(e.target.files[0]);
+    }
+  }
+
+  const resumeHandler = (e: React.FormEvent<HTMLFormElement>)  => {
+    e.preventDefault();
+    uploadResume(resumeFile);
+  }
+
+  const uploadPic = (file: File) => {
+    if (!file) return;
+    const imageRef = ref(storageRef, `/image`);
+    const spaceRef = ref(imageRef, "profilepic");
+    const uploadTask = uploadBytesResumable(spaceRef, file);
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        const prog = Math.round(
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+        );
+        setAvatarProgress(prog);
       },
       (err) => console.log(err),
       () => {
@@ -149,7 +220,7 @@ export default function ProfilePage() {
 
   const openFile = () => {
     document.getElementById("fileID")?.click();
-    setProgress(0);
+    setAvatarProgress(0);
   };
 
   const avatarHandler = (e: React.ChangeEvent<HTMLInputElement>)  => {
@@ -172,7 +243,7 @@ export default function ProfilePage() {
             style={{ width: 100, height: 100 }}
           />
           <Button variant="secondary" onClick={() => openFile()}>Change</Button>
-          <ProgressBar now={progress} />
+          <ProgressBar now={avatarProgress} />
         </ProfileSection>
         <ProfileSection title="Account">
           <Form>
@@ -267,30 +338,31 @@ export default function ProfilePage() {
           </Form>
         </ProfileSection>
         <ProfileSection title='Resume'>
-          <Form>
+          <Form onSubmit={resumeHandler}>
             <Form.Group className="mb-3" >
-            <Form.Group as={Row} className="mb-3" controlId="formPlaintextEmail">
+            <Form.Group as={Row} className="mb-3" controlId="resume">
               <Form.Label column sm="1">
                   Description
               </Form.Label>
               <Col sm="11">
-                <Form.Control  />
+                <Form.Control  placeholder="E.g. Resume_v1" required  onChange={e => setDesc(e.target.value)} />
               </Col>
             </Form.Group>
-              <Form.Control type="file" />
+              <Form.Control type="file" accept=".pdf" onChange={addResumeHandler} />
+              <ProgressBar now={resumeProgress}></ProgressBar>
               <Stack direction="horizontal" gap={1} className="mt-2">
                 {resume.map((l, i) => (
                   <Badge key={i} bg="secondary">
                     <Stack direction="horizontal" gap={2}>
-                      <Button variant="secondary" size="sm">{l}</Button>
-                      <CloseButton variant="white"  onClick={() => deleteLimitation(l)}/>
+                      <Button variant="secondary" size="sm" href={l.link}>{l.desc}</Button>
+                      <CloseButton variant="white" onClick={() => deleteResume(l)} />
                     </Stack>
                   </Badge>
                 ))}
               </Stack>
+              <hr />
+              <Button type='submit'>Upload</Button>
             </Form.Group>
-            <hr />
-            <Button  type="submit" href="#">Upload</Button>
           </Form>
         </ProfileSection>
       </Stack>

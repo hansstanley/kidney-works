@@ -5,7 +5,7 @@ import { useAuth } from "./useAuth";
 
 export default function UseLimitations() {
     const { user } = useAuth();
-    const [limitations, setLimitationState] = useState<String[]>([]);
+    const [limitations, setLimitationState] = useState<string[]>([]);
 
     useEffect(() => {
         async function getLimitations() {
