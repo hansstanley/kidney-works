@@ -3,8 +3,6 @@ import { Button, Card, Col, Container, Row } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { NAV_LINKS } from '../../utils/constants';
-import "../Page.css";
-
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -20,7 +18,7 @@ export default function LoginPage() {
 
   return (
     <Container
-      className="d-flex flex-column justify-content-center align-content-center background"
+      className="d-flex flex-column justify-content-center align-content-center"
       style={{ height: 'calc(100vh - 56px)' }}>
       <Row>
         <Col xs={6} className="mx-auto">
