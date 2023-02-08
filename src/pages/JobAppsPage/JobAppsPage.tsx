@@ -1,11 +1,9 @@
 import { Button, Container, Stack } from 'react-bootstrap';
 import { Page, PageBody, PageHeader } from '../../components/Page';
-import PageHero from '../../components/PageHero';
 import { useAuth } from '../../hooks/useAuth';
 import useJobs from '../../hooks/useJobs';
 import { NAV_LINKS } from '../../utils/constants';
 import { JobsList } from '../JobsPage';
-import '../Page.css';
 
 export default function JobAppsPage() {
   const { user } = useAuth();

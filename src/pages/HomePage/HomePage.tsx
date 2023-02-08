@@ -1,7 +1,6 @@
 import { Button, Container, Stack } from 'react-bootstrap';
 import { NAV_LINKS } from '../../utils/constants';
 import './HomePage.css';
-import '../Page.css';
 
 export default function HomePage() {
   return (

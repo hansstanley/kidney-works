@@ -3,14 +3,12 @@ import {
   Badge,
   Button,
   CloseButton,
-  Container,
   Form,
   Image,
   InputGroup,
   ProgressBar,
   Stack,
 } from 'react-bootstrap';
-import PageHero from '../../components/PageHero';
 import { useAuth } from '../../hooks/useAuth';
 import ProfileSection from './ProfileSection';
 import {
@@ -25,7 +23,6 @@ import UseSkills from '../../hooks/useSkills';
 import UseLimitations from '../../hooks/useLimitations';
 import useUserInfo from '../../hooks/useUserInfo';
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
-import '../Page.css';
 import { Page, PageBody, PageHeader } from '../../components/Page';
 
 export default function ProfilePage() {
