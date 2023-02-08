@@ -6,4 +6,5 @@ export const NAV_LINKS = {
   JOBS_APPLIED: '/my-apps',
   BLOG: '/blog',
   PROFILE: '/profile',
+  PROFILE_CREATION: '/create_profile'
 };

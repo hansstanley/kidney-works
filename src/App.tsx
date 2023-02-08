@@ -11,6 +11,7 @@ import JobDetailPage from './pages/JobDetailPage';
 import ErrorPage from './pages/ErrorPage';
 import AboutPage from './pages/AboutPage';
 import JobAppsPage from './pages/JobAppsPage';
+import ProfileCreationPage from './pages/ProfileCreationPage';
 
 const router = createBrowserRouter([
   { path: NAV_LINKS.HOME, element: <HomePage />, errorElement: <ErrorPage /> },
@@ -21,6 +22,7 @@ const router = createBrowserRouter([
   { path: NAV_LINKS.BLOG, element: <BlogPage /> },
   { path: NAV_LINKS.PROFILE, element: <ProfilePage /> },
   { path: NAV_LINKS.ABOUT, element: <AboutPage /> },
+  { path: NAV_LINKS.PROFILE_CREATION, element: <ProfileCreationPage />},
 ]);
 
 function App() {

@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { NAV_LINKS } from '../../utils/constants';
 import "../Page.css";
+import useUserInfo from '../../hooks/useUserInfo';
 
 
 export default function LoginPage() {
@@ -11,17 +12,21 @@ export default function LoginPage() {
   const { signInWithGoogle, signOutOfSession, user } = useAuth();
 
   const hasAuth = useMemo(() => !!user, [user]);
+  const { created, fetched } = useUserInfo();
 
   useEffect(() => {
-    if (hasAuth) {
-      navigate(NAV_LINKS.HOME);
+    if (fetched && hasAuth) {
+      if (created) {
+        navigate(NAV_LINKS.HOME);
+      } else { 
+        navigate(NAV_LINKS.PROFILE_CREATION);
+      }
     }
-  }, [hasAuth, navigate]);
+  }, [created, fetched, hasAuth, navigate]);
 
   return (
     <Container
-      className="d-flex flex-column justify-content-center align-content-center background"
-      style={{ height: 'calc(100vh - 56px)' }}>
+      className="d-flex flex-column justify-content-center align-content-center background">
       <Row>
         <Col xs={6} className="mx-auto">
           <Card className="text-center">
