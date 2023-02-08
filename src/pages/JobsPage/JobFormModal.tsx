@@ -40,10 +40,6 @@ export default function JobFormModal({
     }
   }
 
-  function getRandomInt(max: number) {
-    return Math.floor(Math.random() * max);
-  }
-
   function makeJob() {
     const newJob: AppJob = {
       id: 'ignored', // ignored
@@ -55,6 +51,12 @@ export default function JobFormModal({
     addJob(newJob);
   }
 
+  function createButtonHandler(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    makeJob();
+    if (onHide) {
+      onHide();
+    }
+  }
   return (
     <Modal
       centered
@@ -115,7 +117,9 @@ export default function JobFormModal({
         <Button variant="secondary" onClick={onHide}>
           Cancel
         </Button>
-        <Button onClick={makeJob}>{isEdit ? 'Edit' : 'Create'}</Button>
+        <Button onClick={createButtonHandler}>
+          {isEdit ? 'Edit' : 'Create'}
+        </Button>
       </Modal.Footer>
     </Modal>
   );
