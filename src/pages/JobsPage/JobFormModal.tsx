@@ -2,8 +2,7 @@ import { useMemo, useState } from 'react';
 import { Button, Form, Modal } from 'react-bootstrap';
 import AppJob from '../../types/job.app';
 import { addDoc, collection } from 'firebase/firestore';
-import { db } from "../../utils/firebase";
-import { v1 as uuidv1 } from 'uuid';
+import { db } from '../../utils/firebase';
 
 export interface JobFormModalProps {
   job?: AppJob;
@@ -13,7 +12,13 @@ export interface JobFormModalProps {
   setJobsState?: React.Dispatch<React.SetStateAction<AppJob[]>>;
 }
 
-export default function JobFormModal({ job, show, onHide, jobs, setJobsState }: JobFormModalProps) {
+export default function JobFormModal({
+  job,
+  show,
+  onHide,
+  jobs,
+  setJobsState,
+}: JobFormModalProps) {
   const [newCompany, setCompany] = useState(job?.company || '');
   const [newTitle, setTitle] = useState(job?.title || '');
   const [newDescription, setDescription] = useState(job?.description || '');
@@ -23,18 +28,15 @@ export default function JobFormModal({ job, show, onHide, jobs, setJobsState }: 
 
   function addJob(job: AppJob) {
     if (jobs && setJobsState) {
-      const newJobs = [
-        ...jobs, job
-      ];
-      const colRef = collection(db, "jobs")
+      const colRef = collection(db, 'jobs');
       addDoc(colRef, {
         title: newTitle,
         company: newCompany,
         description: newDescription,
         requirements: newRequirements,
-      })
-
-      setJobsState(newJobs);
+      }).then((doc) => {
+        setJobsState([...jobs, { ...job, id: doc.id }]);
+      });
     }
   }
 
@@ -44,12 +46,12 @@ export default function JobFormModal({ job, show, onHide, jobs, setJobsState }: 
 
   function makeJob() {
     const newJob: AppJob = {
-      id:uuidv1(),
+      id: 'ignored', // ignored
       title: newTitle,
       company: newCompany,
       description: newDescription,
       requirements: newRequirements,
-    }
+    };
     addJob(newJob);
   }
 
