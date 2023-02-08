@@ -3,11 +3,13 @@ import {
   Badge,
   Button,
   CloseButton,
+  Col,
   Container,
   Form,
   Image,
   InputGroup,
   ProgressBar,
+  Row,
   Stack,
 } from 'react-bootstrap';
 import PageHero from '../../components/PageHero';
@@ -30,6 +32,7 @@ export default function ProfilePage() {
   const [inputSkill, setInputSkill] = useState("");
   const [inputLimitation, setInputLimitation] = useState("");
   const [progress, setProgress] = useState(0);
+  const [resume, setResume] = useState(["resume_v1", "resume_v2"])
 
   function updateUserInfo(name: String, email: String) {
     const userSnap = doc(db, "users", user?.uid || '')
@@ -117,7 +120,7 @@ export default function ProfilePage() {
     })
   }
 
-  const uploadFiles = (file: File) => {
+  const uploadPic = (file: File) => {
     if (!file) return;
     const storageRef = ref(storage);
     const imageRef = ref(storageRef, `/image/${user?.uid}`);
@@ -150,7 +153,7 @@ export default function ProfilePage() {
   const avatarHandler = (e: React.ChangeEvent<HTMLInputElement>)  => {
     e.preventDefault();
     if (e.target.files) {
-        uploadFiles(e.target.files[0]);
+        uploadPic(e.target.files[0]);
     }
   }
 
@@ -259,6 +262,33 @@ export default function ProfilePage() {
                 ))}
               </Stack>
             </Form.Group>
+          </Form>
+        </ProfileSection>
+        <ProfileSection title='Resume'>
+          <Form>
+            <Form.Group className="mb-3" >
+            <Form.Group as={Row} className="mb-3" controlId="formPlaintextEmail">
+              <Form.Label column sm="1">
+                  Description
+              </Form.Label>
+              <Col sm="11">
+                <Form.Control  />
+              </Col>
+            </Form.Group>
+              <Form.Control type="file" />
+              <Stack direction="horizontal" gap={1} className="mt-2">
+                {resume.map((l, i) => (
+                  <Badge key={i} bg="secondary">
+                    <Stack direction="horizontal" gap={2}>
+                      <Button variant="secondary" size="sm">{l}</Button>
+                      <CloseButton variant="white"  onClick={() => deleteLimitation(l)}/>
+                    </Stack>
+                  </Badge>
+                ))}
+              </Stack>
+            </Form.Group>
+            <hr />
+            <Button  type="submit" href="#">Upload</Button>
           </Form>
         </ProfileSection>
       </Stack>
