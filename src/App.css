@@ -36,3 +36,10 @@
     transform: rotate(360deg);
   }
 }
+
+.App-page {
+  display: flex;
+  flex-direction: column;
+  background: rgb(92,255,231);
+  background: radial-gradient(circle, rgba(92,255,231,0.468312324929972) 0%, rgba(33,110,195,0.2666316526610645) 100%);
+}

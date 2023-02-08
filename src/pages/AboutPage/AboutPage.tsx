@@ -1,19 +1,27 @@
 import { Card, Container, Stack } from 'react-bootstrap';
 import PageHero from '../../components/PageHero';
-import "../Page.css";
+import PageSurface from '../../components/PageSurface';
+import '../Page.css';
 
 export default function AboutPage() {
   return (
-    <div className='background'>
-      <Container className="text-center align-items-center">
-        <Stack gap={3}>
-          <PageHero
-            title="About"
-            tagline="Empowering dialysis patients, enriching the workforce"
-          />
+    <>
+      <Container>
+        <Card style={{ transform: 'translateY(20px)' }}>
+          <Card.Body>
+            <PageHero
+              noDivider
+              title="About"
+              tagline="Empowering dialysis patients, enriching the workforce"
+            />
+          </Card.Body>
+        </Card>
+      </Container>
+      <PageSurface>
+        <Container>
           <Card>
             <Card.Body>
-              <Card.Text className="text-start">
+              <Card.Text>
                 Our job portal is dedicated to connecting employers with kidney
                 dialysis patients, providing a platform for patients to find
                 employment opportunities that are flexible and accommodating to
@@ -30,8 +38,8 @@ export default function AboutPage() {
               </Card.Text>
             </Card.Body>
           </Card>
-        </Stack>
-      </Container>
-    </div>
+        </Container>
+      </PageSurface>
+    </>
   );
 }
