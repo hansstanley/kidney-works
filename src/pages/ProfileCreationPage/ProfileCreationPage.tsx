@@ -28,14 +28,14 @@ export default function ProfileCreationPage() {
   const { user, signOutOfSession } = useAuth();
   const { skills, setSkillsState } = UseSkills();
   const { limitations, setLimitationState } = UseLimitations();
-  const { name, email, setName, setEmail, avatar, eduLevel, setEduLevel, created, setCreated, setCompanyName, setCompanyDescription } = useUserInfo();
+  const { name, email, setName, setEmail, avatar, eduLevel, setEduLevel, created, setCreated, setCompanyName, setCompanyDescription, setIsEmployer } = useUserInfo();
   const [inputName, setInputName] = useState(name);
   const [inputEmail, setInputEmail] = useState(email);
   const [inputSkill, setInputSkill] = useState("");
   const [inputLimitation, setInputLimitation] = useState("");
   const [progress, setProgress] = useState(0);
 
-  const [isEmployer, setIsEmployer] = useState(false);
+  const [inputIsEmployer, setInputIsEmployer] = useState(false);
   const [inputCompanyName, setInputCompanyName] = useState("");
   const [inputCompanyDescription, setInputCompanyDescription] = useState("");
 
@@ -162,6 +162,18 @@ export default function ProfileCreationPage() {
     })
   }
 
+  function updateIsEmployer (isEmployer: boolean) {
+    const userSnap = doc(db, "users", user?.uid || '')
+    updateDoc(userSnap, {
+      isEmployer: inputIsEmployer,
+    })
+    onSnapshot(userSnap, (doc) => {
+      if (doc.exists()) {
+        setIsEmployer(doc.data()?.isEmployer);
+      }
+    })
+  }
+
   function updateCreated () {
     setCreated(true);
     const userSnap = doc(db, "users", user?.uid || '')
@@ -216,7 +228,7 @@ export default function ProfileCreationPage() {
 
   async function updateAll(name: String, email: String, eduLevel: String) {
     
-    if (isEmployer) {
+    if (inputIsEmployer) {
         updateCompanyName(inputCompanyName);
         updateCompanyDescription(inputCompanyDescription);
         
@@ -234,6 +246,7 @@ export default function ProfileCreationPage() {
         })
     }
     updateCreated();
+    updateIsEmployer(inputIsEmployer);
     navigate(NAV_LINKS.HOME);
   }
 
@@ -281,7 +294,7 @@ export default function ProfileCreationPage() {
             <Form>
                 <Form.Group className="mb-3" controlId="education">
                 <Form.Label>Employer or Looking for Hire</Form.Label>
-                <Form.Select onChange={e => {e.target.value === "0" ? setIsEmployer(true): setIsEmployer(false)}} value={eduLevel} defaultValue={1}>
+                <Form.Select onChange={e => {e.target.value === "0" ? setInputIsEmployer(true): setInputIsEmployer(false)}} value={eduLevel} defaultValue={1}>
                     <option value="1">Looking for Hire</option>
                     <option value="0">Employer</option>
                 </Form.Select>
@@ -289,7 +302,7 @@ export default function ProfileCreationPage() {
             </Form>
         </ProfileSection>
 
-        {isEmployer ? (
+        {inputIsEmployer ? (
         <ProfileSection title="Company Name">
             <Form>
                 <Form.Group className="mb-3" controlId="companyname">
@@ -324,7 +337,7 @@ export default function ProfileCreationPage() {
           </Form>
         </ProfileSection>
         )}
-        {isEmployer ? (
+        {inputIsEmployer ? (
         <ProfileSection title="Company Description">
             <Form>
                 <Form.Group className="mb-3" controlId="companydescription">

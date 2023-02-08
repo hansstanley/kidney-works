@@ -13,6 +13,7 @@ export default function useUserInfo() {
   const [companyDescription, setCompanyDescription] = useState("");
   const [created, setCreated] = useState(false);
   const [fetched, setFetched] = useState(false);
+  const [isEmployer, setIsEmployer] = useState(false);
 
   useEffect(() => {
     async function getUserData() {
@@ -23,12 +24,15 @@ export default function useUserInfo() {
         setEmail(snapshot.data()?.email);
         setEduLevel(snapshot.data()?.eduLevel);
         setCreated(snapshot.data()?.created);
+        setCompanyName(snapshot.data()?.companyName);
+        setCompanyDescription(snapshot.data()?.companyDescription);
+        setIsEmployer(snapshot.data()?.isEmployer);
         setFetched(true);
       });
     }
     getUserData();
   },[user?.uid])
 
-  return { name, avatar, email, eduLevel, created, fetched, companyName, companyDescription, 
-    setName, setEmail, setAvatar, setEduLevel, setCreated, setCompanyName, setCompanyDescription};
+  return { name, avatar, email, eduLevel, created, fetched, companyName, companyDescription, isEmployer,
+    setName, setEmail, setAvatar, setEduLevel, setCreated, setCompanyName, setCompanyDescription, setIsEmployer};
 }

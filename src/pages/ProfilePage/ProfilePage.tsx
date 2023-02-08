@@ -26,12 +26,16 @@ export default function ProfilePage() {
   const { user } = useAuth();
   const { skills, setSkillsState } = UseSkills();
   const { limitations, setLimitationState } = UseLimitations();
-  const { name, email, setName, setEmail, avatar, eduLevel, setEduLevel } = useUserInfo();
+  const { name, email, setName, setEmail, avatar, eduLevel, setEduLevel, companyName, setCompanyName, companyDescription, setCompanyDescription, isEmployer } = useUserInfo();
   const [inputName, setInputName] = useState(name);
   const [inputEmail, setInputEmail] = useState(email);
   const [inputSkill, setInputSkill] = useState("");
   const [inputLimitation, setInputLimitation] = useState("");
   const [progress, setProgress] = useState(0);
+
+  const [inputCompanyName, setInputCompanyName] = useState("");
+  const [inputCompanyDescription, setInputCompanyDescription] = useState("");
+
 
   function updateUserInfo(name: String, email: String) {
     const userSnap = doc(db, "users", user?.uid || '')
@@ -119,6 +123,30 @@ export default function ProfilePage() {
     })
   }
 
+  function updateCompanyName(companyName: String) {
+    const userSnap = doc(db, "users", user?.uid || '')
+    updateDoc(userSnap, {
+      companyName: companyName,
+    })
+    onSnapshot(userSnap, (doc) => {
+      if (doc.exists()) {
+        setCompanyName(doc.data()?.companyName);
+      }
+    })
+  }
+
+  function updateCompanyDescription(companyDescription: String) {
+    const userSnap = doc(db, "users", user?.uid || '')
+    updateDoc(userSnap, {
+      companyDescription: companyDescription,
+    })
+    onSnapshot(userSnap, (doc) => {
+      if (doc.exists()) {
+        setCompanyDescription(doc.data()?.companyDescription);
+      }
+    })
+  }
+
   const uploadFiles = (file: File) => {
     if (!file) return;
     const storageRef = ref(storage);
@@ -143,6 +171,7 @@ export default function ProfilePage() {
       }
     );
   };
+  
 
   const openFile = () => {
     document.getElementById("fileID")?.click();
@@ -197,11 +226,29 @@ export default function ProfilePage() {
             </Button>
           </Form>
         </ProfileSection>
+        {isEmployer ? (
+        <ProfileSection title="Company Name">
+            <Form>
+                <Form.Group className="mb-3" controlId="companyname">
+                    <Form.Control
+                    type="text"
+                    placeholder="Your company's name"
+                    defaultValue={companyName}
+                    onChange={(e) => setInputCompanyName(e.target.value)}
+                    />
+                </Form.Group>
+            </Form>
+            <hr />
+            <Button type="submit" href="#" onClick={() => updateCompanyName(inputCompanyName)}>
+              Update
+            </Button>
+        </ProfileSection>)
+        : (
         <ProfileSection title="Education">
           <Form>
             <Form.Group className="mb-3" controlId="education">
               <Form.Label>Education level</Form.Label>
-              <Form.Select onChange={e => setEduLevel(e.target.value)} value={eduLevel}>
+              <Form.Select onChange={e => setEduLevel(e.target.value)} value={eduLevel} defaultValue={eduLevel}>
                 <option value="0">No Education</option>
                 <option value="1">Primary Education</option>
                 <option value="2">Normal-level (N-level)</option>
@@ -215,12 +262,31 @@ export default function ProfilePage() {
                 <option value="10">PhD</option>
               </Form.Select>
             </Form.Group>
-            <hr />
+          </Form>
+          <hr />
             <Button type="submit" href="#" onClick={() => updateEduLevel(eduLevel)}>
               Update
             </Button>
-          </Form>
         </ProfileSection>
+        )}
+        {isEmployer ? (
+        <ProfileSection title="Company Description">
+            <Form>
+                <Form.Group className="mb-3" controlId="companydescription">
+                    <Form.Label>A description of your company's dealings</Form.Label>
+                    <Form.Control
+                    type="text"
+                    placeholder="A description of your company's dealings"
+                    defaultValue={companyDescription}
+                    onChange={(e) => setInputCompanyDescription(e.target.value)}
+                    />
+                </Form.Group>
+            </Form>
+            <Button type="submit" href="#" onClick={() => updateCompanyDescription(inputCompanyDescription)}>
+              Update
+            </Button>
+        </ProfileSection> 
+        ) : (
         <ProfileSection title="Skills and limitations">
           <Form>
             <Form.Group className="mb-3" controlId="skills">
@@ -263,6 +329,7 @@ export default function ProfilePage() {
             </Form.Group>
           </Form>
         </ProfileSection>
+        )}
       </Stack>
     </Container>
   );

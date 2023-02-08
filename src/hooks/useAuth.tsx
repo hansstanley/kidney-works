@@ -94,7 +94,8 @@ export const useProvideAuth = () => {
             eduLevel: null,
             companyName: null,
             companyDescription: null,
-            created: false
+            created: false,
+            isEmployer: true,
           });
         }
       }
