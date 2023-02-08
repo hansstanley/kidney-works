@@ -28,8 +28,7 @@ export default function ProfileCreationPage() {
   const { user, signOutOfSession } = useAuth();
   const { skills, setSkillsState } = UseSkills();
   const { limitations, setLimitationState } = UseLimitations();
-  const { name, email, setName, setEmail, avatar, eduLevel, setEduLevel, created, setCreated, 
-    companyName, setCompanyName, companyDescription, setCompanyDescription } = useUserInfo();
+  const { name, email, setName, setEmail, avatar, eduLevel, setEduLevel, created, setCreated, setCompanyName, setCompanyDescription } = useUserInfo();
   const [inputName, setInputName] = useState(name);
   const [inputEmail, setInputEmail] = useState(email);
   const [inputSkill, setInputSkill] = useState("");
@@ -158,7 +157,7 @@ export default function ProfileCreationPage() {
     })
     onSnapshot(userSnap, (doc) => {
       if (doc.exists()) {
-        setCompanyName(doc.data()?.companyDescription);
+        setCompanyDescription(doc.data()?.companyDescription);
       }
     })
   }
@@ -220,9 +219,19 @@ export default function ProfileCreationPage() {
     if (isEmployer) {
         updateCompanyName(inputCompanyName);
         updateCompanyDescription(inputCompanyDescription);
+        
+        const userSnap = doc(db, "stakeholders", "employers", "users", user?.uid || '');
+        await setDoc(userSnap, {
+            uid: user?.uid,
+        })
+
     } else {
         updateUserInfo(inputName, inputEmail);
         updateEduLevel(eduLevel);
+        const userSnap = doc(db, "stakeholders", "employees", "users", user?.uid || '');
+        await setDoc(userSnap, {
+            uid: user?.uid,
+        })
     }
     updateCreated();
     navigate(NAV_LINKS.HOME);
@@ -284,7 +293,6 @@ export default function ProfileCreationPage() {
         <ProfileSection title="Company Name">
             <Form>
                 <Form.Group className="mb-3" controlId="companyname">
-                    <Form.Label>Company name</Form.Label>
                     <Form.Control
                     type="text"
                     placeholder="Your company's name"
@@ -320,7 +328,7 @@ export default function ProfileCreationPage() {
         <ProfileSection title="Company Description">
             <Form>
                 <Form.Group className="mb-3" controlId="companydescription">
-                    <Form.Label>Company name</Form.Label>
+                    <Form.Label>A description of your company's dealings</Form.Label>
                     <Form.Control
                     type="text"
                     placeholder="A description of your company's dealings"
