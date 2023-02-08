@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Badge,
   Button,
@@ -9,6 +9,7 @@ import {
   InputGroup,
   ProgressBar,
   Row,
+  Spinner,
   Stack,
 } from 'react-bootstrap';
 import { useAuth } from '../../hooks/useAuth';
@@ -42,7 +43,8 @@ export default function ProfilePage() {
   const [inputLimitation, setInputLimitation] = useState("");
   const [avatarProgress, setAvatarProgress] = useState(0);
   const [resumeProgress, setResumeProgress] = useState(0);
-  const [resumeFile, setResumeFile] = useState<File | null>(null)
+  const [resumeFile, setResumeFile] = useState<File | null>(null);
+  const [duplicate, setDuplicate] = useState<boolean>(false);
   const [desc, setDesc] = useState("");
 
   const storageRef = ref(storage, `/${user?.uid}`);
@@ -235,11 +237,14 @@ export default function ProfilePage() {
   };
 
   const avatarHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
     if (e.target.files) {
         uploadPic(e.target.files[0]);
     }
   };
+
+  useEffect(() => {
+    setDuplicate(resume.filter(x => x.desc === desc).length !== 0);
+  },[desc, resume])
 
   return (
     <Page>
@@ -384,17 +389,20 @@ export default function ProfilePage() {
             </Form>
           </ProfileSection>
         <ProfileSection title='Resume'>
-          <Form onSubmit={resumeHandler}>
+          <Form onSubmit={resumeHandler} noValidate validated={!duplicate || resume.length === 0}>
             <Form.Group className="mb-3" >
             <Form.Group as={Row} className="mb-3" controlId="resume">
               <Form.Label column sm="1">
-                  Description
+                  Filename
               </Form.Label>
-              <Col sm="11">
-                <Form.Control  placeholder="E.g. Resume_v1" required  onChange={e => setDesc(e.target.value)} />
-              </Col>
+                <Form.Group as={Col}>
+                <Form.Control  placeholder="E.g. Resume_v1" required  onChange={e => setDesc(e.target.value)} isInvalid={duplicate} />
+                  <Form.Control.Feedback type="invalid">
+                    {desc.length === 0 ? "Please choose a filename" : "Filename exists. Please choose other name"}
+                  </Form.Control.Feedback>
             </Form.Group>
-              <Form.Control type="file" accept=".pdf" onChange={addResumeHandler} />
+            </Form.Group>
+              <Form.Control type="file" required accept=".pdf" onChange={addResumeHandler} />
               <ProgressBar now={resumeProgress}></ProgressBar>
               <Stack direction="horizontal" gap={1} className="mt-2">
                 {resume.map((l, i) => (
@@ -407,7 +415,9 @@ export default function ProfilePage() {
                 ))}
               </Stack>
               <hr />
-              <Button type='submit'>Upload</Button>
+              <Button type='submit' disabled={duplicate && resume.length !== 0}>
+                Upload
+                </Button>
             </Form.Group>
           </Form>
         </ProfileSection>
