@@ -24,7 +24,7 @@ import { db, storage } from '../../utils/firebase';
 import UseSkills from '../../hooks/useSkills';
 import UseLimitations from '../../hooks/useLimitations';
 import useUserInfo from '../../hooks/useUserInfo';
-import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import { deleteObject, getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import AppResume from '../../types/resume.app';
 import UseResume from '../../hooks/useResume';
 import { Page, PageBody, PageHeader } from '../../components/Page';
@@ -174,16 +174,23 @@ export default function ProfilePage() {
 
   function deleteResume(resume: AppResume) {
     const resumeSnap = doc(db, "resumes", user?.uid || '')
-    updateDoc(resumeSnap, {
+    const fileRef = ref(storageRef, `/resume`);
+    const spaceRef = ref(fileRef, resume.desc);
+    deleteObject(spaceRef).then(() => {
+      updateDoc(resumeSnap, {
         resumes: arrayRemove(resume),
+      });
+      onSnapshot(resumeSnap, (doc) => {
+        if (doc.exists()) {
+          setResumeState(doc.data().resumes);
+        } else {
+          setResumeState([]);
+        }
+      })
+    }).catch((error) => {
+      console.log("can't delete");
     });
-    onSnapshot(resumeSnap, (doc) => {
-      if (doc.exists()) {
-        setResumeState(doc.data().resumes);
-      } else {
-        setResumeState([]);
-      }
-    })
+    
   }
 
   const addResumeHandler = (e: React.ChangeEvent<HTMLInputElement>)  => {
