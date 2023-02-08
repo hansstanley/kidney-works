@@ -38,12 +38,36 @@ export default function JobsList({
     ['accepted', 'success'],
   ]);
 
+  const { user } = useAuth();
+  const hasAuth = useMemo(() => !!user, [user]);
+
   const applyButton = (job: AppJob) => {
     const hasApplied = appliedStatuses?.map((s) => s.jobId).includes(job.id);
+
+    const renderTooltip = (props: any) => (
+      <Tooltip id="button-tooltip" {...props}>
+        You have to be logged in to apply!
+      </Tooltip>
+    );
+
     if (hideActions || hasApplied) {
       return null;
     } else {
-      return <Button>Apply</Button>;
+      if (hasAuth) {
+        return <Button>Apply</Button>;
+      }
+      return (
+        <OverlayTrigger
+          placement="right"
+          delay={{ show: 250, hide: 400 }}
+          overlay={renderTooltip}
+        >
+          <div>
+            <Button className='' disabled>Apply</Button>
+          </div>
+        </OverlayTrigger>
+      );
+      
     }
   };
 
