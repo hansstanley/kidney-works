@@ -6,6 +6,7 @@ import AppJob from '../../types/job.app';
 import JobFormModal from './JobFormModal';
 import JobsList from './JobsList';
 import { useAuth } from '../../hooks/useAuth';
+import "../Page.css";
 
 export default function JobsPage() {
   const { user } = useAuth();
@@ -44,7 +45,7 @@ export default function JobsPage() {
   const visibleJobs = useMemo(() => jobs?.filter(filterJob), [jobs, filterJob]);
 
   return (
-    <Container className="pb-5">
+    <Container className="pb-5 background">
       <PageHero
         title="Start your journey today"
         tagline="Look for accessible jobs that fit your needs and interests, then hit apply!"

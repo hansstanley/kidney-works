@@ -21,6 +21,8 @@ import UseSkills from '../../hooks/useSkills';
 import UseLimitations from '../../hooks/useLimitations';
 import useUserInfo from '../../hooks/useUserInfo';
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import "../Page.css";
+
 
 export default function ProfilePage() {
   const { user } = useAuth();
@@ -158,7 +160,7 @@ export default function ProfilePage() {
   }
 
   return (
-    <Container className="pb-5">
+    <Container className="pb-5 background">
       <PageHero title="Profile" />
       <Stack gap={4}>
         <ProfileSection>

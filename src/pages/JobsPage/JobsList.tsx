@@ -46,49 +46,50 @@ export default function JobsList({
   };
 
   return (
-    <Stack gap={2}>
-      {hasJobs ? (
-        jobs?.map((j) => (
-          <Card
-            key={j.id}
-            border={statusToColour.get(
-              appliedStatuses?.find((s) => s.jobId === j.id)?.status || 'open',
-            )}>
+
+      <Stack gap={2}>
+        {hasJobs ? (
+          jobs?.map((j) => (
+            <Card
+              key={j.id}
+              border={statusToColour.get(
+                appliedStatuses?.find((s) => s.jobId === j.id)?.status || 'open',
+              )}>
+              <Card.Body>
+                <Card.Title>{j.title}</Card.Title>
+                <Card.Subtitle>{j.company}</Card.Subtitle>
+                <Card.Text>
+                  Description:<br></br>
+                  {j.description}
+                </Card.Text>
+                <Card.Text>
+                  Requirement:<br></br>
+                  {j.requirements}
+                </Card.Text>
+                <ButtonGroup>
+                  <Button variant="light" href={`${NAV_LINKS.JOBS}/${j.id}`}>
+                    View
+                  </Button>
+                  {applyButton(j)}
+                </ButtonGroup>
+              </Card.Body>
+              {hasStatuses ? (
+                <Card.Footer>
+                  {statusToText.get(
+                    appliedStatuses?.find((s) => s.jobId === j.id)?.status ||
+                      'open',
+                  )}
+                </Card.Footer>
+              ) : null}
+            </Card>
+          ))
+        ) : (
+          <Card>
             <Card.Body>
-              <Card.Title>{j.title}</Card.Title>
-              <Card.Subtitle>{j.company}</Card.Subtitle>
-              <Card.Text>
-                Description:<br></br>
-                {j.description}
-              </Card.Text>
-              <Card.Text>
-                Requirement:<br></br>
-                {j.requirements}
-              </Card.Text>
-              <ButtonGroup>
-                <Button variant="light" href={`${NAV_LINKS.JOBS}/${j.id}`}>
-                  View
-                </Button>
-                {applyButton(j)}
-              </ButtonGroup>
+              <Card.Text>No jobs found.</Card.Text>
             </Card.Body>
-            {hasStatuses ? (
-              <Card.Footer>
-                {statusToText.get(
-                  appliedStatuses?.find((s) => s.jobId === j.id)?.status ||
-                    'open',
-                )}
-              </Card.Footer>
-            ) : null}
           </Card>
-        ))
-      ) : (
-        <Card>
-          <Card.Body>
-            <Card.Text>No jobs found.</Card.Text>
-          </Card.Body>
-        </Card>
-      )}
-    </Stack>
+        )}
+      </Stack>
   );
 }

@@ -1,9 +1,10 @@
 import { Card, Container, Stack } from 'react-bootstrap';
 import PageHero from '../../components/PageHero';
+import "../Page.css";
 
 export default function AboutPage() {
   return (
-    <div>
+    <div className='background'>
       <Container className="text-center align-items-center">
         <Stack gap={3}>
           <PageHero

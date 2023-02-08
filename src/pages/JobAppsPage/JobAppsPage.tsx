@@ -4,6 +4,7 @@ import { useAuth } from '../../hooks/useAuth';
 import useJobs from '../../hooks/useJobs';
 import { NAV_LINKS } from '../../utils/constants';
 import { JobsList } from '../JobsPage';
+import "../Page.css";
 
 export default function JobAppsPage() {
   const { user } = useAuth();
@@ -13,7 +14,7 @@ export default function JobAppsPage() {
   const applications = findJobApplications(user?.uid);
 
   return (
-    <Container>
+    <Container className='background'>
       <PageHero title="My Applications" tagline="Track your job applications" />
       <Stack gap={3}>
         <Button className="align-self-start" href={NAV_LINKS.JOBS}>
