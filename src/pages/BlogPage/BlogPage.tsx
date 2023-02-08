@@ -1,5 +1,6 @@
 import { Badge, Card, Container, Stack } from 'react-bootstrap';
 import PageHero from '../../components/PageHero';
+import "../Page.css";
 
 const blogs = [
 	{
@@ -19,7 +20,7 @@ const blogs = [
 
 export default function BlogPage() {
 	return (
-		<Container>
+		<Container className='background'>
 			<PageHero title="Blog" tagline="Make your voice heard" />
 			<Stack gap={2}>
 				{blogs.map((b) => (
