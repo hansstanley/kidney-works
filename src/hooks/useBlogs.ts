@@ -7,7 +7,7 @@ export default function useBlogs() {
   const [blogs, setBlogs] = useState<AppBlog[]>([]);
 
   useEffect(() => {
-    async function findJobs() {
+    async function findBlogs() {
       const ref = collection(db, 'blogs');
       const snapshot = await getDocs(ref);
       if (!snapshot.empty) {
@@ -19,7 +19,7 @@ export default function useBlogs() {
         );
       }
     }
-    findJobs();
+    findBlogs();
   }, []);
 
   return { blogs };
