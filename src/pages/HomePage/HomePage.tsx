@@ -4,9 +4,47 @@ import { NAV_LINKS } from '../../utils/constants';
 import { useNavigate } from 'react-router-dom';
 import Page from '../../components/Page';
 import AnimatedBackground from '../../components/AnimatedBackground';
+import { useState } from 'react';
+import { animated, useSpring } from '@react-spring/web';
+
+const AnimatedButton = animated(Button);
 
 export default function HomePage() {
   const navigate = useNavigate();
+  const [clicked, setClicked] = useState(false);
+  const [exploreClicked, setExploreClicked] = useState(false);
+
+  const { x } = useSpring({
+    from: { x: 0 },
+    to: { x: clicked ? 0 : 1 },
+    config: { duration: 1000 },
+  });
+
+  const exploreSpring = useSpring({
+    from: { scale: 1 },
+    to: { scale: exploreClicked ? 0 : 1 },
+  });
+
+  const circleSpring = useSpring({
+    from: { width: '0vw', height: '0vh', borderRadius: '50vw', opacity: 1 },
+    to: exploreClicked
+      ? {
+          width: '100vw',
+          height: '100vh',
+          borderRadius: '0',
+          opacity: 0,
+        }
+      : { width: '0vw', height: '0vh', borderRadius: '50vw', opacity: 1 },
+  });
+
+  const handleClick = () => {
+    setClicked(!clicked);
+  };
+
+  const handleExploreClick = () => {
+    setExploreClicked(true);
+    setTimeout(() => navigate(NAV_LINKS.JOBS), 500);
+  };
 
   return (
     <AnimatedBackground>
@@ -14,14 +52,31 @@ export default function HomePage() {
         <div className="homescreen">
           <Container fluid className="text-center align-items-center">
             <Stack gap={5}>
-              <h1 className="display-1 fw-bold">Hire-a-Patient</h1>
+              <animated.div
+                style={{
+                  opacity: x.to({ range: [0, 1], output: [0.5, 1] }),
+                  scale: x.to({
+                    range: [0, 0.25, 0.35, 0.45, 0.55, 0.65, 0.75, 1],
+                    output: [1, 0.97, 0.95, 1, 0.95, 1, 0.95, 1],
+                  }),
+                }}
+                onClick={handleClick}>
+                <h1 className="display-1 fw-bold">Hire-a-Patient</h1>
+              </animated.div>
               <p className="lead">
                 Empowering dialysis patients, enriching the workforce
               </p>
             </Stack>
-            <Button variant="primary" onClick={() => navigate(NAV_LINKS.JOBS)}>
+            <AnimatedButton
+              style={exploreSpring}
+              variant="primary"
+              onClick={handleExploreClick}>
               Explore Jobs
-            </Button>
+            </AnimatedButton>
+            <animated.div
+              className="bg-primary position-absolute top-50 start-50 translate-middle"
+              style={circleSpring}
+            />
           </Container>
         </div>
         <Page.Body noCard>
