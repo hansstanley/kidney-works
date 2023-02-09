@@ -36,10 +36,9 @@ export default function ProfilePage() {
   const { user } = useAuth();
   const { skills, setSkillsState } = UseSkills();
   const { limitations, setLimitationState } = UseLimitations();
-  //Still does not work.
-  //const { isEmployer } = UseEmployer();
+  const { isEmployer } = UseEmployer();
   const { resume, setResumeState } = UseResume();
-  const { name, email, setName, setEmail, avatar, eduLevel, setEduLevel, companyName, setCompanyName, companyDescription, setCompanyDescription, isEmployer } = useUserInfo();
+  const { name, email, setName, setEmail, avatar, eduLevel, setEduLevel, companyName, setCompanyName, companyDescription, setCompanyDescription } = useUserInfo();
   const [inputName, setInputName] = useState(name);
   const [inputEmail, setInputEmail] = useState(email);
   const [inputSkill, setInputSkill] = useState("");
