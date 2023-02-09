@@ -46,11 +46,6 @@ export default function HomePage() {
     setTimeout(() => navigate(NAV_LINKS.JOBS), 500);
   };
 
-  const {user} = useAuth();
-  const {created} = useUserInfo();
-
-  console.log(created);
-  console.log(user ? 1 : 0);
 
   return (
     <AnimatedBackground>

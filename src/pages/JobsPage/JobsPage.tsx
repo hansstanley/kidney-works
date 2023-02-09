@@ -6,12 +6,14 @@ import JobFormModal from './JobFormModal';
 import JobsList from './JobsList';
 import { useAuth } from '../../hooks/useAuth';
 import { Page, PageBody, PageHeader } from '../../components/Page';
+import useUserInfo from '../../hooks/useUserInfo';
 
 export default function JobsPage() {
   const { user } = useAuth();
   const { jobs, setJobsState, findJobApplications } = useJobs();
   const [showForm, setShowForm] = useState(false);
   const [search, setSearch] = useState('');
+  const { isEmployer } = useUserInfo();
 
   const applications = findJobApplications(user?.uid);
 
@@ -38,6 +40,18 @@ export default function JobsPage() {
 
   const visibleJobs = useMemo(() => jobs?.filter(filterJob), [jobs, filterJob]);
 
+  const createJobButton = () => {
+      if (isEmployer) {
+        return (
+          <Button className="align-self-end" onClick={handleShowCreateForm}>
+          Create a new job
+          </Button>
+        );
+      } else {
+        return;
+      }
+  }
+
   return (
     <Page>
       <PageHeader
@@ -47,9 +61,7 @@ export default function JobsPage() {
       />
       <PageBody>
         <Stack gap={3}>
-          <Button className="align-self-end" onClick={handleShowCreateForm}>
-            Create a new job
-          </Button>
+          {createJobButton()}
           <Form>
             <Form.Control
               type="search"
