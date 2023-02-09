@@ -518,7 +518,7 @@ export default function ProfilePage() {
                 <Form.Group className="mb-3">
                   <Form.Group as={Row} className="mb-3" controlId="resume">
                     <Form.Label column sm="1">
-                      *- Filename
+                      * Filename
                     </Form.Label>
                     <Form.Group as={Col}>
                       <Form.Control

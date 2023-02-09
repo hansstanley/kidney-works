@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import {
   Button,
   ButtonGroup,
@@ -16,6 +16,8 @@ import { useAuth } from '../../hooks/useAuth';
 import './JobsList.css';
 import useUserInfo from '../../hooks/useUserInfo';
 import { useNavigate } from 'react-router-dom';
+import JobAppsFormModal from '../JobAppsPage/JobAppsFormModal';
+import UseResume from '../../hooks/useResume';
 
 export interface JobsListProps {
   jobs?: AppJob[];
@@ -31,7 +33,9 @@ export default function JobsList({
   const navigate = useNavigate();
   const hasJobs = useMemo(() => !!jobs?.length, [jobs]);
   const hasStatuses = useMemo(() => !!appliedStatuses, [appliedStatuses]);
-
+  const [jobID, setJobID] = useState("")
+  const [showAppsForm, setShowAppsForm] = useState(false);
+  const {resume} = UseResume();
   const statusToText: Map<AppJobStatus, string> = new Map([
     ['open', 'Not applied'],
     ['applied', 'Applied'],
@@ -52,6 +56,11 @@ export default function JobsList({
   const hasAuth = useMemo(() => !!user, [user]);
   const { isEmployer } = useUserInfo();
 
+  function applyHandler(id: string) {
+    setShowAppsForm(true);
+    setJobID(id);
+  }
+
   const applyButton = (job: AppJob) => {
     const hasApplied = appliedStatuses?.map((s) => s.jobId).includes(job.id);
 
@@ -68,7 +77,7 @@ export default function JobsList({
         if (isEmployer) {
           return;
         }
-        return <Button>Apply</Button>;
+        return <Button onClick={() => applyHandler(job.id)}>Apply</Button>;
       } else {
         return (
           <OverlayTrigger
@@ -132,6 +141,8 @@ export default function JobsList({
           </Card.Body>
         </Card>
       )}
+      <JobAppsFormModal show={showAppsForm}  job={jobID}
+      onHide={() => setShowAppsForm(false)}  resume={resume} user={user}/>
     </Stack>
   );
 }
