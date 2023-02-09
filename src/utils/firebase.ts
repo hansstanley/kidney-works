@@ -4,14 +4,14 @@ import { getFirestore } from "firebase/firestore";
 import {getStorage} from "firebase/storage"
 
 const firebaseConfig = {
-    apiKey: "AIzaSyDKp1-B10z3FpKIklrZs7ufWNb2wWJHdXQ",
-    authDomain: "hire-a-patient.firebaseapp.com",
-    projectId: "hire-a-patient",
-    storageBucket: "hire-a-patient.appspot.com",
-    messagingSenderId: "742727498093",
-    appId: "1:742727498093:web:067c8e8afd3712ab818264",
-    measurementId: "G-K0SX8796D5"
-  };
+  apiKey: "AIzaSyCiRX_C3YERRs7Y-DVP52XtPwOPOwI-4yM",
+  authDomain: "kidney-works.firebaseapp.com",
+  projectId: "kidney-works",
+  storageBucket: "kidney-works.appspot.com",
+  messagingSenderId: "687635240235",
+  appId: "1:687635240235:web:09308710c3822a05c3a16e",
+  measurementId: "G-2W2J52EZGP"
+};
 
   // Add Firebase credentials
   export const app = initializeApp(firebaseConfig);
