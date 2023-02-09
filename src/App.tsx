@@ -14,6 +14,7 @@ import AboutPage from './pages/AboutPage';
 import JobAppsPage from './pages/JobAppsPage';
 import AnimatedBackground from './components/AnimatedBackground';
 import ProfileCreationPage from './pages/ProfileCreationPage';
+import BackToTop from './components/BackToTop';
 
 function App() {
   return (
@@ -40,6 +41,7 @@ function App() {
             <Route path="*" element={<ErrorPage />} />
           </Routes>
         </AnimatedBackground>
+        <BackToTop />
       </div>
     </BrowserRouter>
   );

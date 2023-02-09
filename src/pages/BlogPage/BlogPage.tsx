@@ -21,30 +21,38 @@ const blogs = [
 export default function BlogPage() {
   const { blogs } = useBlogs();
 
-  console.log(blogs);
+  const hasBlogs = !!blogs.length;
 
   return (
     <Page>
       <PageHeader noDivider title="Blog" tagline="Make your voice heard" />
       <PageBody>
         <Stack gap={2}>
-          {blogs.map((b) => (
-            <Card key={b.id}>
+          {hasBlogs ? (
+            blogs.map((b) => (
+              <Card key={b.id}>
+                <Card.Body>
+                  <Card.Title>{b.title}</Card.Title>
+                  <Card.Text>
+                    {b.story.map((block, i) => (
+                      <div key={i}>
+                        {block}
+                        <br />
+                        <br />
+                      </div>
+                    ))}
+                  </Card.Text>
+                </Card.Body>
+                <Card.Footer>{b.createdAt.toLocaleString()}</Card.Footer>
+              </Card>
+            ))
+          ) : (
+            <Card>
               <Card.Body>
-                <Card.Title>{b.title}</Card.Title>
-                <Card.Text>
-                  {b.story.map((block, i) => (
-                    <div key={i}>
-                      {block}
-                      <br />
-                      <br />
-                    </div>
-                  ))}
-                </Card.Text>
+                <Card.Text>No blogs.</Card.Text>
               </Card.Body>
-              <Card.Footer>{b.createdAt.toLocaleString()}</Card.Footer>
             </Card>
-          ))}
+          )}
         </Stack>
       </PageBody>
     </Page>

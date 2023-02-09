@@ -9,6 +9,9 @@ import useUserInfo from '../../hooks/useUserInfo';
 import { useState } from 'react';
 import { animated, useSpring } from '@react-spring/web';
 import HomeFeature from './HomeFeature';
+import ImageSlider from '../../components/ImageSlider';
+import { SliderData } from '../../components/SliderData';
+import HomeLinks from './HomeLinks';
 
 const AnimatedButton = animated(Button);
 
@@ -76,6 +79,8 @@ export default function HomePage() {
           </Container>
         </div>
         <HomeFeature />
+        <ImageSlider />
+        <HomeLinks />
       </Page>
       <animated.div
         className="bg-primary position-fixed top-50 start-50 translate-middle"
