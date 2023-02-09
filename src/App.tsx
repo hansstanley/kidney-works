@@ -1,6 +1,6 @@
 import './App.css';
 import './scss/custom.scss';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import AppBar from './components/AppBar';
@@ -15,26 +15,33 @@ import JobAppsPage from './pages/JobAppsPage';
 import AnimatedBackground from './components/AnimatedBackground';
 import ProfileCreationPage from './pages/ProfileCreationPage';
 
-const router = createBrowserRouter([
-  { path: NAV_LINKS.HOME, element: <HomePage />, errorElement: <ErrorPage /> },
-  { path: NAV_LINKS.LOGIN, element: <LoginPage /> },
-  { path: NAV_LINKS.JOBS, element: <JobsPage /> },
-  { path: `${NAV_LINKS.JOBS}/:jobId`, element: <JobDetailPage /> },
-  { path: NAV_LINKS.JOBS_APPLIED, element: <JobAppsPage /> },
-  { path: NAV_LINKS.BLOG, element: <BlogPage /> },
-  { path: NAV_LINKS.PROFILE, element: <ProfilePage /> },
-  { path: NAV_LINKS.ABOUT, element: <AboutPage /> },
-  { path: NAV_LINKS.PROFILE_CREATION, element: <ProfileCreationPage />},
-]);
-
 function App() {
   return (
-    <div className="App-page">
-      <AnimatedBackground>
-        <AppBar />
-        <RouterProvider router={router} />
-      </AnimatedBackground>
-    </div>
+    <BrowserRouter>
+      <div className="App-page">
+        <AnimatedBackground>
+          <AppBar />
+          <Routes>
+            <Route path={NAV_LINKS.HOME} element={<HomePage />} />
+            <Route path={NAV_LINKS.ABOUT} element={<AboutPage />} />
+            <Route path={NAV_LINKS.LOGIN} element={<LoginPage />} />
+            <Route path={NAV_LINKS.JOBS} element={<JobsPage />} />
+            <Route path={NAV_LINKS.JOBS_APPLIED} element={<JobAppsPage />} />
+            <Route
+              path={`${NAV_LINKS.JOBS}/:jobId`}
+              element={<JobDetailPage />}
+            />
+            <Route path={NAV_LINKS.BLOG} element={<BlogPage />} />
+            <Route path={NAV_LINKS.PROFILE} element={<ProfilePage />} />
+            <Route
+              path={NAV_LINKS.PROFILE_CREATION}
+              element={<ProfileCreationPage />}
+            />
+            <Route path="*" element={<ErrorPage />} />
+          </Routes>
+        </AnimatedBackground>
+      </div>
+    </BrowserRouter>
   );
 }
 

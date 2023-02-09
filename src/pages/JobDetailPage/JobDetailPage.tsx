@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Button, ButtonGroup, Card, Container, Stack } from 'react-bootstrap';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Page, PageBody, PageHeader } from '../../components/Page';
 import PageHero from '../../components/PageHero';
 import { useAuth } from '../../hooks/useAuth';
@@ -9,6 +9,7 @@ import { NAV_LINKS } from '../../utils/constants';
 import { JobFormModal } from '../JobsPage';
 
 export default function JobDetailPage() {
+  const navigate = useNavigate();
   const { user } = useAuth();
   const { jobId } = useParams();
   const { findJob, isJobApplied } = useJobs();
@@ -37,7 +38,7 @@ export default function JobDetailPage() {
         <Stack gap={4}>
           <Button
             variant="secondary"
-            href={NAV_LINKS.JOBS}
+            onClick={() => navigate(NAV_LINKS.JOBS)}
             className="align-self-start">
             Back to jobs list
           </Button>
