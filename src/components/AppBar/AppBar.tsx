@@ -29,7 +29,7 @@ export default function AppBar() {
                   Job applications
                 </NavDropdown.Item>
                 <NavDropdown.Divider />
-                <NavDropdown.Item onClick={signOutOfSession}>
+                <NavDropdown.Item onClick={signOutOfSession} href={NAV_LINKS.HOME}>
                   Sign out
                 </NavDropdown.Item>
               </NavDropdown>
