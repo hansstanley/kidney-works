@@ -1,13 +1,21 @@
 import { useMemo } from 'react';
-import { Button, ButtonGroup, Card, OverlayTrigger, Stack, Tooltip } from 'react-bootstrap';
+import {
+  Button,
+  ButtonGroup,
+  Card,
+  OverlayTrigger,
+  Stack,
+  Tooltip,
+} from 'react-bootstrap';
 import AppJobApplication, {
   AppJobStatus,
 } from '../../types/job-application.app';
 import AppJob from '../../types/job.app';
 import { NAV_LINKS } from '../../utils/constants';
 import { useAuth } from '../../hooks/useAuth';
-import "./JobsList.css";
+import './JobsList.css';
 import useUserInfo from '../../hooks/useUserInfo';
+import { useNavigate } from 'react-router-dom';
 
 export interface JobsListProps {
   jobs?: AppJob[];
@@ -20,6 +28,7 @@ export default function JobsList({
   hideActions,
   jobApplications: appliedStatuses,
 }: JobsListProps) {
+  const navigate = useNavigate();
   const hasJobs = useMemo(() => !!jobs?.length, [jobs]);
   const hasStatuses = useMemo(() => !!appliedStatuses, [appliedStatuses]);
 
@@ -61,68 +70,68 @@ export default function JobsList({
         }
         return <Button>Apply</Button>;
       } else {
-
         return (
           <OverlayTrigger
             placement="right"
             delay={{ show: 250, hide: 400 }}
-            overlay={notLoggedInMessage}
-          >
+            overlay={notLoggedInMessage}>
             <div>
-              <Button className='' disabled>Apply</Button>
+              <Button className="" disabled>
+                Apply
+              </Button>
             </div>
           </OverlayTrigger>
         );
       }
-      
     }
   };
 
   return (
-
-      <Stack gap={2}>
-        {hasJobs ? (
-          jobs?.map((j) => (
-            <Card
-              key={j.id}
-              border={statusToColour.get(
-                appliedStatuses?.find((s) => s.jobId === j.id)?.status || 'open',
-              )}>
-              <Card.Body>
-                <Card.Title>{j.title}</Card.Title>
-                <Card.Subtitle>{j.company}</Card.Subtitle>
-                <Card.Text>
-                  Description:<br></br>
-                  {j.description}
-                </Card.Text>
-                <Card.Text>
-                  Requirement:<br></br>
-                  {j.requirements}
-                </Card.Text>
-                <ButtonGroup>
-                  <Button variant="light" href={`${NAV_LINKS.JOBS}/${j.id}`}>
-                    View
-                  </Button>
-                  {applyButton(j)}
-                </ButtonGroup>
-              </Card.Body>
-              {hasStatuses ? (
-                <Card.Footer>
-                  {statusToText.get(
-                    appliedStatuses?.find((s) => s.jobId === j.id)?.status ||
-                      'open',
-                  )}
-                </Card.Footer>
-              ) : null}
-            </Card>
-          ))
-        ) : (
-          <Card>
+    <Stack gap={2}>
+      {hasJobs ? (
+        jobs?.map((j) => (
+          <Card
+            key={j.id}
+            border={statusToColour.get(
+              appliedStatuses?.find((s) => s.jobId === j.id)?.status || 'open',
+            )}>
             <Card.Body>
-              <Card.Text>No jobs found.</Card.Text>
+              <Card.Title>{j.title}</Card.Title>
+              <Card.Subtitle>{j.company}</Card.Subtitle>
+              <Card.Text>
+                Description:<br></br>
+                {j.description}
+              </Card.Text>
+              <Card.Text>
+                Requirement:<br></br>
+                {j.requirements}
+              </Card.Text>
+              <ButtonGroup>
+                <Button
+                  variant="light"
+                  onClick={() => navigate(`${NAV_LINKS.JOBS}/${j.id}`)}>
+                  View
+                </Button>
+                {applyButton(j)}
+              </ButtonGroup>
             </Card.Body>
+            {hasStatuses ? (
+              <Card.Footer>
+                {statusToText.get(
+                  appliedStatuses?.find((s) => s.jobId === j.id)?.status ||
+                    'open',
+                )}
+              </Card.Footer>
+            ) : null}
           </Card>
-        )}
-      </Stack>
+        ))
+      ) : (
+        <Card>
+          <Card.Body>
+            <Card.Text>No jobs found.</Card.Text>
+          </Card.Body>
+        </Card>
+      )}
+    </Stack>
   );
 }
