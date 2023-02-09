@@ -6,7 +6,7 @@ import PageSurface from './PageSurface';
 
 type PageComponent = FunctionComponent<PropsWithChildren> & {
   Header: FunctionComponent<PageHeroProps>;
-  Body: FunctionComponent<PropsWithChildren>;
+  Body: FunctionComponent<PageBodyProps>;
 };
 
 const Page: PageComponent = ({ children }: PropsWithChildren) => {
@@ -28,24 +28,21 @@ function PageHeader(props: PageHeroProps) {
   );
 }
 
-function PageBody({ children }: PropsWithChildren) {
-  // return (
-  //   <PageSurface noBackground>
-  //     <Container>{children}</Container>
-  //   </PageSurface>
-  // );
+interface PageBodyProps extends PropsWithChildren {
+  noCard?: boolean;
+}
+function PageBody({ children, noCard }: PageBodyProps) {
   return (
     <PageSurface noBackground noPaddingTop>
       <Container>
-        <Card>
-          <Card.Body>{children}</Card.Body>
-        </Card>
+        {noCard ? (
+          children
+        ) : (
+          <Card>
+            <Card.Body>{children}</Card.Body>
+          </Card>
+        )}
       </Container>
-    </PageSurface>
-  );
-  return (
-    <PageSurface>
-      <Container>{children}</Container>
     </PageSurface>
   );
 }

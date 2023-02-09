@@ -1,19 +1,12 @@
 import './HomePage.css';
-import { Button, Container, Stack } from 'react-bootstrap';
+import { Button, Card, Col, Container, Row, Stack } from 'react-bootstrap';
 import { NAV_LINKS } from '../../utils/constants';
-import { animated, useSpring } from '@react-spring/web';
 import { useNavigate } from 'react-router-dom';
 import Page from '../../components/Page';
 import AnimatedBackground from '../../components/AnimatedBackground';
 
 export default function HomePage() {
   const navigate = useNavigate();
-  const props = useSpring({
-    from: { backgroundColor: '#ffffff' },
-    to: { backgroundColor: '#ffffff00' },
-    delay: 500,
-    config: { duration: 2000 },
-  });
 
   return (
     <AnimatedBackground>
@@ -31,33 +24,80 @@ export default function HomePage() {
             </Button>
           </Container>
         </div>
-        <Page.Body>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras
-          tristique viverra ullamcorper. Sed scelerisque lacus a sodales
-          suscipit. Fusce scelerisque accumsan mauris, id porttitor nisi
-          vestibulum vitae. Ut tincidunt blandit enim ut pharetra. Phasellus
-          blandit laoreet dignissim. Vestibulum ullamcorper sodales faucibus.
-          Suspendisse laoreet lobortis odio, nec iaculis tellus elementum et.
-          Curabitur eu volutpat sapien. Aliquam leo odio, eleifend nec varius
-          eget, finibus eget turpis. Praesent vel ex posuere nisl iaculis
-          ultricies malesuada at metus. In in elit ut leo cursus malesuada.
-          Morbi vel malesuada libero, elementum dignissim velit. Nam nec sapien
-          sed diam consequat aliquam a in nisl. Nunc viverra, lorem vel
-          dignissim tincidunt, felis ipsum vulputate ex, at aliquam neque lectus
-          sit amet est. Sed ut commodo nulla, ac varius nisl. Nam ullamcorper
-          nisl sit amet mauris scelerisque sagittis. Suspendisse eleifend, augue
-          non porttitor semper, erat metus dapibus ante, at tristique ex nunc id
-          mi. Duis mattis porta fringilla. Fusce scelerisque odio tristique
-          lorem auctor faucibus. Etiam tempus sapien vitae nibh viverra, et
-          auctor mauris sollicitudin. In in gravida velit. Interdum et malesuada
-          fames ac ante ipsum primis in faucibus. Maecenas iaculis maximus lorem
-          ac ultrices. Proin vestibulum ullamcorper sem, non cursus enim auctor
-          vitae. Vivamus dapibus sem ac ante auctor suscipit sit amet nec felis.
-          Etiam porttitor orci mollis mauris viverra vehicula. Pellentesque sit
-          amet pulvinar justo, vel consectetur lectus. Aenean quis ornare enim.
-          Vivamus maximus id justo ut vulputate. Sed porta, ex at maximus
-          rhoncus, quam nunc sagittis arcu, sit amet elementum massa nisl ac
-          sapien. Quisque est purus, sodales vitae mollis a, aliquam eget dui.
+        <Page.Body noCard>
+          <Row>
+            <Col>
+              <Card>
+                <Card.Header>Empower</Card.Header>
+                <Card.Body>
+                  <Card.Subtitle>
+                    Platform to share patients' experiences, challenges, and
+                    triumphs
+                  </Card.Subtitle>
+                  <hr />
+                  <Card.Text>
+                    Empowering patients to share their stories can help build a
+                    supportive community where they can connect with others who
+                    are facing similar challenges. These stories can serve as a
+                    source of inspiration and encouragement for others, helping
+                    to build resilience and hope.
+                    <br />
+                    <br />
+                    The blog can also serve as an educational resource for
+                    people who are interested in learning more about life with
+                    kidney disease and dialysis, increasing awareness and
+                    understanding of the disease and the experiences of those
+                    who live with it.
+                  </Card.Text>
+                </Card.Body>
+              </Card>
+            </Col>
+            <Col>
+              <Card>
+                <Card.Header>Connect</Card.Header>
+                <Card.Body>
+                  <Card.Subtitle>
+                    Bridging the gap between employers and patients
+                  </Card.Subtitle>
+                  <hr />
+                  <Card.Text>
+                    By offering a platform that is specifically tailored to the
+                    needs of kidney dialysis patients, Hire-a-Patient can help
+                    patients overcome the challenges they may face in the job
+                    search process, such as limited mobility, scheduling
+                    conflicts, and medical restrictions.
+                    <br />
+                    <br />
+                    They can also obtain resources and support to help them
+                    succeed in the workplace, such as information on
+                    accommodations and flexible work arrangements.
+                  </Card.Text>
+                </Card.Body>
+              </Card>
+            </Col>
+            <Col>
+              <Card>
+                <Card.Header>Apply</Card.Header>
+                <Card.Body>
+                  <Card.Subtitle>More manageable, less stressful</Card.Subtitle>
+                  <hr />
+                  <Card.Text>
+                    Hire-a-Patient offers job listings from employers who
+                    understand the challenges and limitations faced by dialysis
+                    patients, and are willing to make necessary accommodations.
+                    This means that job seekers can apply for positions with
+                    confidence, knowing that their medical needs will be taken
+                    into consideration.
+                    <br />
+                    <br />
+                    By leveraging the power of technology and connecting with a
+                    supportive community, dialysis patients can find meaningful
+                    employment and take control of their careers.
+                  </Card.Text>
+                </Card.Body>
+              </Card>
+            </Col>
+          </Row>
         </Page.Body>
       </Page>
     </AnimatedBackground>
