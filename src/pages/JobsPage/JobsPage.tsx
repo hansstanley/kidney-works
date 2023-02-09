@@ -42,8 +42,8 @@ export default function JobsPage() {
     <Page>
       <PageHeader
         noDivider
-        title="Start your journey today"
-        tagline="Look for accessible jobs that fit your needs and interests, then hit apply!"
+        title="Jobs"
+        tagline="Start your journey today"
       />
       <PageBody>
         <Stack gap={3}>
