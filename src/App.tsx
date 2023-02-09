@@ -12,6 +12,7 @@ import JobDetailPage from './pages/JobDetailPage';
 import ErrorPage from './pages/ErrorPage';
 import AboutPage from './pages/AboutPage';
 import JobAppsPage from './pages/JobAppsPage';
+import AnimatedBackground from './components/AnimatedBackground';
 
 const router = createBrowserRouter([
   { path: NAV_LINKS.HOME, element: <HomePage />, errorElement: <ErrorPage /> },
@@ -27,8 +28,10 @@ const router = createBrowserRouter([
 function App() {
   return (
     <div className="App-page">
-      <AppBar />
-      <RouterProvider router={router} />
+      <AnimatedBackground>
+        <AppBar />
+        <RouterProvider router={router} />
+      </AnimatedBackground>
     </div>
   );
 }
