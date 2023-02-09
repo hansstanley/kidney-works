@@ -59,7 +59,7 @@ export default function ProfilePage() {
   const [inputSkill, setInputSkill] = useState('');
   const [inputLimitation, setInputLimitation] = useState('');
   const [avatarProgress, setAvatarProgress] = useState(-1);
-  const [resumeProgress, setResumeProgress] = useState(0);
+  const [resumeProgress, setResumeProgress] = useState(-1);
   const [resumeFile, setResumeFile] = useState<File | null>(null);
   const [duplicate, setDuplicate] = useState<boolean>(false);
   const [desc, setDesc] = useState('');
@@ -279,7 +279,6 @@ export default function ProfilePage() {
 
   const openFile = () => {
     document.getElementById('fileID')?.click();
-    // setAvatarProgress(0);
   };
 
   const avatarHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -287,6 +286,14 @@ export default function ProfilePage() {
       uploadPic(e.target.files[0]);
     }
   };
+
+  useEffect(() => {
+    if (resumeProgress === 100) {
+      setTimeout(() => {
+        setResumeProgress(-1);
+      }, 1000);
+    }
+  }, [resumeProgress]);
 
   useEffect(() => {
     if (avatarProgress === 100) {
@@ -533,7 +540,14 @@ export default function ProfilePage() {
                     accept=".pdf"
                     onChange={addResumeHandler}
                   />
-                  <ProgressBar now={resumeProgress}></ProgressBar>
+                  {resumeProgress === -1 ? null : (
+                    <ProgressBar
+                      animated
+                      now={resumeProgress}
+                      label={resumeProgress === 100 ? 'Done!' : undefined}
+                      className="mt-2"
+                    />
+                  )}
                   <Stack direction="horizontal" gap={1} className="mt-2">
                     {resume.map((l, i) => (
                       <Badge key={i} bg="secondary">
