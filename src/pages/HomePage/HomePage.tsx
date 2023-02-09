@@ -4,8 +4,6 @@ import { NAV_LINKS } from '../../utils/constants';
 import { useNavigate } from 'react-router-dom';
 import Page from '../../components/Page';
 import AnimatedBackground from '../../components/AnimatedBackground';
-import { useAuth } from '../../hooks/useAuth';
-import useUserInfo from '../../hooks/useUserInfo';
 import { useState } from 'react';
 import { animated, useSpring } from '@react-spring/web';
 import HomeFeature from './HomeFeature';
