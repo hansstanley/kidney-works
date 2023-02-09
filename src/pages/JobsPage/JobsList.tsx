@@ -1,10 +1,13 @@
 import { useMemo } from 'react';
-import { Button, ButtonGroup, Card, Stack } from 'react-bootstrap';
+import { Button, ButtonGroup, Card, OverlayTrigger, Stack, Tooltip } from 'react-bootstrap';
 import AppJobApplication, {
   AppJobStatus,
 } from '../../types/job-application.app';
 import AppJob from '../../types/job.app';
 import { NAV_LINKS } from '../../utils/constants';
+import { useAuth } from '../../hooks/useAuth';
+import "./JobsList.css";
+import useUserInfo from '../../hooks/useUserInfo';
 
 export interface JobsListProps {
   jobs?: AppJob[];
@@ -36,12 +39,42 @@ export default function JobsList({
     ['accepted', 'success'],
   ]);
 
+  const { user } = useAuth();
+  const hasAuth = useMemo(() => !!user, [user]);
+  const { isEmployer } = useUserInfo();
+
   const applyButton = (job: AppJob) => {
     const hasApplied = appliedStatuses?.map((s) => s.jobId).includes(job.id);
+
+    const notLoggedInMessage = (props: any) => (
+      <Tooltip id="button-tooltip" {...props}>
+        You have to be logged in to apply!
+      </Tooltip>
+    );
+
     if (hideActions || hasApplied) {
       return null;
     } else {
-      return <Button>Apply</Button>;
+      if (hasAuth) {
+        if (isEmployer) {
+          return;
+        }
+        return <Button>Apply</Button>;
+      } else {
+
+        return (
+          <OverlayTrigger
+            placement="right"
+            delay={{ show: 250, hide: 400 }}
+            overlay={notLoggedInMessage}
+          >
+            <div>
+              <Button className='' disabled>Apply</Button>
+            </div>
+          </OverlayTrigger>
+        );
+      }
+      
     }
   };
 

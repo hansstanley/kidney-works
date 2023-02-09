@@ -3,18 +3,25 @@ import { Button, Card, Col, Container, Row } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { NAV_LINKS } from '../../utils/constants';
+import useUserInfo from '../../hooks/useUserInfo';
+
 
 export default function LoginPage() {
   const navigate = useNavigate();
   const { signInWithGoogle, signOutOfSession, user } = useAuth();
 
   const hasAuth = useMemo(() => !!user, [user]);
+  const { created, fetched } = useUserInfo();
 
   useEffect(() => {
-    if (hasAuth) {
-      navigate(NAV_LINKS.HOME);
+    if (fetched && hasAuth) {
+      if (created) {
+        navigate(NAV_LINKS.HOME);
+      } else { 
+        navigate(NAV_LINKS.PROFILE_CREATION);
+      }
     }
-  }, [hasAuth, navigate]);
+  }, [created, fetched, hasAuth, navigate]);
 
   return (
     <Container

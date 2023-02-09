@@ -29,14 +29,16 @@ import { deleteObject, getDownloadURL, ref, uploadBytesResumable } from "firebas
 import AppResume from '../../types/resume.app';
 import UseResume from '../../hooks/useResume';
 import { Page, PageBody, PageHeader } from '../../components/Page';
+import UseEmployer from '../../hooks/useEmployer';
 
 
 export default function ProfilePage() {
   const { user } = useAuth();
   const { skills, setSkillsState } = UseSkills();
   const { limitations, setLimitationState } = UseLimitations();
-  const {resume, setResumeState} = UseResume();
-  const { name, email, setName, setEmail, avatar, eduLevel, setEduLevel } = useUserInfo();
+  const { isEmployer } = UseEmployer();
+  const { resume, setResumeState } = UseResume();
+  const { name, email, setName, setEmail, avatar, eduLevel, setEduLevel, companyName, setCompanyName, companyDescription, setCompanyDescription } = useUserInfo();
   const [inputName, setInputName] = useState(name);
   const [inputEmail, setInputEmail] = useState(email);
   const [inputSkill, setInputSkill] = useState("");
@@ -47,7 +49,13 @@ export default function ProfilePage() {
   const [duplicate, setDuplicate] = useState<boolean>(false);
   const [desc, setDesc] = useState("");
 
+  const [inputCompanyName, setInputCompanyName] = useState("");
+  const [inputCompanyDescription, setInputCompanyDescription] = useState("");
+
+
   const storageRef = ref(storage, `/${user?.uid}`);
+
+  console.log(isEmployer);
 
   function updateUserInfo(name: string, email: string) {
     const userSnap = doc(db, "users", user?.uid || '')
@@ -73,7 +81,7 @@ export default function ProfilePage() {
   }
 
   function addSkill(skill: string) {
-    const newSkills = [...skills, skill];
+    const newSkills: string[] = [...skills, skill];
     setSkills(newSkills);
   }
 
@@ -133,6 +141,30 @@ export default function ProfilePage() {
         setEduLevel(doc.data()?.eduLevel);
       }
     });
+  }
+
+  function updateCompanyName(companyName: String) {
+    const userSnap = doc(db, "users", user?.uid || '')
+    updateDoc(userSnap, {
+      companyName: companyName,
+    })
+    onSnapshot(userSnap, (doc) => {
+      if (doc.exists()) {
+        setCompanyName(doc.data()?.companyName);
+      }
+    })
+  }
+
+  function updateCompanyDescription(companyDescription: String) {
+    const userSnap = doc(db, "users", user?.uid || '')
+    updateDoc(userSnap, {
+      companyDescription: companyDescription,
+    })
+    onSnapshot(userSnap, (doc) => {
+      if (doc.exists()) {
+        setCompanyDescription(doc.data()?.companyDescription);
+      }
+    })
   }
 
   const uploadResume = (file: File | null) => {
@@ -230,6 +262,7 @@ export default function ProfilePage() {
       },
     );
   };
+  
 
   const openFile = () => {
     document.getElementById("fileID")?.click();
@@ -299,65 +332,88 @@ export default function ProfilePage() {
               </Button>
             </Form>
           </ProfileSection>
-          <ProfileSection title="Education">
+        {isEmployer ? (
+        <ProfileSection title="Company Name">
             <Form>
-              <Form.Group className="mb-3" controlId="education">
-                <Form.Label>Education level</Form.Label>
-                <Form.Select
-                  onChange={(e) => setEduLevel(e.target.value)}
-                  value={eduLevel}>
-                  <option value="0">No Education</option>
-                  <option value="1">Primary Education</option>
-                  <option value="2">Normal-level (N-level)</option>
-                  <option value="3">GCE 'O' Level</option>
-                  <option value="4">GEC 'A' Level</option>
-                  <option value="5">National ITE Certificate (Nitec)</option>
-                  <option value="6">
-                    Higher National ITE Certificate (Higher Nitec)
-                  </option>
-                  <option value="7">Diploma</option>
-                  <option value="8">Bachelor's Degree</option>
-                  <option value="9">Master's Degree</option>
-                  <option value="10">PhD</option>
-                </Form.Select>
-              </Form.Group>
-              <hr />
-              <Button
-                type="submit"
-                href="#"
-                onClick={() => updateEduLevel(eduLevel)}>
-                Update
-              </Button>
-            </Form>
-          </ProfileSection>
-          <ProfileSection title="Skills and limitations">
-            <Form>
-              <Form.Group className="mb-3" controlId="skills">
-                <Form.Label>Skills</Form.Label>
-                <InputGroup>
-                  <Form.Control
+                <Form.Group className="mb-3" controlId="companyname">
+                    <Form.Control
                     type="text"
-                    placeholder="E.g. public speaking"
-                    onChange={(e) => setInputSkill(e.target.value)}
-                  />
-                  <Button variant="outline-secondary" onClick={addSkillHandler}>
-                    Add
-                  </Button>
-                </InputGroup>
-                <Stack direction="horizontal" gap={1} className="mt-2">
-                  {skills.map((s, i) => (
-                    <Badge key={i} bg="secondary">
-                      <Stack direction="horizontal" gap={2}>
-                        {s}
-                        <CloseButton
-                          variant="white"
-                          onClick={() => deleteSkill(s)}
-                        />
-                      </Stack>
-                    </Badge>
-                  ))}
-                </Stack>
-              </Form.Group>
+                    placeholder="Your company's name"
+                    defaultValue={companyName}
+                    onChange={(e) => setInputCompanyName(e.target.value)}
+                    />
+                </Form.Group>
+            </Form>
+            <hr />
+            <Button type="submit" href="#" onClick={() => updateCompanyName(inputCompanyName)}>
+              Update
+            </Button>
+        </ProfileSection>
+        ) : (
+        <ProfileSection title="Education">
+          <Form>
+            <Form.Group className="mb-3" controlId="education">
+              <Form.Label>Education level</Form.Label>
+              <Form.Select onChange={e => setEduLevel(e.target.value)} value={eduLevel} defaultValue={eduLevel}>
+                <option value="0">No Education</option>
+                <option value="1">Primary Education</option>
+                <option value="2">Normal-level (N-level)</option>
+                <option value="3">GCE 'O' Level</option>
+                <option value="4">GEC 'A' Level</option>
+                <option value="5">National ITE Certificate (Nitec)</option>
+                <option value="6">Higher National ITE Certificate (Higher Nitec)</option>
+                <option value="7">Diploma</option>
+                <option value="8">Bachelor's Degree</option>
+                <option value="9">Master's Degree</option>
+                <option value="10">PhD</option>
+              </Form.Select>
+            </Form.Group>
+          </Form>
+          <hr />
+            <Button type="submit" href="#" onClick={() => updateEduLevel(eduLevel)}>
+              Update
+            </Button>
+        </ProfileSection>
+        )}
+        {isEmployer ? (
+        <ProfileSection title="Company Description">
+            <Form>
+                <Form.Group className="mb-3" controlId="companydescription">
+                    <Form.Label>A description of your company's dealings</Form.Label>
+                    <Form.Control
+                    type="text"
+                    placeholder="A description of your company's dealings"
+                    defaultValue={companyDescription}
+                    onChange={(e) => setInputCompanyDescription(e.target.value)}
+                    />
+                </Form.Group>
+            </Form>
+            <Button type="submit" href="#" onClick={() => updateCompanyDescription(inputCompanyDescription)}>
+              Update
+            </Button>
+        </ProfileSection> 
+        ) : (
+        <ProfileSection title="Skills and limitations">
+          <Form>
+            <Form.Group className="mb-3" controlId="skills">
+              <Form.Label>Skills</Form.Label>
+              <InputGroup>
+                <Form.Control type="text" placeholder="E.g. public speaking" onChange={e => setInputSkill(e.target.value)}/>
+                <Button variant="outline-secondary" onClick={addSkillHandler} >Add</Button>
+              </InputGroup>
+              <Stack direction="horizontal" gap={1} className="mt-2">
+                {skills.map((s, i) => (
+                  <Badge key={i} bg="secondary">
+                    <Stack direction="horizontal" gap={2}>
+                      {s}
+                      <CloseButton variant="white" onClick={() => deleteSkill(s)} />
+                    </Stack>
+                  </Badge>
+                ))}
+              </Stack>
+            </Form.Group>
+            </Form>
+            <Form>
               <Form.Group className="mb-3" controlId="physicalLimitations">
                 <Form.Label>Physical limitations</Form.Label>
                 <InputGroup>
@@ -387,7 +443,7 @@ export default function ProfilePage() {
                 </Stack>
               </Form.Group>
             </Form>
-          </ProfileSection>
+          </ProfileSection>)}
         <ProfileSection title='Resume'>
           <Form onSubmit={resumeHandler} noValidate validated={!duplicate || resume.length === 0}>
             <Form.Group className="mb-3" >
