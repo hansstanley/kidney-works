@@ -38,8 +38,14 @@ interface FeatureBoxProps {
 function FeatureBox({ title, subtitle, body }: FeatureBoxProps) {
   return (
     <Card>
-      <Card.Header>{title}</Card.Header>
-      <Card.Body>
+      <Card
+        className="position-absolute start-50 top-0 translate-middle text-center"
+        style={{ minWidth: '70%' }}>
+        <Card.Body>
+          <Card.Title>{title}</Card.Title>
+        </Card.Body>
+      </Card>
+      <Card.Body className="mt-5">
         <Card.Subtitle>{subtitle}</Card.Subtitle>
         <Accordion className="mt-3">
           <Accordion.Item eventKey="0">
