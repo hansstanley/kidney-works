@@ -45,12 +45,12 @@ function FeatureBox({ title, subtitle, body }: FeatureBoxProps) {
           <Accordion.Item eventKey="0">
             <Accordion.Header>Read more</Accordion.Header>
             <Accordion.Body>
-              {body.map((b) => (
-                <>
+              {body.map((b, i) => (
+                <div key={i}>
                   {b}
                   <br />
                   <br />
-                </>
+                </div>
               ))}
             </Accordion.Body>
           </Accordion.Item>

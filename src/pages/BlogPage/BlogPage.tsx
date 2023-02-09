@@ -1,5 +1,6 @@
 import { Badge, Card, Stack } from 'react-bootstrap';
 import { Page, PageBody, PageHeader } from '../../components/Page';
+import useBlogs from '../../hooks/useBlogs';
 
 const blogs = [
   {
@@ -18,6 +19,10 @@ const blogs = [
 ];
 
 export default function BlogPage() {
+  const { blogs } = useBlogs();
+
+  console.log(blogs);
+
   return (
     <Page>
       <PageHeader noDivider title="Blog" tagline="Make your voice heard" />
@@ -27,17 +32,17 @@ export default function BlogPage() {
             <Card key={b.id}>
               <Card.Body>
                 <Card.Title>{b.title}</Card.Title>
-                <Card.Text>{b.description}</Card.Text>
-                {b.tags ? (
-                  <Stack direction="horizontal" gap={1}>
-                    {b.tags?.map((t, i) => (
-                      <Badge key={i} pill bg="secondary">
-                        {t}
-                      </Badge>
-                    ))}
-                  </Stack>
-                ) : null}
+                <Card.Text>
+                  {b.story.map((block, i) => (
+                    <div key={i}>
+                      {block}
+                      <br />
+                      <br />
+                    </div>
+                  ))}
+                </Card.Text>
               </Card.Body>
+              <Card.Footer>{b.createdAt.toLocaleString()}</Card.Footer>
             </Card>
           ))}
         </Stack>
