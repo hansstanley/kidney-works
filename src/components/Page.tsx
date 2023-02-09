@@ -1,3 +1,4 @@
+import { animated, useScroll } from '@react-spring/web';
 import { FunctionComponent, PropsWithChildren } from 'react';
 import { Card, Container } from 'react-bootstrap';
 import PageHero from './PageHero';
@@ -17,13 +18,20 @@ Page.Header = PageHeader;
 Page.Body = PageBody;
 
 function PageHeader(props: PageHeroProps) {
+  const { scrollY } = useScroll();
   return (
     <Container>
-      <Card className="mx-5" style={{ transform: 'translateY(20px)' }}>
-        <Card.Body>
-          <PageHero {...props} />
-        </Card.Body>
-      </Card>
+      <animated.div
+        className="mx-5"
+        style={{
+          transform: scrollY.to((y) => `translateY(${y * 0.5 + 20}px)`),
+        }}>
+        <Card>
+          <Card.Body>
+            <PageHero {...props} />
+          </Card.Body>
+        </Card>
+      </animated.div>
     </Container>
   );
 }
