@@ -4,9 +4,17 @@ import { NAV_LINKS } from '../../utils/constants';
 import { useNavigate } from 'react-router-dom';
 import Page from '../../components/Page';
 import AnimatedBackground from '../../components/AnimatedBackground';
+import { useAuth } from '../../hooks/useAuth';
+import useUserInfo from '../../hooks/useUserInfo';
 
 export default function HomePage() {
   const navigate = useNavigate();
+
+  const {user} = useAuth();
+  const {created} = useUserInfo();
+
+  console.log(created);
+  console.log(user ? 1 : 0);
 
   return (
     <AnimatedBackground>
