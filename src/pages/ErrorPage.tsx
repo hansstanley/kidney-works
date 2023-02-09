@@ -1,7 +1,10 @@
 import { Button, Card, Container } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 import { NAV_LINKS } from '../utils/constants';
 
 export default function ErrorPage() {
+  const navigate = useNavigate();
+
   return (
     <Container
       className="d-flex align-items-center justify-content-center"
@@ -10,7 +13,7 @@ export default function ErrorPage() {
         <Card.Body>
           <Card.Title>Oops!</Card.Title>
           <Card.Text>An unexpected error has occured.</Card.Text>
-          <Button href={NAV_LINKS.HOME}>Return home</Button>
+          <Button onClick={() => navigate(NAV_LINKS.HOME)}>Return home</Button>
         </Card.Body>
       </Card>
     </Container>
