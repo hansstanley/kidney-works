@@ -51,12 +51,12 @@ export default function JobDetailPage() {
                 <Card.Title>Job requirements</Card.Title>
                 <Card.Text>{job.requirements || 'Nothing here.'}</Card.Text>
                 <hr />
-                <ButtonGroup>
+                {/* <ButtonGroup>
                   <Button variant="light" onClick={handleShowEditForm}>
                     Edit
                   </Button>
                   {hasApplied ? null : <Button>Apply</Button>}
-                </ButtonGroup>
+                </ButtonGroup> */}
               </Card.Body>
             </Card>
           ) : (

@@ -115,7 +115,7 @@ export default function JobsList({
                 {applyButton(j)}
               </ButtonGroup>
             </Card.Body>
-            {hasStatuses ? (
+            {hasStatuses && !isEmployer ? (
               <Card.Footer>
                 {statusToText.get(
                   appliedStatuses?.find((s) => s.jobId === j.id)?.status ||

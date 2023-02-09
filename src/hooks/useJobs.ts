@@ -19,6 +19,7 @@ export default function useJobs() {
             company,
             description,
             requirements,
+            employerid
           } = doc.data();
           const appjob: AppJob = {
             id: doc.id,
@@ -26,6 +27,7 @@ export default function useJobs() {
             company,
             description,
             requirements,
+            employerid,
           };
           jobsList.push(appjob);
         });

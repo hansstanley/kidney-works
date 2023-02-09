@@ -3,6 +3,8 @@ import { Button, Form, Modal } from 'react-bootstrap';
 import AppJob from '../../types/job.app';
 import { addDoc, collection } from 'firebase/firestore';
 import { db } from '../../utils/firebase';
+import { useAuth } from '../../hooks/useAuth';
+import useUserInfo from '../../hooks/useUserInfo';
 
 export interface JobFormModalProps {
   job?: AppJob;
@@ -19,10 +21,15 @@ export default function JobFormModal({
   jobs,
   setJobsState,
 }: JobFormModalProps) {
-  const [newCompany, setCompany] = useState(job?.company || '');
+
+
+  const { companyName } = useUserInfo();
+
+  const [newCompany, setCompany] = useState(companyName);
   const [newTitle, setTitle] = useState(job?.title || '');
   const [newDescription, setDescription] = useState(job?.description || '');
   const [newRequirements, setRequirements] = useState(job?.requirements || '');
+  const { user } = useAuth();
 
   const isEdit = useMemo(() => !!job, [job]);
 
@@ -31,12 +38,16 @@ export default function JobFormModal({
       const colRef = collection(db, 'jobs');
       addDoc(colRef, {
         title: newTitle,
-        company: newCompany,
+        company: companyName,
         description: newDescription,
         requirements: newRequirements,
+        employerid: user?.uid,
       }).then((doc) => {
         setJobsState([...jobs, { ...job, id: doc.id }]);
       });
+      setTitle("");
+      setDescription("");
+      setRequirements("");
     }
   }
 
@@ -47,6 +58,7 @@ export default function JobFormModal({
       company: newCompany,
       description: newDescription,
       requirements: newRequirements,
+      employerid: user?.uid ?? "",
     };
     addJob(newJob);
   }
@@ -77,7 +89,8 @@ export default function JobFormModal({
               type="text"
               placeholder="E.g. Google"
               autoFocus
-              value={newCompany}
+              value={companyName}
+              disabled={true}
               onChange={(e) => setCompany(e.target.value)}
             />
           </Form.Group>

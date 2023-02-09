@@ -38,6 +38,7 @@ export default function JobsPage() {
     [search],
   );
 
+
   const visibleJobs = useMemo(() => jobs?.filter(filterJob), [jobs, filterJob]);
 
   const createJobButton = () => {
@@ -52,13 +53,25 @@ export default function JobsPage() {
       }
   }
 
-  return (
-    <Page>
-      <PageHeader
+  const pageHeader = () => {
+    if (isEmployer) {
+      return (<PageHeader
+        noDivider
+        title="Your Jobs"
+        tagline="Change somebody's life"
+      />);
+    } else {
+      return(<PageHeader
         noDivider
         title="Jobs"
         tagline="Start your journey today"
-      />
+      />);
+    }
+  }
+
+  return (
+    <Page>
+      {pageHeader()}
       <PageBody>
         <Stack gap={3}>
           {createJobButton()}
