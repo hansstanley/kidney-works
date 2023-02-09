@@ -24,12 +24,16 @@ import { db, storage } from '../../utils/firebase';
 import UseSkills from '../../hooks/useSkills';
 import UseLimitations from '../../hooks/useLimitations';
 import useUserInfo from '../../hooks/useUserInfo';
-import { deleteObject, getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import {
+  deleteObject,
+  getDownloadURL,
+  ref,
+  uploadBytesResumable,
+} from 'firebase/storage';
 import AppResume from '../../types/resume.app';
 import UseResume from '../../hooks/useResume';
 import { Page, PageBody, PageHeader } from '../../components/Page';
 import UseEmployer from '../../hooks/useEmployer';
-
 
 export default function ProfilePage() {
   const { user } = useAuth();
@@ -37,27 +41,36 @@ export default function ProfilePage() {
   const { limitations, setLimitationState } = UseLimitations();
   const { isEmployer } = UseEmployer();
   const { resume, setResumeState } = UseResume();
-  const { name, email, setName, setEmail, avatar, eduLevel, setEduLevel, companyName, setCompanyName, companyDescription, setCompanyDescription } = useUserInfo();
+  const {
+    name,
+    email,
+    setName,
+    setEmail,
+    avatar,
+    eduLevel,
+    setEduLevel,
+    companyName,
+    setCompanyName,
+    companyDescription,
+    setCompanyDescription,
+  } = useUserInfo();
   const [inputName, setInputName] = useState(name);
   const [inputEmail, setInputEmail] = useState(email);
-  const [inputSkill, setInputSkill] = useState("");
-  const [inputLimitation, setInputLimitation] = useState("");
-  const [avatarProgress, setAvatarProgress] = useState(0);
+  const [inputSkill, setInputSkill] = useState('');
+  const [inputLimitation, setInputLimitation] = useState('');
+  const [avatarProgress, setAvatarProgress] = useState(-1);
   const [resumeProgress, setResumeProgress] = useState(0);
   const [resumeFile, setResumeFile] = useState<File | null>(null);
   const [duplicate, setDuplicate] = useState<boolean>(false);
-  const [desc, setDesc] = useState("");
+  const [desc, setDesc] = useState('');
 
-  const [inputCompanyName, setInputCompanyName] = useState("");
-  const [inputCompanyDescription, setInputCompanyDescription] = useState("");
-
+  const [inputCompanyName, setInputCompanyName] = useState('');
+  const [inputCompanyDescription, setInputCompanyDescription] = useState('');
 
   const storageRef = ref(storage, `/${user?.uid}`);
 
-  console.log(isEmployer);
-
   function updateUserInfo(name: string, email: string) {
-    const userSnap = doc(db, "users", user?.uid || '')
+    const userSnap = doc(db, 'users', user?.uid || '');
     updateDoc(userSnap, {
       name: name,
       email: email,
@@ -131,7 +144,7 @@ export default function ProfilePage() {
   }
 
   function updateEduLevel(eduLevel: string) {
-    const userSnap = doc(db, "users", user?.uid || '')
+    const userSnap = doc(db, 'users', user?.uid || '');
     updateDoc(userSnap, {
       eduLevel: eduLevel,
     });
@@ -143,27 +156,27 @@ export default function ProfilePage() {
   }
 
   function updateCompanyName(companyName: String) {
-    const userSnap = doc(db, "users", user?.uid || '')
+    const userSnap = doc(db, 'users', user?.uid || '');
     updateDoc(userSnap, {
       companyName: companyName,
-    })
+    });
     onSnapshot(userSnap, (doc) => {
       if (doc.exists()) {
         setCompanyName(doc.data()?.companyName);
       }
-    })
+    });
   }
 
   function updateCompanyDescription(companyDescription: String) {
-    const userSnap = doc(db, "users", user?.uid || '')
+    const userSnap = doc(db, 'users', user?.uid || '');
     updateDoc(userSnap, {
       companyDescription: companyDescription,
-    })
+    });
     onSnapshot(userSnap, (doc) => {
       if (doc.exists()) {
         setCompanyDescription(doc.data()?.companyDescription);
       }
-    })
+    });
   }
 
   const uploadResume = (file: File | null) => {
@@ -184,70 +197,72 @@ export default function ProfilePage() {
         getDownloadURL(uploadTask.snapshot.ref).then((url) => {
           addResume(desc, url);
         });
-      }
+      },
     );
-  }
+  };
 
   function addResume(desc: string, link: string) {
     const newResume = [
-      ...resume, {
+      ...resume,
+      {
         desc: desc,
-        link: link
-      }
-    ]
+        link: link,
+      },
+    ];
     setResume(newResume);
   }
 
   function setResume(newResume: AppResume[]) {
     setResumeState(newResume);
-    setDoc(doc(db, "resumes", user?.uid || ''), {
-      resumes: newResume
+    setDoc(doc(db, 'resumes', user?.uid || ''), {
+      resumes: newResume,
     });
   }
 
   function deleteResume(resume: AppResume) {
-    const resumeSnap = doc(db, "resumes", user?.uid || '')
+    const resumeSnap = doc(db, 'resumes', user?.uid || '');
     const fileRef = ref(storageRef, `/resume`);
     const spaceRef = ref(fileRef, resume.desc);
-    deleteObject(spaceRef).then(() => {
-      updateDoc(resumeSnap, {
-        resumes: arrayRemove(resume),
-      });
-      onSnapshot(resumeSnap, (doc) => {
-        if (doc.exists()) {
-          setResumeState(doc.data().resumes);
-        } else {
-          setResumeState([]);
-        }
+    deleteObject(spaceRef)
+      .then(() => {
+        updateDoc(resumeSnap, {
+          resumes: arrayRemove(resume),
+        });
+        onSnapshot(resumeSnap, (doc) => {
+          if (doc.exists()) {
+            setResumeState(doc.data().resumes);
+          } else {
+            setResumeState([]);
+          }
+        });
       })
-    }).catch((error) => {
-      console.log("can't delete");
-    });
-    
+      .catch((error) => {
+        console.log("can't delete");
+      });
   }
 
-  const addResumeHandler = (e: React.ChangeEvent<HTMLInputElement>)  => {
+  const addResumeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     if (e.target.files) {
-        setResumeFile(e.target.files[0]);
+      setResumeFile(e.target.files[0]);
     }
-  }
+  };
 
-  const resumeHandler = (e: React.FormEvent<HTMLFormElement>)  => {
+  const resumeHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     uploadResume(resumeFile);
-  }
+  };
 
   const uploadPic = (file: File) => {
     if (!file) return;
     const imageRef = ref(storageRef, `/image`);
-    const spaceRef = ref(imageRef, "profilepic");
+    const spaceRef = ref(imageRef, 'profilepic');
     const uploadTask = uploadBytesResumable(spaceRef, file);
     uploadTask.on(
-      "state_changed",
+      'state_changed',
       (snapshot) => {
         const prog = Math.round(
-          (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100,
         );
         setAvatarProgress(prog);
       },
@@ -261,22 +276,29 @@ export default function ProfilePage() {
       },
     );
   };
-  
 
   const openFile = () => {
-    document.getElementById("fileID")?.click();
-    setAvatarProgress(0);
+    document.getElementById('fileID')?.click();
+    // setAvatarProgress(0);
   };
 
   const avatarHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-        uploadPic(e.target.files[0]);
+      uploadPic(e.target.files[0]);
     }
   };
 
   useEffect(() => {
-    setDuplicate(resume.filter(x => x.desc === desc).length !== 0);
-  },[desc, resume])
+    if (avatarProgress === 100) {
+      setTimeout(() => {
+        setAvatarProgress(-1);
+      }, 1000);
+    }
+  }, [avatarProgress]);
+
+  useEffect(() => {
+    setDuplicate(resume.filter((x) => x.desc === desc).length !== 0);
+  }, [desc, resume]);
 
   return (
     <Page>
@@ -300,7 +322,13 @@ export default function ProfilePage() {
             <Button variant="secondary" onClick={() => openFile()}>
               Change
             </Button>
-            <ProgressBar now={avatarProgress} />
+            {avatarProgress === -1 ? null : (
+              <ProgressBar
+                animated
+                now={avatarProgress}
+                label={avatarProgress === 100 ? 'Done!' : undefined}
+              />
+            )}
           </ProfileSection>
           <ProfileSection title="Account">
             <Form>
@@ -331,157 +359,208 @@ export default function ProfilePage() {
               </Button>
             </Form>
           </ProfileSection>
-        {isEmployer ? (
-        <ProfileSection title="Company Name">
-            <Form>
+          {isEmployer ? (
+            <ProfileSection title="Company Name">
+              <Form>
                 <Form.Group className="mb-3" controlId="companyname">
-                    <Form.Control
+                  <Form.Control
                     type="text"
                     placeholder="Your company's name"
                     defaultValue={companyName}
                     onChange={(e) => setInputCompanyName(e.target.value)}
-                    />
+                  />
                 </Form.Group>
-            </Form>
-            <hr />
-            <Button type="submit" href="#" onClick={() => updateCompanyName(inputCompanyName)}>
-              Update
-            </Button>
-        </ProfileSection>
-        ) : (
-        <ProfileSection title="Education">
-          <Form>
-            <Form.Group className="mb-3" controlId="education">
-              <Form.Label>Education level</Form.Label>
-              <Form.Select onChange={e => setEduLevel(e.target.value)} value={eduLevel} defaultValue={eduLevel}>
-                <option value="0">No Education</option>
-                <option value="1">Primary Education</option>
-                <option value="2">Normal-level (N-level)</option>
-                <option value="3">GCE 'O' Level</option>
-                <option value="4">GEC 'A' Level</option>
-                <option value="5">National ITE Certificate (Nitec)</option>
-                <option value="6">Higher National ITE Certificate (Higher Nitec)</option>
-                <option value="7">Diploma</option>
-                <option value="8">Bachelor's Degree</option>
-                <option value="9">Master's Degree</option>
-                <option value="10">PhD</option>
-              </Form.Select>
-            </Form.Group>
-          </Form>
-          <hr />
-            <Button type="submit" href="#" onClick={() => updateEduLevel(eduLevel)}>
-              Update
-            </Button>
-        </ProfileSection>
-        )}
-        {isEmployer ? (
-        <ProfileSection title="Company Description">
-            <Form>
+              </Form>
+              <hr />
+              <Button
+                type="submit"
+                href="#"
+                onClick={() => updateCompanyName(inputCompanyName)}>
+                Update
+              </Button>
+            </ProfileSection>
+          ) : (
+            <ProfileSection title="Education">
+              <Form>
+                <Form.Group className="mb-3" controlId="education">
+                  <Form.Label>Education level</Form.Label>
+                  <Form.Select
+                    onChange={(e) => setEduLevel(e.target.value)}
+                    value={eduLevel}
+                    defaultValue={eduLevel}>
+                    <option value="0">No Education</option>
+                    <option value="1">Primary Education</option>
+                    <option value="2">Normal-level (N-level)</option>
+                    <option value="3">GCE 'O' Level</option>
+                    <option value="4">GEC 'A' Level</option>
+                    <option value="5">National ITE Certificate (Nitec)</option>
+                    <option value="6">
+                      Higher National ITE Certificate (Higher Nitec)
+                    </option>
+                    <option value="7">Diploma</option>
+                    <option value="8">Bachelor's Degree</option>
+                    <option value="9">Master's Degree</option>
+                    <option value="10">PhD</option>
+                  </Form.Select>
+                </Form.Group>
+              </Form>
+              <hr />
+              <Button
+                type="submit"
+                href="#"
+                onClick={() => updateEduLevel(eduLevel)}>
+                Update
+              </Button>
+            </ProfileSection>
+          )}
+          {isEmployer ? (
+            <ProfileSection title="Company Description">
+              <Form>
                 <Form.Group className="mb-3" controlId="companydescription">
-                    <Form.Label>A description of your company's dealings</Form.Label>
-                    <Form.Control
+                  <Form.Label>
+                    A description of your company's dealings
+                  </Form.Label>
+                  <Form.Control
                     type="text"
                     placeholder="A description of your company's dealings"
                     defaultValue={companyDescription}
                     onChange={(e) => setInputCompanyDescription(e.target.value)}
-                    />
-                </Form.Group>
-            </Form>
-            <Button type="submit" href="#" onClick={() => updateCompanyDescription(inputCompanyDescription)}>
-              Update
-            </Button>
-        </ProfileSection> 
-        ) : (
-        <ProfileSection title="Skills and limitations">
-          <Form>
-            <Form.Group className="mb-3" controlId="skills">
-              <Form.Label>Skills</Form.Label>
-              <InputGroup>
-                <Form.Control type="text" placeholder="E.g. public speaking" onChange={e => setInputSkill(e.target.value)}/>
-                <Button variant="outline-secondary" onClick={addSkillHandler} >Add</Button>
-              </InputGroup>
-              <Stack direction="horizontal" gap={1} className="mt-2">
-                {skills.map((s, i) => (
-                  <Badge key={i} bg="secondary">
-                    <Stack direction="horizontal" gap={2}>
-                      {s}
-                      <CloseButton variant="white" onClick={() => deleteSkill(s)} />
-                    </Stack>
-                  </Badge>
-                ))}
-              </Stack>
-            </Form.Group>
-            </Form>
-            <Form>
-              <Form.Group className="mb-3" controlId="physicalLimitations">
-                <Form.Label>Physical limitations</Form.Label>
-                <InputGroup>
-                  <Form.Control
-                    type="text"
-                    placeholder="E.g. low blood pressure"
-                    onChange={(e) => setInputLimitation(e.target.value)}
                   />
-                  <Button
-                    variant="outline-secondary"
-                    onClick={addLimitationHandler}>
-                    Add
-                  </Button>
-                </InputGroup>
-                <Stack direction="horizontal" gap={1} className="mt-2">
-                  {limitations.map((l, i) => (
-                    <Badge key={i} bg="secondary">
-                      <Stack direction="horizontal" gap={2}>
-                        {l}
-                        <CloseButton
-                          variant="white"
-                          onClick={() => deleteLimitation(l)}
-                        />
-                      </Stack>
-                    </Badge>
-                  ))}
-                </Stack>
-              </Form.Group>
-            </Form>
-          </ProfileSection>)}
-                    
-        {!isEmployer ? (
-          <ProfileSection title='Resume'>
-            <Form onSubmit={resumeHandler} noValidate validated={!duplicate || resume.length === 0}>
-              <Form.Group className="mb-3" >
-              <Form.Group as={Row} className="mb-3" controlId="resume">
-                <Form.Label column sm="1">
-                *-    Filename
-                </Form.Label>
-                  <Form.Group as={Col}>
-                  <Form.Control  placeholder="E.g. Resume_v1" required  onChange={e => setDesc(e.target.value)} isInvalid={duplicate} />
-                    <Form.Control.Feedback type="invalid">
-                      {desc.length === 0 ? "Please choose a filename" : "Filename exists. Please choose other name"}
-                    </Form.Control.Feedback>
-              </Form.Group>
-              </Form.Group>
-                <Form.Control type="file" required accept=".pdf" onChange={addResumeHandler} />
-                <ProgressBar now={resumeProgress}></ProgressBar>
-                <Stack direction="horizontal" gap={1} className="mt-2">
-                  {resume.map((l, i) => (
-                    <Badge key={i} bg="secondary">
-                      <Stack direction="horizontal" gap={2}>
-                        <Button variant="secondary" size="sm" href={l.link}>{l.desc}</Button>
-                        <CloseButton variant="white" onClick={() => deleteResume(l)} />
-                      </Stack>
-                    </Badge>
-                  ))}
-                </Stack>
-                <hr />
-                <Button type='submit' disabled={duplicate && resume.length !== 0}>
-                  Upload
-                  </Button>
-              </Form.Group>
-            </Form>
-          </ProfileSection>
-        ):(
-          <></>
-        )}
+                </Form.Group>
+              </Form>
+              <Button
+                type="submit"
+                href="#"
+                onClick={() =>
+                  updateCompanyDescription(inputCompanyDescription)
+                }>
+                Update
+              </Button>
+            </ProfileSection>
+          ) : (
+            <ProfileSection title="Skills and limitations">
+              <Form>
+                <Form.Group className="mb-3" controlId="skills">
+                  <Form.Label>Skills</Form.Label>
+                  <InputGroup>
+                    <Form.Control
+                      type="text"
+                      placeholder="E.g. public speaking"
+                      onChange={(e) => setInputSkill(e.target.value)}
+                    />
+                    <Button
+                      variant="outline-secondary"
+                      onClick={addSkillHandler}>
+                      Add
+                    </Button>
+                  </InputGroup>
+                  <Stack direction="horizontal" gap={1} className="mt-2">
+                    {skills.map((s, i) => (
+                      <Badge key={i} bg="secondary">
+                        <Stack direction="horizontal" gap={2}>
+                          {s}
+                          <CloseButton
+                            variant="white"
+                            onClick={() => deleteSkill(s)}
+                          />
+                        </Stack>
+                      </Badge>
+                    ))}
+                  </Stack>
+                </Form.Group>
+              </Form>
+              <Form>
+                <Form.Group className="mb-3" controlId="physicalLimitations">
+                  <Form.Label>Physical limitations</Form.Label>
+                  <InputGroup>
+                    <Form.Control
+                      type="text"
+                      placeholder="E.g. low blood pressure"
+                      onChange={(e) => setInputLimitation(e.target.value)}
+                    />
+                    <Button
+                      variant="outline-secondary"
+                      onClick={addLimitationHandler}>
+                      Add
+                    </Button>
+                  </InputGroup>
+                  <Stack direction="horizontal" gap={1} className="mt-2">
+                    {limitations.map((l, i) => (
+                      <Badge key={i} bg="secondary">
+                        <Stack direction="horizontal" gap={2}>
+                          {l}
+                          <CloseButton
+                            variant="white"
+                            onClick={() => deleteLimitation(l)}
+                          />
+                        </Stack>
+                      </Badge>
+                    ))}
+                  </Stack>
+                </Form.Group>
+              </Form>
+            </ProfileSection>
+          )}
 
+          {!isEmployer ? (
+            <ProfileSection title="Resume">
+              <Form
+                onSubmit={resumeHandler}
+                noValidate
+                validated={!duplicate || resume.length === 0}>
+                <Form.Group className="mb-3">
+                  <Form.Group as={Row} className="mb-3" controlId="resume">
+                    <Form.Label column sm="1">
+                      *- Filename
+                    </Form.Label>
+                    <Form.Group as={Col}>
+                      <Form.Control
+                        placeholder="E.g. Resume_v1"
+                        required
+                        onChange={(e) => setDesc(e.target.value)}
+                        isInvalid={duplicate}
+                      />
+                      <Form.Control.Feedback type="invalid">
+                        {desc.length === 0
+                          ? 'Please choose a filename'
+                          : 'Filename exists. Please choose other name'}
+                      </Form.Control.Feedback>
+                    </Form.Group>
+                  </Form.Group>
+                  <Form.Control
+                    type="file"
+                    required
+                    accept=".pdf"
+                    onChange={addResumeHandler}
+                  />
+                  <ProgressBar now={resumeProgress}></ProgressBar>
+                  <Stack direction="horizontal" gap={1} className="mt-2">
+                    {resume.map((l, i) => (
+                      <Badge key={i} bg="secondary">
+                        <Stack direction="horizontal" gap={2}>
+                          <Button variant="secondary" size="sm" href={l.link}>
+                            {l.desc}
+                          </Button>
+                          <CloseButton
+                            variant="white"
+                            onClick={() => deleteResume(l)}
+                          />
+                        </Stack>
+                      </Badge>
+                    ))}
+                  </Stack>
+                  <hr />
+                  <Button
+                    type="submit"
+                    disabled={duplicate && resume.length !== 0}>
+                    Upload
+                  </Button>
+                </Form.Group>
+              </Form>
+            </ProfileSection>
+          ) : (
+            <></>
+          )}
         </Stack>
       </PageBody>
     </Page>

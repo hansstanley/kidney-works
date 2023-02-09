@@ -65,7 +65,7 @@ export default function HomeFeature() {
     <Page.Body noCard>
       <Row>
         {features.map(({ title, subtitle, body }, i) => (
-          <Col key={i}>
+          <Col key={i} className="my-3">
             <FeatureBox title={title} subtitle={subtitle} body={body} />
           </Col>
         ))}
