@@ -12,7 +12,6 @@ import JobDetailPage from './pages/JobDetailPage';
 import ErrorPage from './pages/ErrorPage';
 import AboutPage from './pages/AboutPage';
 import JobAppsPage from './pages/JobAppsPage';
-import { Container } from 'react-bootstrap';
 
 const router = createBrowserRouter([
   { path: NAV_LINKS.HOME, element: <HomePage />, errorElement: <ErrorPage /> },
