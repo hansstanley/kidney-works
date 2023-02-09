@@ -40,7 +40,7 @@ export default function AppBar() {
                   Job applications
                 </NavDropdown.Item>
                 <NavDropdown.Divider />
-                <NavDropdown.Item onClick={handleSignOut}>
+                <NavDropdown.Item onClick={handleSignOut} href={NAV_LINKS.HOME}>
                   Sign out
                 </NavDropdown.Item>
               </NavDropdown>
