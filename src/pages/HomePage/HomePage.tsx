@@ -1,16 +1,13 @@
 import './HomePage.css';
-import { Button, Container, Stack } from 'react-bootstrap';
+import { Button, ButtonGroup, Container, Stack } from 'react-bootstrap';
 import { NAV_LINKS } from '../../utils/constants';
 import { useNavigate } from 'react-router-dom';
 import Page from '../../components/Page';
 import AnimatedBackground from '../../components/AnimatedBackground';
-import { useAuth } from '../../hooks/useAuth';
-import useUserInfo from '../../hooks/useUserInfo';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { animated, useSpring } from '@react-spring/web';
 import HomeFeature from './HomeFeature';
 import ImageSlider from '../../components/ImageSlider';
-import { SliderData } from '../../components/SliderData';
 import HomeLinks from './HomeLinks';
 
 const AnimatedButton = animated(Button);
@@ -18,6 +15,7 @@ const AnimatedButton = animated(Button);
 export default function HomePage() {
   const navigate = useNavigate();
   const [clicked, setClicked] = useState(false);
+  const moreInfoRef = useRef<HTMLDivElement>(null);
 
   const { x } = useSpring({
     from: { x: 0 },
@@ -48,6 +46,10 @@ export default function HomePage() {
     setTimeout(() => navigate(NAV_LINKS.JOBS), 500);
   };
 
+  const handleMoreInfoClick = () => {
+    moreInfoRef.current?.scrollIntoView();
+  };
+
   return (
     <AnimatedBackground>
       <Page>
@@ -70,14 +72,20 @@ export default function HomePage() {
                 Empowering dialysis patients, enriching the workforce
               </p>
             </Stack>
-            <AnimatedButton
-              style={exploreSpring}
-              variant="primary"
-              onClick={handleExploreClick}>
-              Explore Jobs
-            </AnimatedButton>
+            <ButtonGroup>
+              <AnimatedButton
+                style={exploreSpring}
+                variant="primary"
+                onClick={handleExploreClick}>
+                Explore Jobs
+              </AnimatedButton>
+              <Button variant="secondary" onClick={handleMoreInfoClick}>
+                Learn more
+              </Button>
+            </ButtonGroup>
           </Container>
         </div>
+        <div ref={moreInfoRef} />
         <HomeFeature />
         <ImageSlider />
         <HomeLinks />
