@@ -9,7 +9,6 @@ import useUserInfo from '../../hooks/useUserInfo';
 import { useState } from 'react';
 import { animated, useSpring } from '@react-spring/web';
 import HomeFeature from './HomeFeature';
-import { Parallax, ParallaxLayer } from '@react-spring/parallax';
 
 const AnimatedButton = animated(Button);
 
@@ -46,8 +45,8 @@ export default function HomePage() {
     setTimeout(() => navigate(NAV_LINKS.JOBS), 500);
   };
 
-  const {user} = useAuth();
-  const {created} = useUserInfo();
+  const { user } = useAuth();
+  const { created } = useUserInfo();
 
   console.log(created);
   console.log(user ? 1 : 0);
@@ -65,6 +64,7 @@ export default function HomePage() {
                     range: [0, 0.25, 0.35, 0.45, 0.55, 0.65, 0.75, 1],
                     output: [1, 0.97, 0.95, 1, 0.95, 1, 0.95, 1],
                   }),
+                  cursor: 'pointer',
                 }}
                 onClick={handleClick}>
                 <h1 className="display-1 fw-bold">Hire-a-Patient</h1>
