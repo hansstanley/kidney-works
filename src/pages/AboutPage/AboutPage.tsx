@@ -28,6 +28,7 @@ export default function AboutPage() {
               everyone has an equal opportunity to succeed.
             </Card.Text>
           </Card.Body>
+          <Card.Img src='' />
         </Card>
       </PageBody>
     </Page>
