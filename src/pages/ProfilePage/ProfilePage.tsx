@@ -9,7 +9,6 @@ import {
   InputGroup,
   ProgressBar,
   Row,
-  Spinner,
   Stack,
 } from 'react-bootstrap';
 import { useAuth } from '../../hooks/useAuth';
