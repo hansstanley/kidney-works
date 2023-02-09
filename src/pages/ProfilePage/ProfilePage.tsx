@@ -443,39 +443,44 @@ export default function ProfilePage() {
               </Form.Group>
             </Form>
           </ProfileSection>)}
-        <ProfileSection title='Resume'>
-          <Form onSubmit={resumeHandler} noValidate validated={!duplicate || resume.length === 0}>
-            <Form.Group className="mb-3" >
-            <Form.Group as={Row} className="mb-3" controlId="resume">
-              <Form.Label column sm="1">
-                  Filename
-              </Form.Label>
-                <Form.Group as={Col}>
-                <Form.Control  placeholder="E.g. Resume_v1" required  onChange={e => setDesc(e.target.value)} isInvalid={duplicate} />
-                  <Form.Control.Feedback type="invalid">
-                    {desc.length === 0 ? "Please choose a filename" : "Filename exists. Please choose other name"}
-                  </Form.Control.Feedback>
-            </Form.Group>
-            </Form.Group>
-              <Form.Control type="file" required accept=".pdf" onChange={addResumeHandler} />
-              <ProgressBar now={resumeProgress}></ProgressBar>
-              <Stack direction="horizontal" gap={1} className="mt-2">
-                {resume.map((l, i) => (
-                  <Badge key={i} bg="secondary">
-                    <Stack direction="horizontal" gap={2}>
-                      <Button variant="secondary" size="sm" href={l.link}>{l.desc}</Button>
-                      <CloseButton variant="white" onClick={() => deleteResume(l)} />
-                    </Stack>
-                  </Badge>
-                ))}
-              </Stack>
-              <hr />
-              <Button type='submit' disabled={duplicate && resume.length !== 0}>
-                Upload
-                </Button>
-            </Form.Group>
-          </Form>
-        </ProfileSection>
+                    
+        {!isEmployer ? (
+          <ProfileSection title='Resume'>
+            <Form onSubmit={resumeHandler} noValidate validated={!duplicate || resume.length === 0}>
+              <Form.Group className="mb-3" >
+              <Form.Group as={Row} className="mb-3" controlId="resume">
+                <Form.Label column sm="1">
+                *-    Filename
+                </Form.Label>
+                  <Form.Group as={Col}>
+                  <Form.Control  placeholder="E.g. Resume_v1" required  onChange={e => setDesc(e.target.value)} isInvalid={duplicate} />
+                    <Form.Control.Feedback type="invalid">
+                      {desc.length === 0 ? "Please choose a filename" : "Filename exists. Please choose other name"}
+                    </Form.Control.Feedback>
+              </Form.Group>
+              </Form.Group>
+                <Form.Control type="file" required accept=".pdf" onChange={addResumeHandler} />
+                <ProgressBar now={resumeProgress}></ProgressBar>
+                <Stack direction="horizontal" gap={1} className="mt-2">
+                  {resume.map((l, i) => (
+                    <Badge key={i} bg="secondary">
+                      <Stack direction="horizontal" gap={2}>
+                        <Button variant="secondary" size="sm" href={l.link}>{l.desc}</Button>
+                        <CloseButton variant="white" onClick={() => deleteResume(l)} />
+                      </Stack>
+                    </Badge>
+                  ))}
+                </Stack>
+                <hr />
+                <Button type='submit' disabled={duplicate && resume.length !== 0}>
+                  Upload
+                  </Button>
+              </Form.Group>
+            </Form>
+          </ProfileSection>
+        ):(
+          <></>
+        )}
 
         </Stack>
       </PageBody>
