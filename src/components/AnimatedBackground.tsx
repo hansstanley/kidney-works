@@ -9,7 +9,7 @@ export default function AnimatedBackground({ children }: PropsWithChildren) {
       style={{
         flexGrow: 1,
         background: scrollYProgress.to(
-          (y) => `radial-gradient(#ffffff ${y * 100 * 0.9}%, #9fffff 100%)`,
+          (y) => `radial-gradient(#ffffff ${y * 100 * 0.9}%, #c3f5ff 100%)`,
         ),
       }}>
       {children}
