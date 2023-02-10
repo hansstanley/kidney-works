@@ -1,8 +1,84 @@
-# Getting Started with Create React App
+# KidneyWorks
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A job platform dedicated to **raising awareness** among employers and **connecting** them with kidney dialysis patients, **providing a platform** for patients to **find employment opportunities** that are flexible and accommodating to their medical needs.
 
-## Available Scripts
+## We're live!
+
+You can find our live site hosted on Firebase at [KidneyWorks](https://kidney-works.web.app/)!
+
+## Mission
+Our mission is to bridge the gap between employers looking for qualified and motivated employees and patients seeking meaningful employment opportunities.
+
+## Vision
+
+We believe that every individual, including dialysis patients, has the right to work and contribute to society, and our goal is to make this a reality.
+
+## Features
+
+### Delightful visuals
+
+> insert landing page
+
+We believe first impressions are important, reflecting the job application process and encouraging employers to explore the website.
+
+- Friendly avatars and delightful animations make using the website a pleasant experience
+- Responsive design allows the website to be used on mobile devices for on-the-go convenience
+
+### Informative sections
+
+Designed to help employers understand and empathise with kidney patients, the website offers a repository of useful information.
+
+> insert rationale section
+
+*This section contains reasons for employers to hire kidney patients*
+
+> insert brochures section
+
+*This section has brochures from Kidney Dialysis Foundation*
+
+> insert links section
+
+*This section contains links to websites of interest to employers hiring kidney patients*
+
+### Job applications
+
+> insert jobs page
+
+> insert applications page
+
+To transform information into action, we integrated a job portal into the website to connect kidney patients with potential employers easily.
+
+- Employers can view all their job postings on one page, including the applicants who applied for them
+- Kidney patients have a curated list of jobs from accommodating employers, and a quick way to view their application statuses
+
+### Employer and Patient blogs
+
+On a more personalised note, employers and kidney patients alike can share their previous experiences working with each other, showing newcoming employers the potential of hiring kidney patients and providing patients with a source of hope and wisdom.
+
+### Profile customisation
+
+> insert profile page
+
+Like any good job portal, kidney patients can enrich their profiles with relevant information for employment.
+
+Customisations:
+
+- Display name and picture
+- Education level
+- Personal skills
+- Physical limitations and health conditions
+- Resume upload
+
+### Coming soon
+
+- [ ] Integration with popular job sites such as LinkedIn, Indeed, etc.
+- [ ] Connecting jobs with blogs for better context
+- [ ] More ways of signing in
+- [ ] Theme customisations
+
+## For developers
+
+> Don't forget `npm ci` to install the necessary dependencies!
 
 In the project directory, you can run:
 
@@ -28,19 +104,3 @@ The build is minified and the filenames include the hashes.\
 Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
