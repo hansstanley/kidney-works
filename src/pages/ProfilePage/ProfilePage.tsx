@@ -292,6 +292,11 @@ export default function ProfilePage() {
     document.getElementById('fileID')?.click();
   };
 
+  function changeNameHandler(e: React.ChangeEvent<HTMLInputElement>) {
+    setName(e.target.value);
+    setInputName(e.target.value);
+  }
+
   const avatarHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       uploadPic(e.target.files[0]);
@@ -355,8 +360,8 @@ export default function ProfilePage() {
                 <Form.Control
                   type="text"
                   placeholder="Your name"
-                  defaultValue={name}
-                  onChange={(e) => setInputName(e.target.value)}
+                  value={name}
+                  onChange={changeNameHandler}
                 />
               </Form.Group>
               <Form.Group className="mb-3" controlId="email">
@@ -364,8 +369,8 @@ export default function ProfilePage() {
                 <Form.Control
                   type="email"
                   placeholder="E.g. johndoe@abc.com"
-                  defaultValue={email}
-                  onChange={(e) => setInputEmail(e.target.value)}
+                  value={email}
+                  disabled
                 />
               </Form.Group>
               <hr />
