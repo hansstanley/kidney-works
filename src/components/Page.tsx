@@ -25,6 +25,7 @@ function PageHeader(props: PageHeroProps) {
         className="mx-5"
         style={{
           transform: scrollY.to((y) => `translateY(${y * 0.5 + 20}px)`),
+          opacity: scrollY.to([0, 200], [1, 0]),
         }}>
         <Card>
           <Card.Body>
