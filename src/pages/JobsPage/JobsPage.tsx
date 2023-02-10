@@ -27,15 +27,21 @@ export default function JobsPage() {
   console.log(jobs);
   const filterJob = useCallback(
     (job: AppJob) => {
+      
+      if (isEmployer && job.employerid !== user?.uid) {
+        return false;
+      }
+
       if (!search) {
         return true;
       }
+
       const lowerSearch = search.toLowerCase();
       return [job.title, job.description, job.company, job.requirements]
         .map((x) => x?.toLowerCase())
         .some((x) => x?.includes(lowerSearch));
     },
-    [search],
+    [isEmployer, search, user?.uid],
   );
 
 

@@ -43,8 +43,8 @@ export default function useJobs() {
       getDocs(ref).then((snapshot) => {
         setJobApps(
           snapshot.docs.map((doc) => {
-            const { jobId, userId, status } = doc.data();
-            return { jobId, userId, status };
+            const { jobId, userId, status, userName, addNote } = doc.data();
+            return { jobId, userId, status, userName, addNote };
           }),
         );
       });
@@ -55,6 +55,10 @@ export default function useJobs() {
   const findJob = (jobId: string | undefined) => {
     return jobs.find((j) => j.id === jobId);
   };
+
+  const findJobApplicationsForEmployer = (jobId: string | undefined) => {
+    return jobApps.filter((app) => app.jobId === jobId);
+  }
 
   const findJobApplications = (userId: string | undefined) => {
     return jobApps.filter((app) => app.userId === userId);
@@ -78,6 +82,7 @@ export default function useJobs() {
     setJobsState,
     findJob,
     findJobApplications,
+    findJobApplicationsForEmployer,
     findAppliedJobs,
     isJobApplied,
   };

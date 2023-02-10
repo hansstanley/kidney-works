@@ -28,6 +28,7 @@ export default function JobAppsFormModal({
           jobId: job,
           status: "applied",
           userId: user?.uid,
+          userName: user?.displayName,
           addNote: addNote
         }).then(() => window.location.reload());
       }
