@@ -23,10 +23,10 @@
 
 .right-arrow {
     position: absolute;
-    top: 50%;
-    right: 500px;
-    font-size: 3rem;
-    color: #000;
+    top: 35%;
+    right: 400px;
+    font-size: 5rem;
+    color: #005d70;
     z-index: 10;
     cursor: pointer;
     user-select: none;
@@ -35,25 +35,30 @@
 
 .left-arrow {
     position: absolute;
-    top: 50%;
-    left: 500px;
-    font-size: 3rem;
-    color: #000;
+    top: 35%;
+    left: 400px;
+    font-size: 5rem;
+    color: #005d70;
     z-index: 10;
     cursor: pointer;
     user-select: none;
 }
 
 .slide {
-    opacity: 0.5;
-    transition-duration: 1s ease-out;
+    transition: ease-in-out;
+    transition-duration: 1s;
 }
 
 .slide.active {
-    opacity: 1;
+    transition: ease-in-out;
     transition-duration: 1s;
 }
 
 .find {
     text-align: center;
+}
+
+.find-section {
+    position: relative;
+    top: -180px;
 }
