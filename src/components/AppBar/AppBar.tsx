@@ -4,6 +4,7 @@ import { useAuth } from '../../hooks/useAuth';
 import { APP_IDENTITY, NAV_LINKS } from '../../utils/constants';
 import useUserInfo from '../../hooks/useUserInfo';
 import { useNavigate } from 'react-router-dom';
+import logo from '../../images/logo.png';
 
 export default function AppBar() {
   const navigate = useNavigate();
@@ -23,6 +24,12 @@ export default function AppBar() {
     <Navbar expand="lg">
       <Container>
         <Navbar.Brand href="#" onClick={navigateTo(NAV_LINKS.HOME)}>
+          <img
+            src={logo}
+            width={30}
+            height={30}
+            className="d-inline-block align-top me-2"
+          />
           {APP_IDENTITY.TITLE}
         </Navbar.Brand>
         <Navbar.Toggle />
@@ -36,12 +43,12 @@ export default function AppBar() {
                 <NavDropdown.Item onClick={navigateTo(NAV_LINKS.PROFILE)}>
                   Profile
                 </NavDropdown.Item>
-                { !isEmployer ? (
-                  <NavDropdown.Item onClick={navigateTo(NAV_LINKS.JOBS_APPLIED)}>
+                {!isEmployer ? (
+                  <NavDropdown.Item
+                    onClick={navigateTo(NAV_LINKS.JOBS_APPLIED)}>
                     Job applications
                   </NavDropdown.Item>
-                ) : ( null )
-                } 
+                ) : null}
                 <NavDropdown.Divider />
                 <NavDropdown.Item onClick={handleSignOut} href={NAV_LINKS.HOME}>
                   Sign out
