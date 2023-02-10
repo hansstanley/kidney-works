@@ -1,5 +1,12 @@
-import { Accordion, Card, Col, Row } from 'react-bootstrap';
-import Page from '../../components/Page';
+import {
+  Accordion,
+  Badge,
+  Card,
+  Col,
+  Container,
+  Row,
+  Stack,
+} from 'react-bootstrap';
 
 const features = [
   {
@@ -38,8 +45,12 @@ interface FeatureBoxProps {
 function FeatureBox({ title, subtitle, body }: FeatureBoxProps) {
   return (
     <Card>
-      <Card.Header>{title}</Card.Header>
-      <Card.Body>
+      <h3
+        className="position-absolute start-50 top-0 translate-middle text-center"
+        style={{ minWidth: '70%' }}>
+        <Badge>{title}</Badge>
+      </h3>
+      <Card.Body className="mt-3">
         <Card.Subtitle>{subtitle}</Card.Subtitle>
         <Accordion className="mt-3">
           <Accordion.Item eventKey="0">
@@ -62,14 +73,17 @@ function FeatureBox({ title, subtitle, body }: FeatureBoxProps) {
 
 export default function HomeFeature() {
   return (
-    <Page.Body noCard>
-      <Row>
-        {features.map(({ title, subtitle, body }, i) => (
-          <Col key={i} className="my-3">
-            <FeatureBox title={title} subtitle={subtitle} body={body} />
-          </Col>
-        ))}
-      </Row>
-    </Page.Body>
+    <Container className="text-center my-5">
+      <Stack gap={5}>
+        <h2>Features</h2>
+        <Row>
+          {features.map(({ title, subtitle, body }, i) => (
+            <Col key={i} className="my-3" sm={12} md={4}>
+              <FeatureBox title={title} subtitle={subtitle} body={body} />
+            </Col>
+          ))}
+        </Row>
+      </Stack>
+    </Container>
   );
 }
