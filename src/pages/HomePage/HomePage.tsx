@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import Page from '../../components/Page';
 import AnimatedBackground from '../../components/AnimatedBackground';
 import { useRef, useState } from 'react';
-import { animated, useSpring } from '@react-spring/web';
+import { animated, useScroll, useSpring } from '@react-spring/web';
 import HomeFeature from './HomeFeature';
 import ImageSlider from '../../components/ImageSlider';
 import HomeLinks from './HomeLinks';
@@ -15,6 +15,7 @@ const AnimatedButton = animated(Button);
 
 export default function HomePage() {
   const navigate = useNavigate();
+  const { scrollY } = useScroll();
   const [clicked, setClicked] = useState(false);
   const moreInfoRef = useRef<HTMLDivElement>(null);
 
@@ -67,21 +68,21 @@ export default function HomePage() {
                   cursor: 'pointer',
                 }}
                 onClick={handleClick}>
-                <div>
-                  <h1
-                    className="display-1 fw-bold position-absolute"
-                    style={{
-                      transform: 'translate(3px, 3px)',
-                      zIndex: 1,
-                    }}>
-                    {APP_IDENTITY.TITLE}
-                  </h1>
-                  <h1
-                    className="display-1 fw-bold text-primary position-relative"
-                    style={{ zIndex: 2 }}>
-                    {APP_IDENTITY.TITLE}
-                  </h1>
-                </div>
+                <animated.h1
+                  className="display-1 fw-bold position-absolute"
+                  style={{
+                    transform: scrollY.to(
+                      (y) => `translate(3px, ${3 - y * 0.2}px)`,
+                    ),
+                    zIndex: 1,
+                  }}>
+                  {APP_IDENTITY.TITLE}
+                </animated.h1>
+                <h1
+                  className="display-1 fw-bold text-primary position-relative"
+                  style={{ zIndex: 2 }}>
+                  {APP_IDENTITY.TITLE}
+                </h1>
               </animated.div>
               <p className="lead">{APP_IDENTITY.TAGLINE}</p>
             </Stack>

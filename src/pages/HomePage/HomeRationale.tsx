@@ -27,7 +27,12 @@ export default function HomeRationale() {
       <Stack gap={5} className="my-5 text-center">
         <h2 className="mb-3">Why should you hire patients?</h2>
         {sections.map((s, i) => (
-          <RationaleSection title={s.title} body={s.body} flip={i % 2 === 1} />
+          <RationaleSection
+            key={i}
+            title={s.title}
+            body={s.body}
+            flip={i % 2 === 1}
+          />
         ))}
       </Stack>
     </Container>
@@ -49,15 +54,11 @@ function RationaleSection({ title, body, flip }: RationaleSectionProps) {
         <Badge>{title}</Badge>
       </h3>
       <Card.Body className="mt-3">
-        <Card.Text className={flip ? 'text-end' : 'text-start'}>
-          {body.map((line, i) => (
-            <div key={i}>
-              {line}
-              <br />
-              <br />
-            </div>
-          ))}
-        </Card.Text>
+        {body.map((line, i) => (
+          <Card.Text key={i} className={flip ? 'text-end' : 'text-start'}>
+            {line}
+          </Card.Text>
+        ))}
       </Card.Body>
     </Card>
   );
