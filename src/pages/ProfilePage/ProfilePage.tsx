@@ -563,7 +563,7 @@ export default function ProfilePage() {
                     {resume.map((l, i) => (
                       <Badge key={i} bg="secondary">
                         <Stack direction="horizontal" gap={2}>
-                          <Button variant="secondary" size="sm" href={l.link}>
+                          <Button variant="secondary" size="sm" onClick={() => window.open(l.link)}>
                             {l.desc}
                           </Button>
                           <CloseButton

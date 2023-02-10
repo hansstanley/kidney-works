@@ -1,24 +1,8 @@
-import { Card, Stack } from 'react-bootstrap';
+import { Accordion, Badge, Card, Stack } from 'react-bootstrap';
 import { Page, PageBody, PageHeader } from '../../components/Page';
 import useBlogs from '../../hooks/useBlogs';
 import useUserInfo from '../../hooks/useUserInfo';
 import { useAuth } from '../../hooks/useAuth';
-
-// const blogs = [
-//   {
-//     id: 1,
-//     title: 'Blog 1',
-//     description: 'This is blog 1.',
-//     tags: ['hello', 'world'],
-//   },
-//   { id: 2, title: 'Blog 2', description: 'This is blog 2.' },
-//   {
-//     id: 3,
-//     title: 'Blog 3',
-//     description: 'This is blog 3.',
-//     tags: ['hi', 'bye'],
-//   },
-// ];
 
 export default function BlogPage() {
   const { signOutOfSessionWithoutReload } = useAuth();
@@ -35,21 +19,34 @@ export default function BlogPage() {
     <Page>
       <PageHeader noDivider title="Blog" tagline="Make your voice heard" />
       <PageBody>
-        <Stack gap={2}>
+        <Stack gap={3}>
           {hasBlogs ? (
             blogs.map((b) => (
               <Card key={b.id}>
                 <Card.Body>
-                  <Card.Title>{b.title}</Card.Title>
-                  <Card.Text>
-                    {b.story.map((block, i) => (
-                      <div key={i}>
-                        {block}
-                        <br />
-                        <br />
-                      </div>
-                    ))}
-                  </Card.Text>
+                  <Card.Title>
+                    <h3>
+                      <Badge>{b.title}</Badge>
+                    </h3>
+                  </Card.Title>
+                  <Accordion className="mt-3">
+                    <Accordion.Item eventKey="0">
+                      <Accordion.Header>
+                        <div className="row w-100">
+                          <div className="col-12 text-truncate">
+                            {b.story.length > 0
+                              ? b.story[0]
+                              : `It's awfully quiet here...`}
+                          </div>
+                        </div>
+                      </Accordion.Header>
+                      <Accordion.Body>
+                        {b.story.map((block, i) => (
+                          <Card.Text key={i}>{block}</Card.Text>
+                        ))}
+                      </Accordion.Body>
+                    </Accordion.Item>
+                  </Accordion>
                 </Card.Body>
                 <Card.Footer>{b.createdAt.toLocaleString()}</Card.Footer>
               </Card>

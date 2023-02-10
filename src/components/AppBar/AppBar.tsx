@@ -31,7 +31,7 @@ export default function AppBar() {
             height={30}
             className="d-inline-block align-top me-2"
           />
-          {APP_IDENTITY.TITLE}
+          <b className="text-primary">{APP_IDENTITY.TITLE}</b>
         </Navbar.Brand>
         <Navbar.Toggle />
         <Navbar.Collapse>

@@ -24,17 +24,20 @@
 }
 
 .image {
-    width: 300px;
-    height: 600px;
+    display: block;
+    max-width: 55%;
+    height: auto;
     border-radius: 10px;
     cursor: pointer;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .right-arrow {
     position: absolute;
-    top: 35%;
-    right: 400px;
-    font-size: 5rem;
+    top: 33%;
+    right: 26%;
+    font-size: 6vw;
     color: #005d70;
     z-index: 10;
     cursor: pointer;
@@ -44,9 +47,9 @@
 
 .left-arrow {
     position: absolute;
-    top: 35%;
-    left: 400px;
-    font-size: 5rem;
+    top: 33%;
+    left: 26%;
+    font-size: 6vw;
     color: #005d70;
     z-index: 10;
     cursor: pointer;

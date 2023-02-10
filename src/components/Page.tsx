@@ -1,6 +1,6 @@
 import { animated, useScroll } from '@react-spring/web';
 import { FunctionComponent, PropsWithChildren } from 'react';
-import { Card, Container } from 'react-bootstrap';
+import { Card, Container, ContainerProps } from 'react-bootstrap';
 import PageHero from './PageHero';
 import { PageHeroProps } from './PageHero/PageHero';
 import PageSurface from './PageSurface';
@@ -25,6 +25,7 @@ function PageHeader(props: PageHeroProps) {
         className="mx-5"
         style={{
           transform: scrollY.to((y) => `translateY(${y * 0.5 + 20}px)`),
+          opacity: scrollY.to([0, 200], [1, 0]),
         }}>
         <Card>
           <Card.Body>
@@ -36,13 +37,13 @@ function PageHeader(props: PageHeroProps) {
   );
 }
 
-interface PageBodyProps extends PropsWithChildren {
+interface PageBodyProps extends PropsWithChildren, ContainerProps {
   noCard?: boolean;
 }
-function PageBody({ children, noCard }: PageBodyProps) {
+function PageBody({ children, noCard, ...others }: PageBodyProps) {
   return (
     <PageSurface noBackground noPaddingTop>
-      <Container>
+      <Container {...others}>
         {noCard ? (
           children
         ) : (

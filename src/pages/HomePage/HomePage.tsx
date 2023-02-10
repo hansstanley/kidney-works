@@ -93,8 +93,9 @@ export default function HomePage() {
                   className="display-1 fw-bold position-absolute"
                   style={{
                     transform: scrollY.to(
-                      (y) => `translate(3px, ${3 - y * 0.2}px)`,
+                      (y) => `translate(3px, ${3 - y * 0.1}px)`,
                     ),
+                    opacity: scrollY.to([0, 200], [1, 0]),
                     zIndex: 1,
                   }}>
                   {APP_IDENTITY.TITLE}
