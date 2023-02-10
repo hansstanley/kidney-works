@@ -50,11 +50,9 @@ export default function ProfileCreationPage() {
   const navigate = useNavigate();
   const storageRef = ref(storage, `/${user?.uid}`);
 
-  useEffect(() =>{
-    if (created) {
-        navigate(NAV_LINKS.HOME);
-    }
-  }, [created, navigate]);
+  if (created) {
+      navigate(NAV_LINKS.HOME);
+  }
 
   function updateUserInfo(name: String, email: String) {
     const userSnap = doc(db, "users", user?.uid || '')

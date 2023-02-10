@@ -21,8 +21,8 @@ export default function JobsPage() {
   const applications = findJobApplications(user?.uid);
 
   const hasAuth = useMemo(() => !!user, [user]);
-  const { created } = useUserInfo();
-  if (!created && hasAuth) {
+  const { created, fetched } = useUserInfo();
+  if (!created && hasAuth && fetched) {
     navigate(NAV_LINKS.PROFILE_CREATION);
   }
 
