@@ -25,7 +25,7 @@ const ImageSlider = () => {
   return (
     <div style={{ 
       background: `url(${kidneys}) no-repeat center/72%`,
-      paddingTop: 140
+      paddingTop: 200
       }}>
       <section className='find-section'>
         <h2 className="find">Find out more</h2>
