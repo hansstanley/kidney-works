@@ -41,7 +41,7 @@ export default function ProfileCreationPage() {
   const [resumeProgress, setResumeProgress] = useState(0);
   const [desc, setDesc] = useState("");
   const [resumeFile, setResumeFile] = useState<File | null>(null);
-  const [duplicate, setDuplicate] = useState<boolean>(false);
+  const [duplicate] = useState<boolean>(false);
 
 
   const [inputIsEmployer, setInputIsEmployer] = useState(false);

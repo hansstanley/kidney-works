@@ -1,9 +1,7 @@
 import { useState } from 'react';
-import { Button, ButtonGroup, Card, Container, Stack } from 'react-bootstrap';
+import { Button, Card, Stack } from 'react-bootstrap';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Page, PageBody, PageHeader } from '../../components/Page';
-import PageHero from '../../components/PageHero';
-import { useAuth } from '../../hooks/useAuth';
 import useJobs from '../../hooks/useJobs';
 import { NAV_LINKS } from '../../utils/constants';
 import { JobFormModal } from '../JobsPage';
@@ -11,9 +9,8 @@ import { JobFormModal } from '../JobsPage';
 
 export default function JobDetailPage() {
   const navigate = useNavigate();
-  const { user } = useAuth();
   const { jobId } = useParams();
-  const { findJob, isJobApplied, findJobApplicationsForEmployer } = useJobs();
+  const { findJob, findJobApplicationsForEmployer } = useJobs();
   const job = findJob(jobId);
   const [showForm, setShowForm] = useState(false);
 
@@ -21,9 +18,6 @@ export default function JobDetailPage() {
 
   const hasJob = !!job;
 
-  const handleShowEditForm = () => {
-    setShowForm(true);
-  };
 
   const handleHideEditForm = () => {
     setShowForm(false);

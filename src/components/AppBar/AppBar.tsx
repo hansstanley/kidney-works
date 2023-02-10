@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/alt-text */
 import { useMemo } from 'react';
 import { Button, Container, Nav, Navbar, NavDropdown } from 'react-bootstrap';
 import { useAuth } from '../../hooks/useAuth';

@@ -1,22 +1,22 @@
-import { Badge, Card, Stack } from 'react-bootstrap';
+import { Card, Stack } from 'react-bootstrap';
 import { Page, PageBody, PageHeader } from '../../components/Page';
 import useBlogs from '../../hooks/useBlogs';
 
-const blogs = [
-  {
-    id: 1,
-    title: 'Blog 1',
-    description: 'This is blog 1.',
-    tags: ['hello', 'world'],
-  },
-  { id: 2, title: 'Blog 2', description: 'This is blog 2.' },
-  {
-    id: 3,
-    title: 'Blog 3',
-    description: 'This is blog 3.',
-    tags: ['hi', 'bye'],
-  },
-];
+// const blogs = [
+//   {
+//     id: 1,
+//     title: 'Blog 1',
+//     description: 'This is blog 1.',
+//     tags: ['hello', 'world'],
+//   },
+//   { id: 2, title: 'Blog 2', description: 'This is blog 2.' },
+//   {
+//     id: 3,
+//     title: 'Blog 3',
+//     description: 'This is blog 3.',
+//     tags: ['hi', 'bye'],
+//   },
+// ];
 
 export default function BlogPage() {
   const { blogs } = useBlogs();
