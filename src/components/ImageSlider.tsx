@@ -23,27 +23,34 @@ const ImageSlider = () => {
   }
 
   return (
-    <div style={{ background: `url(${kidneys}) no-repeat center/72%` }}>
-      <h2 className="find">Find out more</h2>
-      <section className="slider">
-        <FaArrowAltCircleLeft className="left-arrow" onClick={prevSlide} />
-        <FaArrowAltCircleRight className="right-arrow" onClick={nextSlide} />
-        {SliderData.map((slide, index) => {
-          return (
-            <div
-              className={index === infographic ? 'slide active' : 'slide'}
-              key={index}>
-              {index === infographic && (
-                <img
-                  src={slide.image}
-                  alt="infographic"
-                  className="image"
-                  onClick={() => handleClick(slide.link)}
-                />
-              )}
-            </div>
-          );
-        })}
+    <div
+      className="my-5"
+      style={{
+        background: `url(${kidneys}) no-repeat center/72%`,
+        paddingTop: 200,
+      }}>
+      <section className="find-section">
+        <h2 className="find mb-5">Find out more</h2>
+        <section className="slider">
+          <FaArrowAltCircleLeft className="left-arrow" onClick={prevSlide} />
+          <FaArrowAltCircleRight className="right-arrow" onClick={nextSlide} />
+          {SliderData.map((slide, index) => {
+            return (
+              <div
+                className={index === infographic ? 'slide active' : 'slide'}
+                key={index}>
+                {index === infographic && (
+                  <img
+                    src={slide.image}
+                    alt="infographic"
+                    className="image"
+                    onClick={() => handleClick(slide.link)}
+                  />
+                )}
+              </div>
+            );
+          })}
+        </section>
       </section>
     </div>
   );

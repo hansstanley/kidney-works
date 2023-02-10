@@ -1,14 +1,16 @@
+/* eslint-disable jsx-a11y/alt-text */
 import { useMemo } from 'react';
 import { Button, Container, Nav, Navbar, NavDropdown } from 'react-bootstrap';
 import { useAuth } from '../../hooks/useAuth';
-import { NAV_LINKS } from '../../utils/constants';
+import { APP_IDENTITY, NAV_LINKS } from '../../utils/constants';
 import useUserInfo from '../../hooks/useUserInfo';
 import { useNavigate } from 'react-router-dom';
+import logo from '../../images/logo.png';
 
 export default function AppBar() {
   const navigate = useNavigate();
   const { user, signOutOfSession } = useAuth();
-  const { name } = useUserInfo();
+  const { name, isEmployer } = useUserInfo();
 
   const hasAuth = useMemo(() => !!user, [user]);
 
@@ -23,7 +25,13 @@ export default function AppBar() {
     <Navbar expand="lg">
       <Container>
         <Navbar.Brand href="#" onClick={navigateTo(NAV_LINKS.HOME)}>
-          Hire-a-Patient
+          <img
+            src={logo}
+            width={30}
+            height={30}
+            className="d-inline-block align-top me-2"
+          />
+          {APP_IDENTITY.TITLE}
         </Navbar.Brand>
         <Navbar.Toggle />
         <Navbar.Collapse>
@@ -36,9 +44,12 @@ export default function AppBar() {
                 <NavDropdown.Item onClick={navigateTo(NAV_LINKS.PROFILE)}>
                   Profile
                 </NavDropdown.Item>
-                <NavDropdown.Item onClick={navigateTo(NAV_LINKS.JOBS_APPLIED)}>
-                  Job applications
-                </NavDropdown.Item>
+                {!isEmployer ? (
+                  <NavDropdown.Item
+                    onClick={navigateTo(NAV_LINKS.JOBS_APPLIED)}>
+                    Job applications
+                  </NavDropdown.Item>
+                ) : null}
                 <NavDropdown.Divider />
                 <NavDropdown.Item onClick={handleSignOut} href={NAV_LINKS.HOME}>
                   Sign out

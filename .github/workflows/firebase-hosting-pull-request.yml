@@ -13,5 +13,5 @@ jobs:
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_HIRE_A_PATIENT }}'
-          projectId: hire-a-patient
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_KIDNEY_WORKS }}'
+          projectId: kidney-works

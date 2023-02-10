@@ -1,0 +1,12 @@
+.title {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+}
+
+.banner {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    background-color: '#FFFFFF';
+}

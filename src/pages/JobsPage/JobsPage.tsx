@@ -24,19 +24,26 @@ export default function JobsPage() {
   const handleHideCreateForm = () => {
     setShowForm(false);
   };
-  console.log(jobs);
+  
   const filterJob = useCallback(
     (job: AppJob) => {
+      
+      if (isEmployer && job.employerid !== user?.uid) {
+        return false;
+      }
+
       if (!search) {
         return true;
       }
+
       const lowerSearch = search.toLowerCase();
       return [job.title, job.description, job.company, job.requirements]
         .map((x) => x?.toLowerCase())
         .some((x) => x?.includes(lowerSearch));
     },
-    [search],
+    [isEmployer, search, user?.uid],
   );
+
 
   const visibleJobs = useMemo(() => jobs?.filter(filterJob), [jobs, filterJob]);
 
@@ -52,13 +59,25 @@ export default function JobsPage() {
       }
   }
 
-  return (
-    <Page>
-      <PageHeader
+  const pageHeader = () => {
+    if (isEmployer) {
+      return (<PageHeader
+        noDivider
+        title="Your Jobs"
+        tagline="Change somebody's life"
+      />);
+    } else {
+      return(<PageHeader
         noDivider
         title="Jobs"
         tagline="Start your journey today"
-      />
+      />);
+    }
+  }
+
+  return (
+    <Page>
+      {pageHeader()}
       <PageBody>
         <Stack gap={3}>
           {createJobButton()}

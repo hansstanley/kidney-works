@@ -1,4 +1,4 @@
-import { animated, useScroll, useSpring } from '@react-spring/web';
+import { animated, useScroll } from '@react-spring/web';
 import { PropsWithChildren } from 'react';
 
 export default function AnimatedBackground({ children }: PropsWithChildren) {

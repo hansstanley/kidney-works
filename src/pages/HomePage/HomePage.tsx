@@ -1,41 +1,46 @@
 import './HomePage.css';
 import { Button, ButtonGroup, Container, Stack } from 'react-bootstrap';
-import { NAV_LINKS } from '../../utils/constants';
+import { APP_IDENTITY, NAV_LINKS } from '../../utils/constants';
 import { useNavigate } from 'react-router-dom';
 import Page from '../../components/Page';
 import AnimatedBackground from '../../components/AnimatedBackground';
 import { useRef, useState } from 'react';
-import { animated, useSpring } from '@react-spring/web';
+import { animated, useScroll, useSpring } from '@react-spring/web';
 import HomeFeature from './HomeFeature';
 import ImageSlider from '../../components/ImageSlider';
 import HomeLinks from './HomeLinks';
 import HomeRationale from './HomeRationale';
-
-const AnimatedButton = animated(Button);
+import bgImage from '../../images/homebackground.png';
 
 export default function HomePage() {
   const navigate = useNavigate();
-  const [clicked, setClicked] = useState(false);
+  const { scrollY } = useScroll();
+  const [titleClicked, setTitleClicked] = useState(false);
   const moreInfoRef = useRef<HTMLDivElement>(null);
 
   const { x } = useSpring({
     from: { x: 0 },
-    to: { x: clicked ? 0 : 1 },
+    to: { x: titleClicked ? 0 : 1 },
     config: { duration: 1000 },
   });
-
-  const [exploreSpring, exploreApi] = useSpring(() => ({ from: { scale: 1 } }));
 
   const [circleSpring, circleApi] = useSpring(() => ({
     from: { width: '0vw', height: '0vh', borderRadius: '50vw', opacity: 1 },
   }));
 
-  const handleClick = () => {
-    setClicked(!clicked);
+  const bgSpring = useSpring({
+    from: { y: 0 },
+    to: { y: 1 },
+    loop: true,
+    delay: 2000,
+    config: { duration: 1000 },
+  });
+
+  const handleTitleClick = () => {
+    setTitleClicked(!titleClicked);
   };
 
   const handleExploreClick = () => {
-    exploreApi.start({ to: { scale: 0 } });
     circleApi.start({
       to: {
         width: '100vw',
@@ -56,7 +61,16 @@ export default function HomePage() {
       <Page>
         <div className="homescreen">
           <Container fluid className="text-center align-items-center">
-            <Stack gap={5}>
+            <Stack gap={1} className="align-items-center">
+              <animated.img
+                style={{
+                  transform: bgSpring.y
+                    .to([0, 0.2, 0.5, 0.7, 1], [0, -10, 0, -10, 0])
+                    .to((val) => `translateY(${val}px)`),
+                }}
+                src={bgImage}
+                className="homescreen-bg"
+              />
               <animated.div
                 style={{
                   opacity: x.to({ range: [0, 1], output: [0.5, 1] }),
@@ -66,27 +80,36 @@ export default function HomePage() {
                   }),
                   cursor: 'pointer',
                 }}
-                onClick={handleClick}>
-                <h1 className="display-1 fw-bold">Hire-a-Patient</h1>
+                onClick={handleTitleClick}>
+                <animated.h1
+                  className="display-1 fw-bold position-absolute"
+                  style={{
+                    transform: scrollY.to(
+                      (y) => `translate(3px, ${3 - y * 0.2}px)`,
+                    ),
+                    zIndex: 1,
+                  }}>
+                  {APP_IDENTITY.TITLE}
+                </animated.h1>
+                <h1
+                  className="display-1 fw-bold text-primary position-relative"
+                  style={{ zIndex: 2 }}>
+                  {APP_IDENTITY.TITLE}
+                </h1>
               </animated.div>
-              <p className="lead">
-                Empowering dialysis patients, enriching the workforce
-              </p>
+              <p className="lead">{APP_IDENTITY.TAGLINE}</p>
             </Stack>
-            <ButtonGroup>
-              <AnimatedButton
-                style={exploreSpring}
-                variant="primary"
-                onClick={handleExploreClick}>
+            <ButtonGroup className="mt-3">
+              <Button variant="primary" onClick={handleExploreClick}>
                 Explore Jobs
-              </AnimatedButton>
+              </Button>
               <Button variant="secondary" onClick={handleMoreInfoClick}>
                 Learn more
               </Button>
             </ButtonGroup>
           </Container>
         </div>
-        <div ref={moreInfoRef} style={{ height: 50 }} />
+        <div ref={moreInfoRef} />
         <HomeRationale />
         <HomeFeature />
         <ImageSlider />

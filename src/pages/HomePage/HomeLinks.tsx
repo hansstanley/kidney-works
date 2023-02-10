@@ -1,5 +1,4 @@
 import { Card, Col, Container, Row } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
 import Page from '../../components/Page';
 import { MdLaunch } from 'react-icons/md';
 
@@ -49,13 +48,12 @@ export default function HomeLinks() {
                 />
                 <Card.Body className="mt-3">
                   <Card.Subtitle>{link.title}</Card.Subtitle>
-                  <Card.Link title={link.title}>
-                    <Link
-                      to={link.url}
-                      target="_blank"
-                      rel="noopener noreferrer">
-                      {link.url}
-                    </Link>
+                  <Card.Link
+                    title={link.title}
+                    href={link.url}
+                    target="_blank"
+                    rel="noopener noreferrer">
+                    {link.url}
                   </Card.Link>
                 </Card.Body>
               </Card>

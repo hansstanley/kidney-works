@@ -61,7 +61,7 @@ export default function JobsList({
     setJobID(id);
   }
 
-  const applyButton = (job: AppJob) => {
+  const applyOrViewButton = (job: AppJob) => {
     const hasApplied = appliedStatuses?.map((s) => s.jobId).includes(job.id);
 
     const notLoggedInMessage = (props: any) => (
@@ -75,7 +75,11 @@ export default function JobsList({
     } else {
       if (hasAuth) {
         if (isEmployer) {
-          return;
+          return (<Button
+            variant="light"
+            onClick={() => navigate(`${NAV_LINKS.JOBS}/${job.id}`)}>
+            View
+          </Button>);
         }
         return <Button onClick={() => applyHandler(job.id)}>Apply</Button>;
       } else {
@@ -107,24 +111,21 @@ export default function JobsList({
             <Card.Body>
               <Card.Title>{j.title}</Card.Title>
               <Card.Subtitle>{j.company}</Card.Subtitle>
+              <br/>
               <Card.Text>
-                Description:<br></br>
+                Description: <br/>
                 {j.description}
               </Card.Text>
+              <br/>
               <Card.Text>
-                Requirement:<br></br>
+                Requirement: <br/>
                 {j.requirements}
               </Card.Text>
               <ButtonGroup>
-                <Button
-                  variant="light"
-                  onClick={() => navigate(`${NAV_LINKS.JOBS}/${j.id}`)}>
-                  View
-                </Button>
-                {applyButton(j)}
+                {applyOrViewButton(j)}
               </ButtonGroup>
             </Card.Body>
-            {hasStatuses ? (
+            {hasStatuses && !isEmployer ? (
               <Card.Footer>
                 {statusToText.get(
                   appliedStatuses?.find((s) => s.jobId === j.id)?.status ||
