@@ -1,13 +1,18 @@
 .homescreen {
-    height: calc(125vh - 56px);
+    height: calc(100vh - 56px);
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    background-image: url(../../images/homebackground.png);
-    background-repeat: no-repeat;
-    background-position-x: center;
-    background-position-y: -85px;
+}
+
+.homescreen-bg {
+    /* Image is 500px * 500px */
+    /* Scales the image to 80% for better resolution */
+    height: 240px;
+    width: 400px;
+    /* Crops the excessive space above and below the subject */
+    object-fit: cover;
 }
 
 .slider {
