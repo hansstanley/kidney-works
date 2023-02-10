@@ -25,7 +25,6 @@ export default function JobFormModal({
 
   const { companyName } = useUserInfo();
 
-  const [newCompany, setCompany] = useState(companyName);
   const [newTitle, setTitle] = useState(job?.title || '');
   const [newDescription, setDescription] = useState(job?.description || '');
   const [newRequirements, setRequirements] = useState(job?.requirements || '');
@@ -55,7 +54,7 @@ export default function JobFormModal({
     const newJob: AppJob = {
       id: 'ignored', // ignored
       title: newTitle,
-      company: newCompany,
+      company: companyName,
       description: newDescription,
       requirements: newRequirements,
       employerid: user?.uid ?? "",
@@ -91,7 +90,6 @@ export default function JobFormModal({
               autoFocus
               value={companyName}
               disabled={true}
-              onChange={(e) => setCompany(e.target.value)}
             />
           </Form.Group>
           <Form.Group className="mb-3">
