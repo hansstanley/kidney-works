@@ -111,12 +111,14 @@ export default function JobsList({
             <Card.Body>
               <Card.Title>{j.title}</Card.Title>
               <Card.Subtitle>{j.company}</Card.Subtitle>
+              <br/>
               <Card.Text>
-                Description:<br></br>
+                Description: <br/>
                 {j.description}
               </Card.Text>
+              <br/>
               <Card.Text>
-                Requirement:<br></br>
+                Requirement: <br/>
                 {j.requirements}
               </Card.Text>
               <ButtonGroup>

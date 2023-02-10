@@ -70,8 +70,17 @@ export default function JobDetailPage() {
                 <Card.Body>
                 <Card.Title>Applications</Card.Title>
                 <hr />
-                {
-                apps.map((app) => (
+                {apps.length === 0 ?
+                  <Card>
+                  <Card.Body>  
+                    <Card.Body>
+                      <Card.Text>
+                        No applications right now. Check back later.
+                      </Card.Text>
+                    </Card.Body>
+                  </Card.Body>
+                </Card>
+                : apps.map((app) => (
                   <Card>
                     <Card.Body>  
                       <Card.Title>Name</Card.Title>
