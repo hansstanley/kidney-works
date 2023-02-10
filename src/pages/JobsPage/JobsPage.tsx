@@ -24,7 +24,7 @@ export default function JobsPage() {
   const handleHideCreateForm = () => {
     setShowForm(false);
   };
-  console.log(jobs);
+  
   const filterJob = useCallback(
     (job: AppJob) => {
       
