@@ -1,5 +1,5 @@
 import './AboutPage.css';
-import { Badge, Card, Container, Image, Stack } from 'react-bootstrap';
+import { Badge, Card, Image, Stack } from 'react-bootstrap';
 import { Page, PageBody, PageHeader } from '../../components/Page';
 import kidneyWork from '../../images/kidneywork.jpg';
 
