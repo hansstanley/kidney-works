@@ -7,6 +7,8 @@ import { NAV_LINKS } from '../../utils/constants';
 import { JobFormModal } from '../JobsPage';
 import useUserInfo from '../../hooks/useUserInfo';
 import { useAuth } from '../../hooks/useAuth';
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '../../utils/firebase';
 
 
 export default function JobDetailPage() {
@@ -16,10 +18,19 @@ export default function JobDetailPage() {
   const job = findJob(jobId);
   const [showForm, setShowForm] = useState(false);
   const { user } = useAuth();
+  const { companyName } = useUserInfo();
 
   const apps = findJobApplicationsForEmployer(jobId);
 
   const hasJob = !!job;
+
+  async function findUserEmail(uid: string) {
+    const docRef = doc(db, "users", uid);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      window.open(`mailto:${docSnap.data().email}?subject=Job Application from ${companyName} via KidneyWorks`);
+    }
+  }
 
   const hasAuth = useMemo(() => !!user, [user]);
   const { created } = useUserInfo();
@@ -91,7 +102,7 @@ export default function JobDetailPage() {
                       <Card.Title>Applicant's Additional Notes</Card.Title>
                       <Card.Text>{app.addNote || 'Nothing here.'}</Card.Text>
                       <hr />
-                      <Button>
+                      <Button onClick={() => findUserEmail(app.userId)}>
                         Contact
                       </Button>
                     </Card.Body>
