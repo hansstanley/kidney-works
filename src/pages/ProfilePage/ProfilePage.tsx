@@ -370,6 +370,7 @@ export default function ProfilePage() {
                   type="email"
                   placeholder="E.g. johndoe@abc.com"
                   value={email}
+                  onChange={(e) => setInputEmail(e.target.value)}
                   disabled
                 />
               </Form.Group>
