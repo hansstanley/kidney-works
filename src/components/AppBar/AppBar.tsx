@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 export default function AppBar() {
   const navigate = useNavigate();
   const { user, signOutOfSession } = useAuth();
-  const { name } = useUserInfo();
+  const { name, isEmployer } = useUserInfo();
 
   const hasAuth = useMemo(() => !!user, [user]);
 
@@ -36,9 +36,12 @@ export default function AppBar() {
                 <NavDropdown.Item onClick={navigateTo(NAV_LINKS.PROFILE)}>
                   Profile
                 </NavDropdown.Item>
-                <NavDropdown.Item onClick={navigateTo(NAV_LINKS.JOBS_APPLIED)}>
-                  Job applications
-                </NavDropdown.Item>
+                { !isEmployer ? (
+                  <NavDropdown.Item onClick={navigateTo(NAV_LINKS.JOBS_APPLIED)}>
+                    Job applications
+                  </NavDropdown.Item>
+                ) : ( null )
+                } 
                 <NavDropdown.Divider />
                 <NavDropdown.Item onClick={handleSignOut} href={NAV_LINKS.HOME}>
                   Sign out

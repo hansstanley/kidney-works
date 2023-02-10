@@ -8,16 +8,18 @@ import useJobs from '../../hooks/useJobs';
 import { NAV_LINKS } from '../../utils/constants';
 import { JobFormModal } from '../JobsPage';
 
+
 export default function JobDetailPage() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { jobId } = useParams();
-  const { findJob, isJobApplied } = useJobs();
+  const { findJob, isJobApplied, findJobApplicationsForEmployer } = useJobs();
   const job = findJob(jobId);
   const [showForm, setShowForm] = useState(false);
 
+  const apps = findJobApplicationsForEmployer(jobId);
+
   const hasJob = !!job;
-  const hasApplied = isJobApplied(user?.uid)(jobId || '');
 
   const handleShowEditForm = () => {
     setShowForm(true);
@@ -26,6 +28,9 @@ export default function JobDetailPage() {
   const handleHideEditForm = () => {
     setShowForm(false);
   };
+
+
+
 
   return (
     <Page>
@@ -43,22 +48,49 @@ export default function JobDetailPage() {
             Back to jobs list
           </Button>
           {hasJob ? (
-            <Card>
-              <Card.Body>
-                <Card.Title>Description</Card.Title>
-                <Card.Text>{job.description}</Card.Text>
+            <Stack gap={4}>
+              <Card>
+                <Card.Body>
+                  <Card.Title>Description</Card.Title>
+                  <Card.Text>{job.description}</Card.Text>
+                  <hr />
+                  <Card.Title>Job requirements</Card.Title>
+                  <Card.Text>{job.requirements || 'Nothing here.'}</Card.Text>
+                  <hr />
+                  {/* <ButtonGroup>
+                    <Button variant="light" onClick={handleShowEditForm}>
+                      Edit
+                    </Button>
+                    {hasApplied ? null : <Button>Apply</Button>}
+                  </ButtonGroup> */}
+                </Card.Body>
+              </Card>
+              <Card>
+                
+                <Card.Body>
+                <Card.Title>Applications</Card.Title>
                 <hr />
-                <Card.Title>Job requirements</Card.Title>
-                <Card.Text>{job.requirements || 'Nothing here.'}</Card.Text>
-                <hr />
-                <ButtonGroup>
-                  <Button variant="light" onClick={handleShowEditForm}>
-                    Edit
-                  </Button>
-                  {hasApplied ? null : <Button>Apply</Button>}
-                </ButtonGroup>
-              </Card.Body>
-            </Card>
+                {
+                apps.map((app) => (
+                  <Card>
+                    <Card.Body>  
+                      <Card.Title>Name</Card.Title>
+                      <Card.Text>{app.userName}</Card.Text>
+                      <hr />
+                      <Card.Title>Applicant's Additional Notes</Card.Title>
+                      <Card.Text>{app.addNote || 'Nothing here.'}</Card.Text>
+                      <hr />
+                      <Button>
+                        Contact
+                      </Button>
+                    </Card.Body>
+                  </Card>
+                 ))
+                }
+                </Card.Body>
+              </Card>
+              
+            </Stack>
           ) : (
             <MissingJobPlaceholder />
           )}
