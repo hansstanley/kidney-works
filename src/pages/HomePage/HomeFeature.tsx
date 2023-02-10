@@ -7,6 +7,7 @@ import {
   Row,
   Stack,
 } from 'react-bootstrap';
+import { APP_IDENTITY } from '../../utils/constants';
 
 const features = [
   {
@@ -22,7 +23,7 @@ const features = [
     title: 'Connect',
     subtitle: 'Bridging the gap between employers and patients',
     body: [
-      'By offering a platform that is specifically tailored to the needs of kidney dialysis patients, Hire-a-Patient can help patients overcome the challenges they may face in the job search process, such as limited mobility, scheduling conflicts, and medical restrictions.',
+      `By offering a platform that is specifically tailored to the needs of kidney dialysis patients, ${APP_IDENTITY.TITLE} can help patients overcome the challenges they may face in the job search process, such as limited mobility, scheduling conflicts, and medical restrictions.`,
       'They can also obtain resources and support to help them succeed in the workplace, such as information on accommodations and flexible work arrangements.',
     ],
   },
@@ -30,7 +31,7 @@ const features = [
     title: 'Apply',
     subtitle: 'More manageable, less stressful',
     body: [
-      'Hire-a-Patient offers job listings from employers who understand the challenges and limitations faced by dialysis patients, and are willing to make necessary accommodations. This means that job seekers can apply for positions with confidence, knowing that their medical needs will be taken into consideration.',
+      `${APP_IDENTITY.TITLE} offers job listings from employers who understand the challenges and limitations faced by dialysis patients, and are willing to make necessary accommodations. This means that job seekers can apply for positions with confidence, knowing that their medical needs will be taken into consideration.`,
       'By leveraging the power of technology and connecting with a supportive community, dialysis patients can find meaningful employment and take control of their careers.',
     ],
   },
@@ -57,7 +58,7 @@ function FeatureBox({ title, subtitle, body }: FeatureBoxProps) {
             <Accordion.Header>Read more</Accordion.Header>
             <Accordion.Body>
               {body.map((b, i) => (
-                <div key={i}>
+                <div key={i} className="text-start">
                   {b}
                   <br />
                   <br />

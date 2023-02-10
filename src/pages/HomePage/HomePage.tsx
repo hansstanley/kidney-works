@@ -1,6 +1,6 @@
 import './HomePage.css';
 import { Button, ButtonGroup, Container, Stack } from 'react-bootstrap';
-import { NAV_LINKS } from '../../utils/constants';
+import { APP_IDENTITY, NAV_LINKS } from '../../utils/constants';
 import { useNavigate } from 'react-router-dom';
 import Page from '../../components/Page';
 import AnimatedBackground from '../../components/AnimatedBackground';
@@ -56,7 +56,7 @@ export default function HomePage() {
       <Page>
         <div className="homescreen">
           <Container fluid className="text-center align-items-center">
-            <Stack gap={5}>
+            <Stack gap={5} className="align-items-center">
               <animated.div
                 style={{
                   opacity: x.to({ range: [0, 1], output: [0.5, 1] }),
@@ -67,13 +67,25 @@ export default function HomePage() {
                   cursor: 'pointer',
                 }}
                 onClick={handleClick}>
-                <h1 className="display-1 fw-bold">Hire-a-Patient</h1>
+                <div>
+                  <h1
+                    className="display-1 fw-bold position-absolute"
+                    style={{
+                      transform: 'translate(3px, 3px)',
+                      zIndex: 1,
+                    }}>
+                    {APP_IDENTITY.TITLE}
+                  </h1>
+                  <h1
+                    className="display-1 fw-bold text-primary position-relative"
+                    style={{ zIndex: 2 }}>
+                    {APP_IDENTITY.TITLE}
+                  </h1>
+                </div>
               </animated.div>
-              <p className="lead">
-                Empowering dialysis patients, enriching the workforce
-              </p>
+              <p className="lead">{APP_IDENTITY.TAGLINE}</p>
             </Stack>
-            <ButtonGroup>
+            <ButtonGroup className="mt-5">
               <AnimatedButton
                 style={exploreSpring}
                 variant="primary"

@@ -23,12 +23,14 @@ const ImageSlider = () => {
   }
 
   return (
-    <div style={{ 
-      background: `url(${kidneys}) no-repeat center/72%`,
-      paddingTop: 200
+    <div
+      className="my-5"
+      style={{
+        background: `url(${kidneys}) no-repeat center/72%`,
+        paddingTop: 200,
       }}>
-      <section className='find-section'>
-        <h2 className="find">Find out more</h2>
+      <section className="find-section">
+        <h2 className="find mb-5">Find out more</h2>
         <section className="slider">
           <FaArrowAltCircleLeft className="left-arrow" onClick={prevSlide} />
           <FaArrowAltCircleRight className="right-arrow" onClick={nextSlide} />
