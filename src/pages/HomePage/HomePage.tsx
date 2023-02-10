@@ -86,7 +86,7 @@ export default function HomePage() {
             </ButtonGroup>
           </Container>
         </div>
-        <div ref={moreInfoRef} style={{ height: 50 }} />
+        <div ref={moreInfoRef} />
         <HomeRationale />
         <HomeFeature />
         <ImageSlider />

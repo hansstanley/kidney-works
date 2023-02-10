@@ -1,9 +1,13 @@
 .homescreen {
-    height: calc(100vh - 56px);
+    height: calc(120vh - 56px);
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    background-image: url(../../images/homebackground.png);
+    background-repeat: no-repeat;
+    background-position-x: center;
+    background-position-y: -85px;
 }
 
 .slider {
