@@ -6,6 +6,10 @@ A job platform dedicated to **raising awareness** among employers and **connecti
 
 You can find our live site hosted on Firebase at [KidneyWorks](https://kidney-works.web.app/)!
 
+## Problem statement
+
+> How can we get employers to empathise, understand, and hire kidney patients who have limited education levels and mobility due to their health conditions and treatment schedule?
+
 ## Mission
 Our mission is to bridge the gap between employers looking for qualified and motivated employees and patients seeking meaningful employment opportunities.
 
