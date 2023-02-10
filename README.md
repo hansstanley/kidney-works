@@ -17,7 +17,7 @@ We believe that every individual, including dialysis patients, has the right to 
 
 ### Delightful visuals
 
-> insert landing page
+<img width="1440" alt="Screenshot 2023-02-10 at 23 26 38" src="https://user-images.githubusercontent.com/20805849/218142904-2231e49b-e52c-44e1-a5b6-3e89753beea2.png">
 
 We believe first impressions are important, reflecting the job application process and encouraging employers to explore the website.
 
@@ -28,17 +28,17 @@ We believe first impressions are important, reflecting the job application proce
 
 Designed to help employers understand and empathise with kidney patients, the website offers a repository of useful information.
 
-> insert rationale section
+<img width="1440" alt="Screenshot 2023-02-11 at 00 23 28" src="https://user-images.githubusercontent.com/20805849/218143017-4adbc04b-ed1f-4116-971b-051eca3d3866.png">
 
-*This section contains reasons for employers to hire kidney patients*
+> *This section contains reasons for employers to hire kidney patients*
 
-> insert brochures section
+<img width="1440" alt="Screenshot 2023-02-11 at 00 31 37" src="https://user-images.githubusercontent.com/20805849/218144939-3967d9c6-9b8c-431e-a058-2746ee5e3260.png">
 
-*This section has brochures from Kidney Dialysis Foundation*
+> *This section has brochures from Kidney Dialysis Foundation*
 
-> insert links section
+<img width="1440" alt="Screenshot 2023-02-11 at 00 32 39" src="https://user-images.githubusercontent.com/20805849/218145193-43f1de5b-3072-4a2b-aae2-7af9d0cf8062.png">
 
-*This section contains links to websites of interest to employers hiring kidney patients*
+> *This section contains links to websites of interest to employers hiring kidney patients*
 
 ### Job applications
 
@@ -57,7 +57,7 @@ On a more personalised note, employers and kidney patients alike can share their
 
 ### Profile customisation
 
-> insert profile page
+<img width="1440" alt="Screenshot 2023-02-11 at 00 35 45" src="https://user-images.githubusercontent.com/20805849/218145819-6e0fef30-c8b5-400b-b558-1aa1600c26fb.png">
 
 Like any good job portal, kidney patients can enrich their profiles with relevant information for employment.
 
