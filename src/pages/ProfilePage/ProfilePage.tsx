@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   Badge,
   Button,
@@ -11,6 +11,7 @@ import {
   Row,
   Stack,
 } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import ProfileSection from './ProfileSection';
 import {
@@ -34,9 +35,19 @@ import AppResume from '../../types/resume.app';
 import UseResume from '../../hooks/useResume';
 import { Page, PageBody, PageHeader } from '../../components/Page';
 import UseEmployer from '../../hooks/useEmployer';
+import { NAV_LINKS } from '../../utils/constants';
 
 export default function ProfilePage() {
+
   const { user } = useAuth();
+
+  const hasAuth = useMemo(() => !!user, [user]);
+  const navigate = useNavigate();
+  const { created } = useUserInfo();
+  if (!created && hasAuth) {
+    navigate(NAV_LINKS.PROFILE_CREATION);
+  }
+
   const { skills, setSkillsState } = UseSkills();
   const { limitations, setLimitationState } = UseLimitations();
   const { isEmployer } = UseEmployer();

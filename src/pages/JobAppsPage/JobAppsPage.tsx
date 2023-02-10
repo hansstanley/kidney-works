@@ -5,6 +5,8 @@ import { useAuth } from '../../hooks/useAuth';
 import useJobs from '../../hooks/useJobs';
 import { NAV_LINKS } from '../../utils/constants';
 import { JobsList } from '../JobsPage';
+import { useMemo } from 'react';
+import useUserInfo from '../../hooks/useUserInfo';
 
 export default function JobAppsPage() {
   const navigate = useNavigate();
@@ -13,6 +15,13 @@ export default function JobAppsPage() {
 
   const jobs = findAppliedJobs(user?.uid);
   const applications = findJobApplications(user?.uid);
+
+
+  const { created } = useUserInfo();
+  const hasAuth = useMemo(() => !!user, [user]);
+  if (!created && hasAuth) {
+    navigate(NAV_LINKS.PROFILE_CREATION);
+  }
 
   return (
     <Page>

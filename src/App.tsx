@@ -17,6 +17,7 @@ import ProfileCreationPage from './pages/ProfileCreationPage';
 import BackToTop from './components/BackToTop';
 
 function App() {
+
   return (
     <BrowserRouter>
       <div className="App-page">

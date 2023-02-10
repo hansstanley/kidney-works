@@ -26,9 +26,8 @@ import { NAV_LINKS } from '../../utils/constants';
 import UseResume from '../../hooks/useResume';
 import AppResume from '../../types/resume.app';
 
-
 export default function ProfileCreationPage() {
-  const { user, signOutOfSession } = useAuth();
+  const { user } = useAuth();
   const { skills, setSkillsState } = UseSkills();
   const { limitations, setLimitationState } = UseLimitations();
   const { resume, setResumeState } = UseResume();
@@ -50,21 +49,6 @@ export default function ProfileCreationPage() {
 
   const navigate = useNavigate();
   const storageRef = ref(storage, `/${user?.uid}`);
-
-  useEffect(() => {
-    const handleBeforeUnload = () => {
-      if (!created) {
-        signOutOfSession();
-      }
-    };
-
-    window.addEventListener('beforeunload', handleBeforeUnload);
-
-    return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload);
-    };
-  }, [created, signOutOfSession]);
-
 
   useEffect(() =>{
     if (created) {
@@ -338,9 +322,9 @@ export default function ProfileCreationPage() {
   }
 
   return (
-    <>            
+    <>
         <Container className="pb-5 background">
-        <PageHero title="Profile" />
+        <PageHero title="Profile Creation" />
         <Stack gap={4}>
 
             <ProfileSection>

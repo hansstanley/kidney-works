@@ -1,10 +1,12 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Button, Card, Stack } from 'react-bootstrap';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Page, PageBody, PageHeader } from '../../components/Page';
 import useJobs from '../../hooks/useJobs';
 import { NAV_LINKS } from '../../utils/constants';
 import { JobFormModal } from '../JobsPage';
+import useUserInfo from '../../hooks/useUserInfo';
+import { useAuth } from '../../hooks/useAuth';
 
 
 export default function JobDetailPage() {
@@ -13,11 +15,17 @@ export default function JobDetailPage() {
   const { findJob, findJobApplicationsForEmployer } = useJobs();
   const job = findJob(jobId);
   const [showForm, setShowForm] = useState(false);
+  const { user } = useAuth();
 
   const apps = findJobApplicationsForEmployer(jobId);
 
   const hasJob = !!job;
 
+  const hasAuth = useMemo(() => !!user, [user]);
+  const { created } = useUserInfo();
+  if (!created && hasAuth) {
+    navigate(NAV_LINKS.PROFILE_CREATION);
+  }
 
   const handleHideEditForm = () => {
     setShowForm(false);

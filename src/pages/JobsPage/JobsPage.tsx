@@ -1,12 +1,14 @@
 import { useCallback, useMemo, useState } from 'react';
 import useJobs from '../../hooks/useJobs';
 import { Button, Form, Stack } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 import AppJob from '../../types/job.app';
 import JobFormModal from './JobFormModal';
 import JobsList from './JobsList';
 import { useAuth } from '../../hooks/useAuth';
 import { Page, PageBody, PageHeader } from '../../components/Page';
 import useUserInfo from '../../hooks/useUserInfo';
+import { NAV_LINKS } from '../../utils/constants';
 
 export default function JobsPage() {
   const { user } = useAuth();
@@ -14,8 +16,15 @@ export default function JobsPage() {
   const [showForm, setShowForm] = useState(false);
   const [search, setSearch] = useState('');
   const { isEmployer } = useUserInfo();
+  const navigate = useNavigate();
 
   const applications = findJobApplications(user?.uid);
+
+  const hasAuth = useMemo(() => !!user, [user]);
+  const { created } = useUserInfo();
+  if (!created && hasAuth) {
+    navigate(NAV_LINKS.PROFILE_CREATION);
+  }
 
   const handleShowCreateForm = () => {
     setShowForm(true);

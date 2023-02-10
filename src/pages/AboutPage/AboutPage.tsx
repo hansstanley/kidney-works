@@ -1,7 +1,17 @@
 import { Card } from 'react-bootstrap';
 import { Page, PageBody, PageHeader } from '../../components/Page';
+import { useAuth } from '../../hooks/useAuth';
+import useUserInfo from '../../hooks/useUserInfo';
 
 export default function AboutPage() {
+
+  const { signOutOfSessionWithoutReload } = useAuth();
+
+  const { created } = useUserInfo();
+  if (!created) {
+    signOutOfSessionWithoutReload();
+  }
+
   return (
     <Page>
       <PageHeader

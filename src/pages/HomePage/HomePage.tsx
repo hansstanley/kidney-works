@@ -11,12 +11,20 @@ import ImageSlider from '../../components/ImageSlider';
 import HomeLinks from './HomeLinks';
 import HomeRationale from './HomeRationale';
 import bgImage from '../../images/homebackground.png';
+import useUserInfo from '../../hooks/useUserInfo';
+import { useAuth } from '../../hooks/useAuth';
 
 export default function HomePage() {
   const navigate = useNavigate();
   const { scrollY } = useScroll();
   const [titleClicked, setTitleClicked] = useState(false);
   const moreInfoRef = useRef<HTMLDivElement>(null);
+  const { signOutOfSessionWithoutReload } = useAuth();
+
+  const { created } = useUserInfo();
+  if (!created) {
+    signOutOfSessionWithoutReload();
+  }
 
   const { x } = useSpring({
     from: { x: 0 },

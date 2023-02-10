@@ -42,6 +42,7 @@ export interface AuthContextModel {
   signUp: (email: string, password: string) => Promise<UserCredential>;
   signOutOfSession: () => Promise<void>;
   sendPasswordResetEmail?: (email: string) => Promise<void>;
+  signOutOfSessionWithoutReload: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextModel>({} as AuthContextModel);
@@ -78,6 +79,9 @@ export const useProvideAuth = () => {
     window.location.reload();
     return signOut(firebaseAuth);
   }
+  function signOutOfSessionWithoutReload() {
+    return signOut(firebaseAuth);
+  }
   useEffect(() => {
     //function that firebase notifies you if a user is set
     const unsubsrcibe = firebaseAuth.onAuthStateChanged(async (user) => {
@@ -112,6 +116,7 @@ export const useProvideAuth = () => {
     firebaseAuth,
     signInWithGoogle,
     signOutOfSession,
+    signOutOfSessionWithoutReload
   };
 };
 
