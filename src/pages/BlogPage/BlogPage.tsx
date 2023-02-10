@@ -7,8 +7,8 @@ import { useAuth } from '../../hooks/useAuth';
 export default function BlogPage() {
   const { signOutOfSessionWithoutReload } = useAuth();
 
-  const { created } = useUserInfo();
-  if (!created) {
+  const { created, fetched } = useUserInfo();
+  if (!created && fetched) {
     signOutOfSessionWithoutReload();
   }
   const { blogs } = useBlogs();

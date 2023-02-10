@@ -21,8 +21,8 @@ export default function HomePage() {
   const moreInfoRef = useRef<HTMLDivElement>(null);
   const { signOutOfSessionWithoutReload } = useAuth();
 
-  const { created } = useUserInfo();
-  if (!created) {
+  const { created, fetched } = useUserInfo();
+  if (!created && fetched) {
     signOutOfSessionWithoutReload();
   }
 
