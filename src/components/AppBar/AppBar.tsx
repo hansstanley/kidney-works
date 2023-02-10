@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { Button, Container, Nav, Navbar, NavDropdown } from 'react-bootstrap';
 import { useAuth } from '../../hooks/useAuth';
-import { NAV_LINKS } from '../../utils/constants';
+import { APP_IDENTITY, NAV_LINKS } from '../../utils/constants';
 import useUserInfo from '../../hooks/useUserInfo';
 import { useNavigate } from 'react-router-dom';
 
@@ -23,7 +23,7 @@ export default function AppBar() {
     <Navbar expand="lg">
       <Container>
         <Navbar.Brand href="#" onClick={navigateTo(NAV_LINKS.HOME)}>
-          Hire-a-Patient
+          {APP_IDENTITY.TITLE}
         </Navbar.Brand>
         <Navbar.Toggle />
         <Navbar.Collapse>
