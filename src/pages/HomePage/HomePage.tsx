@@ -9,6 +9,7 @@ import { animated, useSpring } from '@react-spring/web';
 import HomeFeature from './HomeFeature';
 import ImageSlider from '../../components/ImageSlider';
 import HomeLinks from './HomeLinks';
+import HomeRationale from './HomeRationale';
 
 const AnimatedButton = animated(Button);
 
@@ -86,6 +87,7 @@ export default function HomePage() {
           </Container>
         </div>
         <div ref={moreInfoRef} style={{ height: 50 }} />
+        <HomeRationale />
         <HomeFeature />
         <ImageSlider />
         <HomeLinks />
