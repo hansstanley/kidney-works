@@ -58,11 +58,9 @@ function FeatureBox({ title, subtitle, body }: FeatureBoxProps) {
             <Accordion.Header>Read more</Accordion.Header>
             <Accordion.Body>
               {body.map((b, i) => (
-                <div key={i} className="text-start">
+                <Card.Text key={i} className="text-start">
                   {b}
-                  <br />
-                  <br />
-                </div>
+                </Card.Text>
               ))}
             </Accordion.Body>
           </Accordion.Item>
