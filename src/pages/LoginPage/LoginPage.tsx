@@ -13,15 +13,13 @@ export default function LoginPage() {
   const hasAuth = useMemo(() => !!user, [user]);
   const { created, fetched } = useUserInfo();
 
-  useEffect(() => {
-    if (fetched && hasAuth) {
-      if (created) {
-        navigate(NAV_LINKS.HOME);
-      } else { 
-        navigate(NAV_LINKS.PROFILE_CREATION);
-      }
+  if (fetched && hasAuth) {
+    if (created) {
+      navigate(NAV_LINKS.HOME);
+    } else { 
+      navigate(NAV_LINKS.PROFILE_CREATION);
     }
-  }, [created, fetched, hasAuth, navigate]);
+  }
 
   return (
     <Container
