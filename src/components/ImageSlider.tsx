@@ -10,6 +10,10 @@ const ImageSlider = () => {
     return null;
   }
 
+  const handleClick = (link: string) => () => {
+    window.open(link, '_blank');
+  };
+
   return (
     <div
       className="my-5"
@@ -33,6 +37,7 @@ const ImageSlider = () => {
                   width: 'auto',
                   maxHeight: '80vh',
                 }}
+                onClick={handleClick(slide.link)}
               />
             </Carousel.Item>
           ))}
