@@ -84,6 +84,14 @@ Customisations:
 - [ ] More ways of signing in
 - [ ] Theme customisations
 
+## Tech stack
+
+- ReactJS frontend
+  - Bootstrap CSS library
+  - React Spring animations
+- Cloud Firestore - Firebase
+- Firebase Hosting
+
 ## For developers
 
 > Don't forget `npm ci` to install the necessary dependencies!
@@ -112,3 +120,13 @@ The build is minified and the filenames include the hashes.\
 Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+
+## Contributors
+
+Han Shangru, Stanley
+
+Huang Hao
+
+Pierce Ng Wei Sheng
+
+Soh Je Hou
