@@ -48,7 +48,11 @@ Designed to help employers understand and empathise with kidney patients, the we
 
 <img width="1440" alt="List of available jobs" src="https://user-images.githubusercontent.com/20805849/218235386-e8413662-8f4e-4827-bfb3-caa53e1f1045.png">
 
+> *View a list of available jobs*
+
 <img width="1440" alt="Job application tracking" src="https://user-images.githubusercontent.com/20805849/218235442-663aa474-ecd0-4c4c-ab8e-defbd7ba2741.png">
+
+> *Keep track of applied jobs*
 
 To transform information into action, we integrated a job portal into the website to connect kidney patients with potential employers easily.
 
